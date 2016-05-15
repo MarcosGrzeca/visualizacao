@@ -1,0 +1,45 @@
+TreeMap
+http://bl.ocks.org/mbostock/4063582
+http://mbostock.github.io/d3/talk/20111018/treemap.html
+http://mbostock.github.io/d3/talk/20111018/partition.html
+
+
+Circle Packing
+http://bl.ocks.org/mbostock/4063530
+
+Cordenadas paralelas
+http://mbostock.github.io/d3/talk/20111116/iris-parallel.html
+
+Scatter Plot:
+http://mbostock.github.io/d3/talk/20111116/iris-splom.html
+http://benjiec.github.io/scatter-matrix/demo/demo.html
+http://bl.ocks.org/mbostock/3887118
+
+http://slodge.com/teach/
+http://bl.ocks.org/nsonnad/4481531
+
+Sunburst Partition
+http://bl.ocks.org/mbostock/4063423
+
+Árvores
+http://bl.ocks.org/robschmuecker/7880033
+http://taxontree.bpodgursky.com/
+
+Gerador de visualizações
+https://my.infocaptor.com/free_data_visualization.php
+
+Mapa
+https://live2.zoomdata.com/zoomdata/visualization#53f22849e4b08f9d5f15360a-522655b0e4b00f4f3af30f12
+http://blog.superquadra.co/frontend/mapa-do-brasil-em-d3js/
+http://bl.ocks.org/ChumaA/385a269db46ae56444772b62f1ae82bf
+http://bl.ocks.org/lokesh005/7640d9b562bf59b561d6
+http://charts.animateddata.co.uk/ukwind/
+https://vida.io/documents/s5qo5Gwrct5HNxAD2
+http://bl.ocks.org/NPashaP/a74faf20b492ad377312
+https://vida.io/documents/4vZ9mRGyepoyQxFcK
+https://vida.io/gists/JrG2Luv6pfJWyRvbw
+
+https://github.com/carolinabigonha/br-atlas/
+
+Comparativos:
+http://tylernwolf.com/#/portfolio/corrdisp?utm_source=d3&utm_medium=link&utm_campaign=finviz	
