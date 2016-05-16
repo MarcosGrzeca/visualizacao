@@ -43,3 +43,7 @@ https://github.com/carolinabigonha/br-atlas/
 
 Comparativos:
 http://tylernwolf.com/#/portfolio/corrdisp?utm_source=d3&utm_medium=link&utm_campaign=finviz	
+
+JSON RS
+https://gist.github.com/marcionicolau/7480c1af1086fe940a3e
+https://github.com/carolinabigonha/br-atlas

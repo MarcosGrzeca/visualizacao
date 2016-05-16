@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+
+		body {
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			margin: auto;
+			position: relative;
+			width: 960px;
+		}
+
+		text {
+			font: 10px sans-serif;
+		}
+
+		.axis path,
+		.axis line {
+			fill: none;
+			stroke: #000;
+			shape-rendering: crispEdges;
+		}
+
+		form {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}
+
+	</style>
+	<script src="libs/jquery-2.2.3.min.js"></script>
+<script src="libs/d3.v3.min.js"></script>
+<script src="scripts/testes.js"></script>
+
+</head>
+<body>
+	<!--<div id="teste"></div>
+	<form>
+		<label><input type="radio" name="mode" value="grouped"> Grouped</label>
+		<label><input type="radio" name="mode" value="stacked" checked> Stacked</label>
+	</form>
+	-->
+	<svg></svg>
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			teste();
+		});
+
+	</script>
+    
+</body>
+</html>
