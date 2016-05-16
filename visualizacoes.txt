@@ -47,3 +47,8 @@ http://tylernwolf.com/#/portfolio/corrdisp?utm_source=d3&utm_medium=link&utm_cam
 JSON RS
 https://gist.github.com/marcionicolau/7480c1af1086fe940a3e
 https://github.com/carolinabigonha/br-atlas
+
+
+view-source:https://live2.zoomdata.com/zoomdata/visualization?__target=embedded&key=546ca53ae4b0f6e2257e3295#54292b07e4b011a99e1252ba-5411ace4e4b065842f0df36e
+
+https://live2.zoomdata.com/zoomdata/visualization?__target=embedded&key=546ca53ae4b0f6e2257e3295#54292b07e4b011a99e1252ba-5411ace4e4b065842f0df36e

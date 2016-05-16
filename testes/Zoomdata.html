@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<!-- saved from url=(0146)https://live2.zoomdata.com/zoomdata/visualization?__target=embedded&key=546ca53ae4b0f6e2257e3295#54292b07e4b011a99e1252ba-5411ace4e4b065842f0df36e -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Zoomdata</title>
+    <meta content="initial-scale=1.0, width=device-width, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" name="viewport">
+
+    <link type="image/x-icon" rel="shortcut icon" href="https://live2.zoomdata.com/zoomdata/service/branding/images/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/jquery-ui-1.8.20.custom.css">
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/datepicker-timeline.css">
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/jquery.gridster.css">
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/spectrum.css">
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/Zoomdata.Controls.css">
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/customCss.css">
+
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/zoomdata-web.css">
+
+    <!--google.analytics.placeholder-->
+    <!-- *** current user data **** -->
+
+<style type="text/css"></style><script type="text/javascript" id="script_Scatter_Plot_visualization">function Scatter_Plot_visualization() {return function(controller, Zoomdata) {
+/*
+ * Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+ */
+(function () {
+    "use strict";
+    initLabels();
+    var duration = 1000;
+    var brushed = false;
+    var widgetBody = d3.select(controller.element.parentNode);
+    var widgetContent = d3.select(controller.element);
+    var $widgetContent = $(controller.element);
+    var widgetContentNode = d3.select(controller.element).node();
+    var chart = scatterplot()
+        .width($(controller.element).width())
+        .height($(controller.element).height())
+        .x(function(d) {
+            var metric = controller.metrics['X Axis'],
+                metricType = metric.get('type'),
+                axisFormatter = d3.format("s"),
+                formattedValue;
+
+            if (!isInt(d)) {
+                axisFormatter = d3.format(",.2f");
+                formattedValue = axisFormatter(d);
+            }
+            else if(metricType === "MONEY") {
+                axisFormatter = d3.format("$s");
+                formattedValue = axisFormatter(d);
+            } else {
+                formattedValue = axisFormatter(d);
+            }
+
+            formattedValue = formattedValue.replace('G', 'B');
+
+            return formattedValue;
+        })
+        .y(function(d) {
+            var metric = controller.metrics['Y Axis'],
+                metricType = metric.get('type'),
+                axisFormatter = d3.format("s"),
+                formattedValue;
+
+            if (!isInt(d)) {
+                axisFormatter = d3.format(",.2f");
+                formattedValue = axisFormatter(d);
+            }
+            else if(metricType === "MONEY") {
+                axisFormatter = d3.format("$s");
+                formattedValue = axisFormatter(d);
+            } else {
+                formattedValue = axisFormatter(d);
+            }
+
+            formattedValue = formattedValue.replace('G', 'B');
+
+            return formattedValue;
+        });
+
+    var tooltip;
+    var colorScale = d3.scale.ordinal();
+
+    $widgetContent.on('mouseup', function(){
+        controller.menu.hide();
+    });
+
+    controller.update = function(data, progress) {
+        colorScale
+            .domain(controller.state.colorDataObj.domain())
+            .range(controller.state.colorDataObj.colorRange());
+
+        d3.select(controller.element)
+            .datum(data)
+            .call(chart);
+    };
+
+    // Called when the widget is resized
+    controller.resize = function(newWidth, newHeight, size) {
+        brushed = false;
+        !d3.select(controller.element.parentNode).select(".brush-botton").empty() ? d3.select(controller.element.parentNode).select(".brush-botton").remove() : null;
+        chart.height(newHeight).width(newWidth);
+
+        d3.select(controller.element)
+            .call(chart);
+    };
+
+    controller.clear = function() {
+        brushed = false;
+        !d3.select(controller.element.parentNode).select(".brush-botton").empty() ? d3.select(controller.element.parentNode).select(".brush-botton").remove() : null;
+        d3.select(controller.element).selectAll("g.axis").remove();
+    };
+
+    function isInt(n) {
+        return n % 1 === 0;
+    }
+
+    function scatterplot() {
+        var svg = null,
+            timestamp = new Date().getTime(),
+            widgetHeight = 500,
+            widgetWidth = 500,
+            widgetSize = 'large',
+            transitioning = false,
+            brushDomainX = [],
+            brushDomainY = [],
+            xDomainOrig = [],
+            yDomainOrig = [],
+            fontSize = 14,
+            margin = {top: 20, right: 20, bottom: 20, left: 45},
+            width = widgetWidth - margin.left - margin.right,
+            height = widgetHeight - margin.top - margin.bottom,
+            x = d3.scale.linear(),
+            y = d3.scale.linear(),
+            size = d3.scale.linear(),
+            brush = d3.svg.brush().on("brush", brushmove).on("brushend", brushend),
+            xAxis = d3.svg.axis().scale(x).orient("bottom").outerTickSize(6).tickFormat(xValue),
+            yValue = function(d) { return d; },
+            xValue = function(d) { return d; },
+            yAxis = d3.svg.axis().scale(y).orient("left").outerTickSize(6).tickFormat(yValue),
+            color = d3.scale.category20c(),
+            groupKey = function(d) { return d.group };
+
+        function chart(selection) {
+            selection.each(function(data) {
+                if (!data) return;
+                makeResponsive();
+                width = widgetWidth - margin.left - margin.right;
+                height = widgetHeight - margin.top - margin.bottom;
+
+                if(transitioning) return;
+
+                // Select the svg element, if it exists.
+                svg = d3.select(this).selectAll("svg").data([data]);
+
+                updateAxisScales(data);
+
+                var gEnter = svg.enter()
+                    .append("svg")
+                    .attr("width", "100%")
+                    .attr("height", "100%")
+                    .append("g")
+                    .attr("class", "main-group");
+
+                gEnter.append("g").attr("class", "brush").call(brush);
+
+                var scatterplotGroup = gEnter.append("g")
+                    .attr("class", "scatterplot-area")
+                    .append("g")
+                    .attr("class", "scatterplot-group");
+
+                // Draw the X and Y Axis for the first time
+                gEnter.call(drawAxis);
+
+                if (d3.select(controller.element).selectAll("g.axis").empty()) {
+                    d3.select(controller.element).select("g.main-group").call(drawAxis);
+                }
+
+                // Update the inner group dimensions.
+                var g = svg.select("g.main-group")
+                    .attr("transform", "translate(" + (margin.left) + "," + (margin.top) + ")");
+
+                // Refresh the Axis position and text labels
+                g.call(redrawAxis);
+
+                // Redraw the brush to account for changes in width and height
+                g.select(".brush").call(brush);
+
+                var scatterGroup = g.select(".scatterplot-group").selectAll(".scatter-group")
+                    .data(data, groupKey);
+
+                var scatterEnterGroup = scatterGroup.enter()
+                    .append("g")
+                    .attr("class", "scatter-group")
+                    .attr("transform", function(d) { return "translate(" + x(controller.metrics["X Axis"].raw(d)) + "," + y(controller.metrics["Y Axis"].raw(d)) + ")"; })
+                    .on("mouseover", mouseover)
+                    .on("mousemove", mousemove)
+                    .on("mouseout", mouseleave);
+
+                scatterEnterGroup
+                    .append("circle")
+                    .attr("class", "dot")
+                    .attr("r", 0)
+                    .style("fill", function(d) { return colorScale(d.group); })
+                    .style("opacity", 1e-6);
+
+                scatterGroup.transition()
+                    .duration(duration)
+                    .attr("transform", function(d) { return "translate(" + x(controller.metrics["X Axis"].raw(d)) + "," + y(controller.metrics["Y Axis"].raw(d)) + ")"; })
+                    .each(function (d) {
+                        var el = this;
+                        controller.registerInteractiveElements(this, {
+                            data: function() {
+                                return el.__data__;
+                            },
+                            tooltip:{
+                                color: function(){
+                                    return colorScale(d.group);
+                                }
+                            }
+                        });
+                    });
+
+                scatterGroup.select("circle.dot")
+                    .transition()
+                    .duration(duration)
+                    .attr("r", function(d) { return size(Math.abs(controller.metrics["Size"].raw(d))); })
+                    .style("fill", function(d) { return colorScale(d.group); })
+                    .style("opacity", 1);
+
+                scatterGroup.exit()
+                    .transition()
+                    .duration(duration)
+                    .attr("r", 0)
+                    .style("opacity", 1e-6)
+                    .remove();
+            });
+        }
+
+        function mouseover(d) {
+        }
+
+        function mousemove(d) {
+        }
+
+        // Mouseleave Handler
+        function mouseleave(d) {
+        }
+
+        function updateAxisScales(data) {
+            // Update the x-scale & y-scale domain
+            var minMetricValueX = d3.min(data, function(d) {
+                return controller.metrics["X Axis"].raw(d);
+            });
+            var minMetricValueY = d3.min(data, function(d) {
+                return controller.metrics["Y Axis"].raw(d);
+            });
+            var minMetricValueSize = d3.min(data, function(d) {
+                return controller.metrics["Size"].raw(d);
+            });
+
+            var absMaxMetricValueX = d3.max(data, function(d) {
+                return Math.abs(controller.metrics["X Axis"].raw(d));
+            });
+            var absMaxMetricValueY = d3.max(data, function(d) {
+                return Math.abs(controller.metrics["Y Axis"].raw(d));
+            });
+            var absMaxMetricValueSize = d3.max(data, function(d) {
+                return Math.abs(controller.metrics["Size"].raw(d));
+            });
+
+            xDomainOrig = [minMetricValueX < 0 ? -absMaxMetricValueX : 0, absMaxMetricValueX];
+            yDomainOrig = [minMetricValueY < 0 ? -absMaxMetricValueY : 0, absMaxMetricValueY];
+            var xDomain = brushed ? brushDomainX : xDomainOrig,
+                xRange = [0, width];
+            var yDomain = brushed ? brushDomainY : yDomainOrig,
+                yRange = [height, 0];
+            var sizeDomain = [0, absMaxMetricValueSize],
+                sizeRange = [5, 25];
+
+            if ((brushed ? x.domain()[0] : minMetricValueX) < 0) {
+                xDomain[0] = -absMaxMetricValueX;
+                xDomainOrig[0] = -absMaxMetricValueX;
+                xRange[0] = 0;
+            }
+            if ((brushed ? y.domain()[0] : minMetricValueY) < 0) {
+                yDomain[0] = -absMaxMetricValueY;
+                yDomainOrig[0] = -absMaxMetricValueY;
+                yRange[0] = height;
+            }
+
+            x.range(xRange).domain(xDomain).nice();
+            y.range(yRange).domain(yDomain).nice();
+            size.range(sizeRange).domain(sizeDomain).nice();
+
+            // Correct range dependent on radius of circle near the border
+            function correctRange(element) {
+                var pointX = x(controller.metrics["X Axis"].raw(element)),
+                    pointY = y(controller.metrics["Y Axis"].raw(element)),
+                    pointR = size(Math.abs(controller.metrics["Size"].raw(element)));
+
+                if (pointX + pointR > x.range()[1]) {
+                    xRange = [0, width - pointR];
+                    x.range(xRange).domain(xDomain).nice();
+                }
+                if (pointY + pointR > y.range()[1]) {
+                    yRange = [height, pointR];
+                    y.range(yRange).domain(yDomain).nice();
+                }
+            }
+
+            data.forEach(correctRange);
+
+            brush.x(x).y(y);
+        }
+
+        function brushmove() {
+            var extent = brush.extent();
+            if(brush.empty()) {
+                return;
+            }
+            d3.select(controller.element).selectAll(".scatter-group").classed("selected", function(d) {
+                var is_brushed = extent[0][0] <= x.invert(x(controller.metrics["X Axis"].raw(d))) && x.invert(x(controller.metrics["X Axis"].raw(d))) <= extent[1][0]
+                    && extent[0][1] <= y.invert(y(controller.metrics["Y Axis"].raw(d))) && y.invert(y(controller.metrics["Y Axis"].raw(d))) <= extent[1][1];
+                return is_brushed;
+            });
+        }
+
+        function brushend() {
+            if(brush.empty()) {
+                return;
+            }
+            !d3.select(controller.element.parentNode).select(".brush-botton").empty() ? d3.select(controller.element.parentNode).select(".brush-botton").remove() : null;
+            d3.select(controller.element.parentNode).select(".widgetLabel.bottom")
+                .append("div")
+                .classed("axisLabel brush-botton", true)
+                .style("position", "static")
+                .style("display", "inline-block")
+                .text("Clear Zoom");
+
+            brushed = true;
+            brushDomainX = [brush.extent()[0][0], brush.extent()[1][0]];
+            brushDomainY = [brush.extent()[0][1], brush.extent()[1][1]];
+            x.domain(brushDomainX).nice;
+            y.domain(brushDomainY).nice;
+
+            transitioning = true;
+            d3.select(controller.element).selectAll(".scatter-group")
+                .transition()
+                .duration(duration)
+                .attr("transform", function(d) { return "translate(" + x(controller.metrics["X Axis"].raw(d)) + "," + y(controller.metrics["Y Axis"].raw(d)) + ")"; })
+                .call(endall, function() { transitioning = false; });
+
+            svg.select("g.main-group").call(redrawAxis);
+
+            d3.select(controller.element).selectAll(".scatter-group").classed("selected", false);
+            d3.select(controller.element).select(".brush").call(brush.clear());
+
+            d3.select(controller.element.parentNode).select(".brush-botton").on("click", function() {
+                x.domain(xDomainOrig).nice;
+                y.domain(yDomainOrig).nice;
+                transitioning = true;
+                d3.select(controller.element).selectAll(".scatter-group")
+                    .transition()
+                    .duration(duration)
+                    .attr("transform", function(d) { return "translate(" + x(controller.metrics["X Axis"].raw(d)) + "," + y(controller.metrics["Y Axis"].raw(d)) + ")"; })
+                    .call(endall, function() { transitioning = false; });
+
+                svg.select("g.main-group").call(redrawAxis);
+                brushed = false;
+                d3.select(controller.element.parentNode).select(".brush-botton").remove();
+            });
+        }
+
+        function drawAxis() {
+            var yVal = y(0);
+            var xVal = x(0);
+
+            if (isNaN(yVal) || isNaN(xVal)) {
+                return false;
+            }
+            this.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0, " + yVal + ")")
+                .call(xAxis);
+
+            this.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(" + xVal + ", 0)")
+                .call(yAxis);
+        }
+
+        // Update the positions and values of the X and Y Axis
+        function redrawAxis() {
+            // Update the x-axis based on the updated xScale range
+            this.select(".x.axis")
+                .attr("transform", function() {
+                    var yDomainVal = y.domain();
+                    var yValue = y(0);
+
+                    if (yDomainVal[0] >= 0) {
+                        yValue = y(yDomainVal[0]);
+                    } else if (yDomainVal[0] < 0 && yDomainVal[1] < 0) {
+                        yValue = y(yDomainVal[1]);
+                    }
+                    if (isNaN(yValue)) {
+                        yValue = 0;
+                    }
+                    return 'translate(0, ' + yValue + ')';
+                })
+                .call(xAxis);
+
+            // Update the y-axis based on the updated yScale range
+            this.select(".y.axis")
+                .attr("transform", function() {
+                    var xDomainVal = x.domain();
+                    var xValue = x(0);
+
+                    if (xDomainVal[0] >= 0) {
+                        xValue = x(xDomainVal[0]);
+                    } else if (xDomainVal[0] < 0 && xDomainVal[1] < 0) {
+                        xValue = x(xDomainVal[1]);
+                    }
+                    if (isNaN(xValue)) {
+                        xValue = 0;
+                    }
+                    return 'translate(' + xValue + ', 0)';
+                })
+                .call(yAxis);
+        }
+
+        function endall(transition, callback) {
+            var n = 0;
+            transition
+                .each(function() { ++n; })
+                .each("end", function() { if (!--n) callback.apply(this, arguments); });
+        }
+
+        function getFieldLabel(fieldName) {
+            var field = controller.fields.findWhere({name:fieldName});
+            return field && field.attributes ? field.attributes.label : '';
+        }
+
+        function getFieldType(fieldName) {
+            var field = controller.fields.findWhere({name:fieldName});
+            var fieldType = field && field.attributes ? field.attributes.type : '';
+            return fieldType;
+        }
+
+        function makeResponsive() {
+            if(widgetWidth < 500 || widgetHeight < 380) {
+                //medium
+                widgetSize = 'medium';
+                fontSize = 11;
+            } else {
+                //large
+                widgetSize = 'large';
+                fontSize = 14;
+            }
+        }
+
+        // Setter and getter methods
+        chart.margin = function(_) {
+            if (!arguments.length) return margin;
+            margin = _;
+            width = widgetWidth - margin.left - margin.right;
+            height = widgetHeight - margin.top - margin.bottom;
+            return chart;
+        };
+
+        chart.width = function(_) {
+            if (!arguments.length) return widgetWidth;
+            widgetWidth = _;
+            width = widgetWidth - margin.left - margin.right;
+            return chart;
+        };
+
+        chart.height = function(_) {
+            if (!arguments.length) return widgetHeight;
+            widgetHeight = _;
+            height = widgetHeight - margin.top - margin.bottom;
+            return chart;
+        };
+
+        chart.duration = function(_) {
+            if (!arguments.length) return duration;
+            duration = _;
+            return chart;
+        };
+
+        chart.x = function(_) {
+            if (!arguments.length) return xValue;
+            xValue = _;
+            xAxis.tickFormat(xValue);
+            return chart;
+        };
+
+        chart.y = function(_) {
+            if (!arguments.length) return yValue;
+            yValue = _;
+            yAxis.tickFormat(yValue);
+            return chart;
+        };
+
+        chart.data = function(_) {
+            if (!arguments.length) return data;
+            data = _;
+            return chart;
+        };
+
+        return chart;
+    }
+
+    function initLabels(){
+        controller.createAxisLabel({
+            picks: 'Group By',
+            orientation: 'horizontal',
+            position: 'bottom',
+            popoverTitle: 'Group'
+        });
+
+        controller.createAxisLabel({
+            picks: 'X Axis',
+            orientation: 'horizontal',
+            position: 'bottom',
+            popoverTitle: 'X Axis'
+        });
+
+        controller.createAxisLabel({
+            picks: 'Y Axis',
+            orientation: 'vertical',
+            position: 'left',
+            popoverTitle: 'Y Axis'
+        });
+
+        controller.createAxisLabel({
+            picks: 'Size',
+            orientation: 'horizontal',
+            position: 'bottom',
+            popoverTitle: 'Size'
+        });
+
+        controller.createAxisLabel({
+            picks: 'Color',
+            orientation: 'horizontal',
+            position: 'bottom',
+            popoverTitle: 'Color'
+        });
+    }
+
+    // Remove default panning when dragging
+    $(controller.element).mousedown(function() {
+        var $widget = $(this).closest('li.widget');
+        if ($widget.hasClass('selectedWidget')) {
+            return false;
+        }
+
+    });
+
+    controller.customReadyStatusDelay = duration*2;
+})();
+};}</script><script type="text/javascript" id="script_Line_Chart_Visualisation">function Line_Chart_Visualisation() {return function(controller, Zoomdata) {
+/*
+ * Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+ */
+(function () {
+    'use strict';
+
+    var CanvablePath=function(e){e=e.replace(/,/gm," ");e=e.replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm,"$1 $2");e=e.replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm,"$1 $2");e=e.replace(/([MmZzLlHhVvCcSsQqTtAa])([^\s])/gm,"$1 $2");e=e.replace(/([^\s])([MmZzLlHhVvCcSsQqTtAa])/gm,"$1 $2");e=e.replace(/([0-9])([+\-])/gm,"$1 $2");e=e.replace(/(\.[0-9]*)(\.)/gm,"$1 $2");e=e.replace(/([Aa](\s+[0-9]+){3})\s+([01])\s*([01])/gm,"$1 $3 $4 ");e=CanvablePath.compressSpaces(e);e=CanvablePath.trim(e);this.PathParser=new function(e){this.tokens=e.split(" ");this.reset=function(){this.i=-1;this.command="";this.previousCommand="";this.start=new CanvablePath.Point(0,0);this.control=new CanvablePath.Point(0,0);this.current=new CanvablePath.Point(0,0);this.points=[];this.angles=[]};this.isEnd=function(){return this.i>=this.tokens.length-1};this.isCommandOrEnd=function(){if(this.isEnd())return true;return this.tokens[this.i+1].match(/^[A-Za-z]$/)!=null};this.isRelativeCommand=function(){switch(this.command){case"m":case"l":case"h":case"v":case"c":case"s":case"q":case"t":case"a":case"z":return true;break}return false};this.getToken=function(){this.i++;return this.tokens[this.i]};this.getScalar=function(){return parseFloat(this.getToken())};this.nextCommand=function(){this.previousCommand=this.command;this.command=this.getToken()};this.getPoint=function(){var e=new CanvablePath.Point(this.getScalar(),this.getScalar());return this.makeAbsolute(e)};this.getAsControlPoint=function(){var e=this.getPoint();this.control=e;return e};this.getAsCurrentPoint=function(){var e=this.getPoint();this.current=e;return e};this.getReflectedControlPoint=function(){if(this.previousCommand.toLowerCase()!="c"&&this.previousCommand.toLowerCase()!="s"&&this.previousCommand.toLowerCase()!="q"&&this.previousCommand.toLowerCase()!="t"){return this.current}var e=new CanvablePath.Point(2*this.current.x-this.control.x,2*this.current.y-this.control.y);return e};this.makeAbsolute=function(e){if(this.isRelativeCommand()){e.x+=this.current.x;e.y+=this.current.y}return e};this.addMarker=function(e,t,n){if(n!=null&&this.angles.length>0&&this.angles[this.angles.length-1]==null){this.angles[this.angles.length-1]=this.points[this.points.length-1].angleTo(n)}this.addMarkerAngle(e,t==null?null:t.angleTo(e))};this.addMarkerAngle=function(e,t){this.points.push(e);this.angles.push(t)};this.getMarkerPoints=function(){return this.points};this.getMarkerAngles=function(){for(var e=0;e<this.angles.length;e++){if(this.angles[e]==null){for(var t=e+1;t<this.angles.length;t++){if(this.angles[t]!=null){this.angles[e]=this.angles[t];break}}}}return this.angles}}(e);this.bounds=function(){return this.draw(null)};this.draw=function(e){var t=this.PathParser;t.reset();var n=new CanvablePath.BoundingBox;if(e!=null)e.beginPath();while(!t.isEnd()){t.nextCommand();switch(t.command){case"M":case"m":var r=t.getAsCurrentPoint();t.addMarker(r);n.addPoint(r.x,r.y);if(e!=null)e.moveTo(r.x,r.y);t.start=t.current;while(!t.isCommandOrEnd()){var r=t.getAsCurrentPoint();t.addMarker(r,t.start);n.addPoint(r.x,r.y);if(e!=null)e.lineTo(r.x,r.y)}break;case"L":case"l":while(!t.isCommandOrEnd()){var i=t.current;var r=t.getAsCurrentPoint();t.addMarker(r,i);n.addPoint(r.x,r.y);if(e!=null)e.lineTo(r.x,r.y)}break;case"H":case"h":while(!t.isCommandOrEnd()){var s=new CanvablePath.Point((t.isRelativeCommand()?t.current.x:0)+t.getScalar(),t.current.y);t.addMarker(s,t.current);t.current=s;n.addPoint(t.current.x,t.current.y);if(e!=null)e.lineTo(t.current.x,t.current.y)}break;case"V":case"v":while(!t.isCommandOrEnd()){var s=new CanvablePath.Point(t.current.x,(t.isRelativeCommand()?t.current.y:0)+t.getScalar());t.addMarker(s,t.current);t.current=s;n.addPoint(t.current.x,t.current.y);if(e!=null)e.lineTo(t.current.x,t.current.y)}break;case"C":case"c":while(!t.isCommandOrEnd()){var o=t.current;var u=t.getPoint();var a=t.getAsControlPoint();var f=t.getAsCurrentPoint();t.addMarker(f,a,u);n.addBezierCurve(o.x,o.y,u.x,u.y,a.x,a.y,f.x,f.y);if(e!=null)e.bezierCurveTo(u.x,u.y,a.x,a.y,f.x,f.y)}break;case"S":case"s":while(!t.isCommandOrEnd()){var o=t.current;var u=t.getReflectedControlPoint();var a=t.getAsControlPoint();var f=t.getAsCurrentPoint();t.addMarker(f,a,u);n.addBezierCurve(o.x,o.y,u.x,u.y,a.x,a.y,f.x,f.y);if(e!=null)e.bezierCurveTo(u.x,u.y,a.x,a.y,f.x,f.y)}break;case"Q":case"q":while(!t.isCommandOrEnd()){var o=t.current;var a=t.getAsControlPoint();var f=t.getAsCurrentPoint();t.addMarker(f,a,a);n.addQuadraticCurve(o.x,o.y,a.x,a.y,f.x,f.y);if(e!=null)e.quadraticCurveTo(a.x,a.y,f.x,f.y)}break;case"T":case"t":while(!t.isCommandOrEnd()){var o=t.current;var a=t.getReflectedControlPoint();t.control=a;var f=t.getAsCurrentPoint();t.addMarker(f,a,a);n.addQuadraticCurve(o.x,o.y,a.x,a.y,f.x,f.y);if(e!=null)e.quadraticCurveTo(a.x,a.y,f.x,f.y)}break;case"A":case"a":while(!t.isCommandOrEnd()){var o=t.current;var l=t.getScalar();var c=t.getScalar();var h=t.getScalar()*(Math.PI/180);var p=t.getScalar();var d=t.getScalar();var f=t.getAsCurrentPoint();var v=new CanvablePath.Point(Math.cos(h)*(o.x-f.x)/2+Math.sin(h)*(o.y-f.y)/2,-Math.sin(h)*(o.x-f.x)/2+Math.cos(h)*(o.y-f.y)/2);var m=Math.pow(v.x,2)/Math.pow(l,2)+Math.pow(v.y,2)/Math.pow(c,2);if(m>1){l*=Math.sqrt(m);c*=Math.sqrt(m)}var g=(p==d?-1:1)*Math.sqrt((Math.pow(l,2)*Math.pow(c,2)-Math.pow(l,2)*Math.pow(v.y,2)-Math.pow(c,2)*Math.pow(v.x,2))/(Math.pow(l,2)*Math.pow(v.y,2)+Math.pow(c,2)*Math.pow(v.x,2)));if(isNaN(g))g=0;var y=new CanvablePath.Point(g*l*v.y/c,g*-c*v.x/l);var b=new CanvablePath.Point((o.x+f.x)/2+Math.cos(h)*y.x-Math.sin(h)*y.y,(o.y+f.y)/2+Math.sin(h)*y.x+Math.cos(h)*y.y);var w=function(e){return Math.sqrt(Math.pow(e[0],2)+Math.pow(e[1],2))};var E=function(e,t){return(e[0]*t[0]+e[1]*t[1])/(w(e)*w(t))};var S=function(e,t){return(e[0]*t[1]<e[1]*t[0]?-1:1)*Math.acos(E(e,t))};var x=S([1,0],[(v.x-y.x)/l,(v.y-y.y)/c]);var T=[(v.x-y.x)/l,(v.y-y.y)/c];var N=[(-v.x-y.x)/l,(-v.y-y.y)/c];var C=S(T,N);if(E(T,N)<=-1)C=Math.PI;if(E(T,N)>=1)C=0;var k=1-d?1:-1;var L=x+k*(C/2);var A=new CanvablePath.Point(b.x+l*Math.cos(L),b.y+c*Math.sin(L));t.addMarkerAngle(A,L-k*Math.PI/2);t.addMarkerAngle(f,L-k*Math.PI);n.addPoint(f.x,f.y);if(e!=null){var E=l>c?l:c;var O=l>c?1:l/c;var M=l>c?c/l:1;e.translate(b.x,b.y);e.rotate(h);e.scale(O,M);e.arc(0,0,E,x,x+C,1-d);e.scale(1/O,1/M);e.rotate(-h);e.translate(-b.x,-b.y)}}break;case"Z":case"z":if(e!=null)e.closePath();t.current=t.start}}return n};this.getMarkers=function(){var e=this.PathParser.getMarkerPoints();var t=this.PathParser.getMarkerAngles();var n=[];for(var r=0;r<e.length;r++){n.push([e[r],t[r]])}return n}};CanvablePath.trim=function(e){return e.replace(/^\s+|\s+$/g,"")};CanvablePath.compressSpaces=function(e){return e.replace(/[\s\r\t\n]+/gm," ")};CanvablePath.Point=function(e,t){this.x=e;this.y=t};CanvablePath.Point.prototype.angleTo=function(e){return Math.atan2(e.y-this.y,e.x-this.x)};CanvablePath.Point.prototype.applyTransform=function(e){var t=this.x*e[0]+this.y*e[2]+e[4];var n=this.x*e[1]+this.y*e[3]+e[5];this.x=t;this.y=n};CanvablePath.BoundingBox=function(e,t,n,r){this.x1=Number.NaN;this.y1=Number.NaN;this.x2=Number.NaN;this.y2=Number.NaN;this.x=function(){return this.x1};this.y=function(){return this.y1};this.width=function(){return this.x2-this.x1};this.height=function(){return this.y2-this.y1};this.addPoint=function(e,t){if(e!=null){if(isNaN(this.x1)||isNaN(this.x2)){this.x1=e;this.x2=e}if(e<this.x1)this.x1=e;if(e>this.x2)this.x2=e}if(t!=null){if(isNaN(this.y1)||isNaN(this.y2)){this.y1=t;this.y2=t}if(t<this.y1)this.y1=t;if(t>this.y2)this.y2=t}};this.addX=function(e){this.addPoint(e,null)};this.addY=function(e){this.addPoint(null,e)};this.addBoundingBox=function(e){this.addPoint(e.x1,e.y1);this.addPoint(e.x2,e.y2)};this.addQuadraticCurve=function(e,t,n,r,i,s){var o=e+2/3*(n-e);var u=t+2/3*(r-t);var a=o+1/3*(i-e);var f=u+1/3*(s-t);this.addBezierCurve(e,t,o,a,u,f,i,s)};this.addBezierCurve=function(e,t,n,r,s,o,u,a){var f=[e,t],l=[n,r],c=[s,o],h=[u,a];this.addPoint(f[0],f[1]);this.addPoint(h[0],h[1]);for(i=0;i<=1;i++){var p=function(e){return Math.pow(1-e,3)*f[i]+3*Math.pow(1-e,2)*e*l[i]+3*(1-e)*Math.pow(e,2)*c[i]+Math.pow(e,3)*h[i]};var d=6*f[i]-12*l[i]+6*c[i];var v=-3*f[i]+9*l[i]-9*c[i]+3*h[i];var m=3*l[i]-3*f[i];if(v==0){if(d==0)continue;var g=-m/d;if(0<g&&g<1){if(i==0)this.addX(p(g));if(i==1)this.addY(p(g))}continue}var y=Math.pow(d,2)-4*m*v;if(y<0)continue;var b=(-d+Math.sqrt(y))/(2*v);if(0<b&&b<1){if(i==0)this.addX(p(b));if(i==1)this.addY(p(b))}var w=(-d-Math.sqrt(y))/(2*v);if(0<w&&w<1){if(i==0)this.addX(p(w));if(i==1)this.addY(p(w))}}};this.isPointInBox=function(e,t){return this.x1<=e&&e<=this.x2&&this.y1<=t&&t<=this.y2};this.addPoint(e,t);this.addPoint(n,r)}
+
+    var LINE_HEIGHT = 'Y1 Axis';
+    var duration = 700,
+        container = controller.element,
+        widgetBody = d3.select(controller.element.parentNode),
+        widgetContent = d3.select(controller.element),
+        widgetContentNode = d3.select(controller.element).node(),
+        pixelRatio = window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI,
+        stopAnimation = false,
+        animationTimeoutId,
+        canvas = null,
+        canvasMarginCoef = 40,
+        context = null,
+        lineDetachedContainer = null,
+        circleDetachedContainer = null,
+        lineContainer = null,
+        circlesContainer = null,
+        listenersArr = [],
+        colorScale = d3.scale.category10(),
+        dataLength = 0,
+        styleSettings = {alpha: [], fill: [], stroke: [], line: [], radius: []},
+        maxDataObj = {line: 0},
+        noData = false,
+        cache = null,
+        isTouch = isTouchDevice();
+
+    initLabels();
+
+    var trends = new MultiBarTrend();
+
+    trends
+        .width($(container).width())
+        .height($(container).height())
+        .y(function(d) {
+            var formattedVal = formattedValue(LINE_HEIGHT, d);
+            return formattedVal;
+        });
+
+    // Helper function to arrange data by ascending time period
+    var compare = function(a,b) {
+        if (a.group > b.group) {
+            return 1
+        } else if (a.group < b.group) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    controller.update = function(data, progress) {
+        if (data.length > 0) {
+            // Check needed to skip first "empty" array from rendering
+            var sum = 0;
+            $.each(data, function(index, object) {
+                if (typeof controller.metrics[LINE_HEIGHT][0] !== "undefined") {
+                    sum += controller.metrics[LINE_HEIGHT][0].raw(object);
+                } else {
+                    // Clear canvas in case if no metrics selected
+                    if (canvas !== null) {
+                        context.clearRect(0, 0, canvas.node().width, canvas.node().height);
+                    }
+                }
+            });
+            noData = false;
+
+            if (data.length > 100) {
+                data.splice(0, data.length - 100);
+            }
+
+            data.sort(compare);
+
+            if (dataLength !== data.length) {
+                // Manage appearance of circles
+                styleSettings = {alpha: [], fill: [], stroke: [], line: [], radius: []};
+
+                $.each(data, function(index, obj) {
+                    styleSettings.alpha.push(1);
+                    styleSettings.fill.push("rgb(255, 127, 14)");
+                    styleSettings.stroke.push("rgb(255, 127, 14)");
+                    styleSettings.line.push(0);
+                    styleSettings.radius.push(5);
+                });
+                dataLength = data.length;
+            }
+
+            if  (stopAnimation) {
+                stopAnimation = false;
+            }
+            d3.timer(drawCanvas);
+
+            var linesData = formattedData(data);
+
+            d3.select(controller.element)
+                .datum(data)
+                .call(trends.scales);
+
+            trends.drawGraphics(linesData);
+
+            addListeners(canvas.node(), listenersArr, data);
+        }
+    };
+
+    controller.onNoDataFound = function() {
+        context && context.clearRect(0, 0, canvas.node().width, canvas.node().height);
+        noData = true;
+    }
+
+    controller.resize = function(width, height, size) {
+        // Called when the widget is resized
+        trends
+            .height(height)
+            .width(width)
+            .maxHeight(height);
+
+        d3.select(controller.element)
+            .call(trends.scales);
+
+        var data;
+        if (lineContainer !== null) {
+            data = lineContainer[0][0].__data__;
+
+
+            trends.drawGraphics(data);
+
+            var margin = trends.getMargin();
+
+            canvas.node().width = width - margin.left - margin.right + 2 * canvasMarginCoef;
+            canvas.node().height = height - margin.top - margin.bottom + canvasMarginCoef;
+
+            if (stopAnimation) {
+                stopAnimation = false;
+            }
+
+            d3.timer(drawCanvas);
+        }
+    };
+
+    controller.clear = function() {
+        function clear() {
+            // clear canvas, make sure to compensate for translation with negative offset.
+            context && context.clearRect(0, 0, canvas.node().width, canvas.node().height);
+            removeListeners(canvas.node());
+            lineContainer = null;
+        }
+        // Delay need to be done to make sure that D3.timer stop it's work
+        setTimeout(clear, 1000);
+    };
+
+    function isInt(n) {
+        return n % 1 === 0;
+    }
+
+    function MultiBarTrend() {
+        var self = this,
+            svg = null,
+            widgetHeight = 500,
+            widgetWidth = 500,
+            widgetSize = "large",
+            margin = {top: 10, right: 40, bottom: 0, left: 40},
+            width = widgetWidth - margin.left - margin.right,
+            height = widgetHeight - margin.top - margin.bottom,
+            utc = controller.state.isTimeUTC(),
+            xScale = d3.scale.ordinal(),
+            yScale = d3.scale.linear(),
+            yValue = function(d) { return d; },
+            xValue = function(d) {
+                var period, format;
+
+                switch (controller.state.get("timeTrendStep")) {
+                    case "MINUTE":
+                        period = 60000;
+                        format = d3.time.format("%I:%M");
+                        return format(new Date(d));
+                        break;
+                    case "HOUR":
+                        period = 3600000;
+                        format = d3.time.format("%I %p");
+                        return format(new Date(d));
+                        break;
+                    case "DAY":
+                        period = 86400000;
+                        format = d3.time.format("%m-%d-%Y");
+                        return format(new Date(d));
+                        break;
+                    case "WEEK":
+                        period = 604800000;
+                        format = d3.time.format("%m-%d-%Y");
+                        return format(new Date(d));
+                        break;
+                    case "MONTH":
+                        period = 2628000000;
+                        format = d3.time.format("%m-%Y");
+                        return format(new Date(d));
+                        break;
+                    case "YEAR":
+                        period = 31536000000;
+                        format = d3.time.format("%Y");
+                        return format(new Date(d));
+                        break;
+                }
+            },
+            xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickFormat(xValue),
+            yAxis = d3.svg.axis().scale(yScale).orient("left").tickFormat(yValue),
+            xGrid = d3.svg.axis().scale(xScale).orient("bottom").innerTickSize(-height+verticalShift).tickFormat(""),
+            yGrid = d3.svg.axis().scale(yScale).orient("left").innerTickSize(-width).tickFormat(""),
+            line = d3.svg.line().interpolate("linear").x(function(d) { return xScale(d.group) + canvasMarginCoef; }).y(function(d) { return yScale(d.line);}),
+            rotationAngle = 0, // Labels rotation angle
+            verticalShift = 0, // Labels shifting in case of rotation
+            ticksParams = [],  // Define parameters for each label
+            groupKey = function(d) {
+                return d.key;
+            };
+
+        this.scales = function(selection) {
+            selection.each(function(data) {
+
+                if (typeof data !== "undefined") {
+                    width = widgetWidth - margin.left - margin.right;
+                    height = widgetHeight - margin.top - margin.bottom;
+                    updateAxisScales(data);
+
+                    xGrid.innerTickSize(-height+verticalShift);
+
+                    // Select the svg element, if it exists.
+                    svg = d3.select(this).selectAll("svg").data([data]);
+                    var gEnter = svg.enter()
+                        .append("svg")
+                        .attr("width", "100%")
+                        .attr("height", "100%")
+                        .append("g")
+                        .attr("class", "main-group");
+
+                    // Draw the X and Y Axis for the first time
+                    gEnter.call(drawAxis, data);
+
+                    // Update the inner group dimensions.
+                    var g = svg.select("g.main-group")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                    // Refresh the Axis position and text labels
+                    //g.call(redrawAxis, data);
+                    updateLabels(g, data);
+
+                    // Delete last not needed group from x-axis
+                    /*var gLength = svg.select(".x.axis").selectAll("g").size();
+                    if (gLength > 1) {
+                        var xAxisGroup = svg.select(".x.axis").selectAll("g").filter(function(d, i) { return i === gLength - 1; });
+                        xAxisGroup.remove();
+
+                        svg.select(".x.axis").selectAll("path").remove();
+
+                        var gridLength = svg.select(".x.grid").selectAll("g").size();
+                        var xGridGroup = svg.select(".x.grid").selectAll("g").filter(function(d, i) { return i === gridLength - 1; });
+                        xGridGroup.remove();
+
+                        svg.select(".x.grid").selectAll("path").remove();
+                    }
+
+                    svg.select("line.x-line").remove();
+                    svg.append("line")
+                        .attr("class", "x-line")
+                        .attr("x1", margin.left)
+                        .attr("y1", yScale(0) + margin.top)
+                        .attr("x2", width + margin.left)
+                        .attr("y2", yScale(0) + margin.top);*/
+                }
+            });
+        }
+
+        this.drawGraphics = function(data) {
+            // Draw canvas element
+            if (d3.select(controller.element).select("canvas").empty()) {
+                canvas = d3.select(controller.element).append("canvas")
+                    .attr("width", width + 2*canvasMarginCoef)
+                    .attr("height", height + canvasMarginCoef)
+                    .style("position", "absolute")
+                    .style("left", margin.left - canvasMarginCoef + "px")
+                    .style("top", margin.top + "px");
+            } else {
+                canvas = d3.select(controller.element).select("canvas");
+            }
+
+            // Create an in memory only element of type 'custom'
+            if (lineDetachedContainer === null) {
+                lineDetachedContainer = document.createElement("svg");
+            }
+            if (circleDetachedContainer === null) {
+                circleDetachedContainer = document.createElement("svg");
+            }
+
+            // Create a d3 selection for the detached container. We won't
+            // actually be attaching it to the DOM.
+            lineContainer = d3.select(lineDetachedContainer);
+            circlesContainer = d3.select(circleDetachedContainer);
+
+            context = canvas.node().getContext('2d');
+            /*context.scale(pixelRatio, pixelRatio);*/
+
+            //**Add lines set**
+            if (typeof data !== "undefined" && data.length > 0 ) { // Check should be done to prevent line missing in static mode
+                var lineGroup = lineContainer.datum(data).selectAll("g.line-group").data(data, function(d) {return d.key; });
+
+                // Enter
+                var lineEnterGroup = lineGroup.enter().append("g")
+                    .attr("class", "line-group");
+
+                // Append the path    
+                lineEnterGroup
+                    .append("path")
+                    .attr("class", "line")
+                    .attr("d", function(d, i) {
+                        $.each(d.values, function(index, object) {
+                            object.line = controller.metrics[LINE_HEIGHT][i].raw(object);
+                        })
+                        return line(d.values);
+                    })
+                    .attr("stroke", function(d) {
+                        return colorScale(d.key);
+                    })
+                    .style("opacity", 0);
+
+                lineGroup.exit()
+                    .transition()
+                    .remove();
+
+                lineGroup.select("path.line")
+                    .transition()
+                    .duration(duration)
+                    .attr("d", function(d, i) {
+                        $.each(d.values, function(index, object) {
+                            if (typeof controller.metrics[LINE_HEIGHT][i] !== "undefined") {
+                                object.line = controller.metrics[LINE_HEIGHT][i].raw(object);
+                            }
+                        })
+                        return line(d.values);
+                    })
+                    .style("opacity", 1);
+
+            } else { // Check should be done to remove lines correctly when no metrics applied
+                if (controller.metrics[LINE_HEIGHT].length === 0) {
+                    lineContainer.selectAll("g").remove();
+                }
+            }
+
+            //**Add circles
+            var circlesGroup = circlesContainer.datum(data).selectAll("g.circle-group").data(data, function(d) { return d.key; });
+
+            // Enter
+            var circlesEnterGroup = circlesGroup.enter().append("g")
+                .attr("class", "circle-group")
+                .call(circles);
+
+            circlesGroup.exit()
+                .transition()
+                .remove();
+
+            function circles() {
+                this
+                    .each(function(d, i) {
+                        var circlesData = d.values;
+                        var circles = d3.select(this).datum(circlesData).selectAll("circle").data(circlesData, function(d) {return d.group;});
+
+                        circles.enter().append("circle")
+                            .attr("cx", function(d) {
+                                return xScale(d.group) + canvasMarginCoef;
+                            })
+                            .attr("cy", function(d) {
+                                return yScale(controller.metrics[LINE_HEIGHT][i].raw(d));
+                            })
+                            .attr("r", 0)
+                            .attr("stroke", function(d) {
+                                return colorScale(d.id);
+                            })
+                            .attr("fill", function(d) {return colorScale(d.id);})
+                            .style("opacity", 0);
+
+                        circles.exit()
+                            .transition()
+                            .remove();
+
+                        circles
+                            .transition()
+                            .duration(duration)
+                            .attr("cx", function(d) {
+                                return xScale(d.group) + canvasMarginCoef;
+                            })
+                            .attr("cy", function(d) {
+                                return yScale(controller.metrics[LINE_HEIGHT][i].raw(d));
+                            })
+                            .attr("r", function(d, i) { return styleSettings.radius[i]; })
+                            .style("opacity", 1);
+
+                    });
+            }
+
+            stopAnimationAfterDelay(duration * 1.1);
+        };
+
+        function labelsData(elem, data) {
+
+            updateAxisScales(data);
+            elem.call(redrawAxis, data);
+
+            var ticks = d3.select(controller.element).select("g.axis").selectAll("g.tick");
+
+            ticksParams = ticks[0].map(function(object) {
+                return {
+                    position: $(object).position().left,
+                    width: object.getBoundingClientRect().width,
+                    height: object.getBoundingClientRect().height
+                };
+            });
+            return ticksParams;
+        }
+
+        function updateLabels(elem, data) {
+            //updateAxisScales(elem, data);
+            //elem.call(redrawAxis, data);
+
+            var container = d3.select(controller.element).select("g.axis"),
+                ticksArr = labelsData(elem, data),
+                maxWidth = function() {
+                    return Math.max.apply(Math,ticksArr.map(function(obj) { return obj.width; }));
+                },
+                isRotate = function() {
+                    if (rotationAngle === 0) {
+                        for (var i = 0; i < ticksArr.length - 1; i++) {
+                            if (ticksArr[i].position + ticksArr[i].width >= ticksArr[i + 1].position - 3) {
+                                rotationAngle = 45;
+                                return true;
+                            }
+                        }
+                        return false;
+                    } else if (maxWidth()*ticksArr.length < width) {
+                        rotationAngle = 0;
+                        return false;
+                    } else {
+                        rotationAngle = 45;
+                        return true;
+                    }
+                };
+
+            var rotation = isRotate();
+
+            if (rotation) {
+                verticalShift = maxWidth() * Math.cos(rotationAngle) + 5;
+                height = widgetHeight - margin.top - margin.bottom - verticalShift;
+
+                updateAxisScales(data);
+                elem.call(redrawAxis, data);
+
+                d3.select(controller.element).select("g.axis").selectAll("g.tick")
+                 .each(function() {
+                 $(d3.select(this).select("text").node()).attr("style", "text-anchor: begin");
+
+                 });
+
+                container.selectAll("text")
+                    .attr("transform", function (d, i) {
+                        var step = controller.state.get("timeTrendStep");
+
+                        if (step === "MINUTE" || step === "HOUR" || step === "DAY" || step === "WEEK" || step === "YEAR") {
+                            return "translate(" + (10) + ", 0) rotate(" + (rotationAngle) + ",0,0)";
+                        } else if (step === "MONTH") {
+                                return "translate(" + 10 + ", 0) rotate(" + (rotationAngle) + ",0,0)";
+                            } else {
+                                return "translate(" + (ticksArr[i].width) + ", 10) rotate(" + (rotationAngle) + ",0,0)";
+                            }
+                        });
+
+            } else {
+                verticalShift = 0;
+                height = widgetHeight - margin.top - margin.bottom - verticalShift;
+
+                updateAxisScales(data);
+                elem.call(redrawAxis, data);
+
+                d3.select(controller.element).select("g.axis").selectAll("g.tick")
+                    .each(function() {
+                        $(d3.select(this).select("text").node()).attr("style", "text-anchor: middle");
+
+                    });
+
+                container.selectAll("text")
+                    .attr("transform", function () {
+                        return "translate(0, 0) rotate(" + (rotationAngle) + ",0,0)";
+                    });
+            }
+        }
+
+        function updateAxisScales(data) {
+            var originalDomain = data.map(function(el){
+                return el.group;
+            });
+
+            xScale.domain(originalDomain)
+                .rangePoints([0, width]);
+
+            // Update the y scale domain
+            var minMetricValue = d3.min(data, function(d) {
+                return d3.min(controller.metrics[LINE_HEIGHT], function(metricData) {
+                    return metricData.raw(d);
+                });
+            });
+            var maxMetricValue = d3.max(data, function(d) {
+                return d3.max(controller.metrics[LINE_HEIGHT], function(metricData) {
+                    return Math.abs(metricData.raw(d));
+                });
+            });
+
+            if (minMetricValue < 0) {
+                var yScaleDomain = [-maxMetricValue, maxMetricValue];
+                yScale.rangeRound([height, 10]).domain(yScaleDomain);
+            } else {
+                var yScaleDomain = [0, maxMetricValue];
+                yScale.rangeRound([height, 10]).domain(yScaleDomain);
+            }
+        }
+
+        // Draw the X and Y Axis for the first time
+        function drawAxis(data) {
+            var xAxisGroup = this.append("g")
+                .attr("class", "x grid")
+                .attr("transform", "translate(0," + yScale(0) + ")")
+                .call(xGrid);
+
+            var yAxisGroup = this.append("g")
+                .attr("class", "y-left-grid")
+                .call(yGrid);
+
+            var yAxisGroup = this.append("g")
+                .attr("class", "y-left-axis")
+                .call(yAxis);
+
+            var xAxisGroup = this.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + yScale(0) + ")")
+                .call(xAxis);
+        }
+
+        // Update the positions and values of the X and Y Axis
+        function redrawAxis() {
+            // Define number of ticks for the y left axis and y left grid
+            var yScaleMin = yScale.domain()[0],
+                yScaleMax = yScale.domain()[1],
+                yScaleInterval = yScaleMax - yScaleMin,
+                tickFactor = 0.017,
+                tickStep = yScaleInterval / (height * tickFactor),
+                tickValues = d3.range(yScaleMin, yScaleMax, Math.abs(tickStep));
+            yAxis.ticks(tickValues.length);
+            yGrid.ticks(tickValues.length);
+
+            // Re-define x and y grid axis with new width and height
+            yGrid.innerTickSize(-width);
+
+            this.select(".x.grid")
+                .attr("transform", "translate(0," + yScale(0) + ")")
+                .call(xGrid);
+
+            // Update the y left axis based on the updated yLeftScale range         
+            this.select(".y-left-axis")
+                .call(yAxis);
+
+            this.select(".y-left-grid")
+                .call(yGrid);
+
+
+            this.select(".x.axis")
+                .attr("transform", "translate(0, " + yScale(0) + ")")
+                .call(xAxis);
+        }
+
+        function makeResponsive() {
+            if(widgetWidth < 500 || widgetHeight < 380) {
+                //medium
+                widgetSize = 'medium';
+                margin.bottom = 20;
+                margin.left = 40;
+            } else {
+                //large
+                widgetSize = 'large';
+                margin.bottom = 20;
+                margin.left = 40;
+            }
+
+        }
+
+        // Setter and getter methods
+        this.margin = function(_) {
+            if (!arguments.length) return margin;
+            margin = _;
+            width = widgetWidth - margin.left - margin.right;
+            height = widgetHeight - margin.top - margin.bottom;
+            return self;
+        };
+
+        this.width = function(_) {
+            if (!arguments.length) return widgetWidth;
+            widgetWidth = _;
+            width = widgetWidth - margin.left - margin.right;
+            makeResponsive();
+            return self;
+        };
+
+        this.height = function(_) {
+            if (!arguments.length) return widgetHeight;
+            widgetHeight = _;
+            height = widgetHeight - margin.top - margin.bottom;
+            makeResponsive();
+            return self;
+        };
+
+        this.maxHeight = function(_) {
+            if (!arguments.length) return maxHeight;
+
+            xGrid.innerTickSize(-_+verticalShift);
+            return self;
+        }
+
+        this.duration = function(_) {
+            if (!arguments.length) return duration;
+            duration = _;
+            return self;
+        };
+
+        this.y = function(_) {
+            if (!arguments.length) return yValue;
+            yValue = _;
+            yAxis.tickFormat(yValue);
+            return self;
+        };
+
+        this.getMargin = function() {
+            return margin;
+        }
+    }
+
+    function drawCanvas() {
+        context.clearRect(0, 0, canvas.node().width, canvas.node().height);
+
+        // select our dummy nodes and draw the data to canvas.
+        var line = lineContainer.selectAll("path.line");
+
+        line.each(function(d) {
+            var node = d3.select(this),
+                fill = node.attr('fill'),
+                path = new CanvablePath(node.attr("d"));
+            context.globalAlpha = 0;
+            context.fillStyle = fill;
+            path.draw(context);
+            context.fill();
+            context.globalAlpha = 1;
+            context.strokeStyle = node.attr("stroke");
+            context.lineWidth = 3;
+            context.stroke();
+        });
+
+        var circle = circlesContainer.selectAll("circle");
+
+        circle.each(function(d, i) {
+            var node = d3.select(this),
+                fill = node.attr('fill');
+
+            context.beginPath();
+            context.globalAlpha = 1;
+            context.arc(node.attr('cx'), node.attr('cy'), 5, 0, 2 * Math.PI, false);
+            context.fillStyle = fill;
+            context.fill();
+            context.lineWidth = 2;
+            context.strokeStyle = node.attr('stroke');
+            context.stroke();
+        });
+
+        return stopAnimation;
+    }
+
+    function stopAnimationAfterDelay(delay) {
+        if(animationTimeoutId) {
+            window.clearTimeout(animationTimeoutId);
+        }
+
+        animationTimeoutId = setTimeout(function() {
+            stopAnimation = true;
+        }, delay);
+    }
+
+    // Add events to canvas
+    function getCoords(e) {
+        var target = e.target || e.srcElement,
+            rect = target.getBoundingClientRect(),
+            offsetX = e.clientX - rect.left,
+            offsetY = e.clientY - rect.top;
+
+        var x = offsetX,
+            y = offsetY;
+
+        return {x: x, y: y};
+    }
+
+    function addClick(e) {
+        /*var x = e.layerX,
+         y = e.layerY;*/
+        var event = null;
+
+        if(e && e.changedTouches){
+            event = e.changedTouches[0];
+        } else {
+            event = e;
+        }
+
+        if (!noData) {
+            var target = event.target || event.srcElement,
+                rect = target.getBoundingClientRect(),
+                offsetX = event.clientX - rect.left,
+                offsetY = event.clientY - rect.top;
+
+            var x = offsetX,
+                y = offsetY;
+
+            // select our dummy nodes and draw the data to canvas.
+            var elements = circlesContainer.selectAll("circle");
+            elements.each(function (d) {
+                var node = d3.select(this);
+
+                context.beginPath();
+                context.arc(node.attr('cx'), node.attr('cy'), node.attr('r'), 0, 2 * Math.PI, false);
+                context.closePath();
+
+                // If browser not detect PixelAspectRatio: x * pixelRatio, y * pixelRatio
+                if (context.isPointInPath(x, y)) {
+                    controller.menu.show({
+                        event: event,
+                        data: function () {
+                            var newD = $.extend({}, d);
+                            return newD;
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+
+    function addMove(e) {
+        var coords = getCoords(e),
+            x = coords.x,
+            y = coords.y;
+
+        if (!noData) {
+            // select our dummy nodes and draw the data to canvas.
+            var elements = circlesContainer.selectAll("circle"),
+                tooltipShown = false;
+
+            elements.each(function (d, i) {
+                var node = d3.select(this);
+
+                context.beginPath();
+                context.arc(node.attr('cx'), node.attr('cy'), node.attr('r'), 0, 2 * Math.PI, false);
+                context.closePath();
+
+                // If browser not detect PixelAspectRatio: x * pixelRatio, y * pixelRatio
+                if (context.isPointInPath(x, y)) {
+                    tooltipShown = true;
+                    styleSettings.alpha[i] = 1;
+
+                    controller.tooltip.show({
+                        event: e,
+                        data: function () {
+                            //var newD = _.clone(d)
+                            var newD = $.extend({}, node.data()[0]),
+                                timeFormat;
+                            var utc = controller.state.isTimeUTC();
+
+                            switch (controller.state.get("timeTrendStep")) {
+                                case "MINUTE":
+                                    timeFormat = utc ?
+                                        d3.time.format.utc("%I:%M"):
+                                        d3.time.format("%I:%M");
+                                    break;
+                                case "HOUR":
+                                    timeFormat = utc ?
+                                        d3.time.format.utc("%I %p"):
+                                        d3.time.format("%I %p");
+                                    break;
+                                case "DAY":
+                                    timeFormat = utc ?
+                                        d3.time.format.utc("%a %d"):
+                                        d3.time.format("%a %d");
+                                    break;
+                                case "WEEK":
+                                    timeFormat = utc ?
+                                        d3.time.format.utc("%b %d"):
+                                        d3.time.format("%b %d");
+                                    break;
+                                case "MONTH":
+                                    timeFormat = utc ?
+                                        d3.time.format.utc("%B"):
+                                        d3.time.format("%B");
+                                    break;
+                                case "YEAR":
+                                    timeFormat = utc ?
+                                        d3.time.format.utc("%Y"):
+                                        d3.time.format("%Y");
+                                    break;
+                            }
+                            newD.group = timeFormat(new Date(newD.group));
+
+                            return newD;
+                        },
+                        color: function () {
+                            return colorScale(d.id);
+                        }
+                    });
+                } else {
+                    styleSettings.alpha[i] = 1;
+                }
+            });
+
+            if (!tooltipShown) {
+                controller.tooltip.hide();
+            }
+        }
+    }
+
+    function addListeners(element, listenersArr) {
+        if (element !== null) {
+            if (controller.isInteractive() && listenersArr.indexOf('click') === -1 && listenersArr.indexOf('touchend') === -1) {
+                if(isTouch) {
+                    element.addEventListener("touchend", addClick, false);
+                    listenersArr.push("touchend");
+                } else {
+                    element.addEventListener("click", addClick, false);
+                    listenersArr.push("click");
+                }
+            }
+            if (listenersArr.indexOf('mousemove') === -1) {
+                element.addEventListener("mousemove", addMove, false);
+                listenersArr.push("mousemove");
+            }
+        }
+    }
+
+    function removeListeners(element) {
+        if (element !== null) {
+            element.removeEventListener("click", addClick);
+            element.removeEventListener("mousemove", addMove);
+            listenersArr = [];
+        }
+    }
+
+    // Listen for grid event
+    //controller.state.metrics.on('add', function() {});
+    //controller.state.metrics.on('remove', function() {});
+
+    function formattedData(data) {
+        var newData = [];
+
+        $.each(controller.metrics[LINE_HEIGHT], function(index, metric) {
+            var sortedData = [];
+            $.each(data, function(i, d) {
+                if ( metric.raw(d) !== null ) {
+                    sortedData.push({
+                        group: d.group,
+                        current: d.current,
+                        id: metric.metric.name
+                    });
+                }
+            });
+            if (sortedData.length !== 0) {
+                newData.push({
+                    key: metric.metric.name,
+                    values: sortedData
+                });
+            }
+        });
+
+        if (newData.length === 1 && newData[0].key === "count") {
+            var sum = 0;
+            for (var i = 0; i < newData[0].values.length; i++ ) {
+                sum += controller.metrics[LINE_HEIGHT][0].raw(newData[0].values[i]);
+            }
+            if (sum === 0) {
+                newData = [];
+            }
+        }
+
+        return newData;
+    }
+
+    function formattedValue(metric, data) {
+        var metric = controller.metrics[metric][0],
+            metricType = metric.get('type'),
+            axisFormatter = d3.format("s"),
+            formattedValue;
+
+        if (!isInt(data)) {
+            axisFormatter = d3.format(",.2f");
+            formattedValue = axisFormatter(data);
+        }
+        else if(metricType === "MONEY") {
+            axisFormatter = d3.format("$s");
+            formattedValue = axisFormatter(data);
+        } else {
+            formattedValue = axisFormatter(data);
+        }
+
+        formattedValue.replace('G', 'B');
+
+        return formattedValue;
+    }
+
+    function initLabels(){
+        controller.createAxisLabel({
+            picks: LINE_HEIGHT,
+            orientation: 'vertical',
+            position: 'left',
+            customClass: 'volume',
+            popoverTitle: 'Bars'
+        });
+        controller.createAxisLabel({
+            picks: 'timeScale',
+            orientation: 'horizontal',
+            position: 'bottom',
+            popoverTitle: 'Time Scale'
+        });
+    }
+    
+    function isTouchDevice() {
+        var bool;
+        var prefixes = window.prefixes || null;
+        if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+            bool = true;
+        } else {
+            if(prefixes){
+                var query = ['@media (',prefixes.join('touch-enabled),('),'heartz',')','{#modernizr{top:9px;position:absolute}}'].join('');
+                testStyles(query, function( node ) {
+                    bool = node.offsetTop === 9;
+                });
+            } else {
+                bool = false;
+            }
+        }
+        return bool;
+    }
+})();
+};}</script><style type="text/css"> [data-col="5"] { left:1289px; }
+ [data-col="4"] { left:968px; }
+ [data-col="3"] { left:647px; }
+ [data-col="2"] { left:326px; }
+ [data-col="1"] { left:5px; }
+ [data-row="5"] { top:534px; }
+ [data-row="4"] { top:401.75px; }
+ [data-row="3"] { top:269.5px; }
+ [data-row="2"] { top:137.25px; }
+ [data-row="1"] { top:5px; }
+ [data-sizey="1"] { height:122.25px; }
+ [data-sizey="2"] { height:254.5px; }
+ [data-sizey="3"] { height:386.75px; }
+ [data-sizey="4"] { height:519px; }
+ [data-sizex="1"] { width:311px; }
+ [data-sizex="2"] { width:632px; }
+ [data-sizex="3"] { width:953px; }
+ [data-sizex="4"] { width:1274px; }
+</style></head>
+
+
+<body class="screenshot_status_ready">
+    
+
+    <div id="unsupportedBrowserWarning" style="display: none; position: relative; margin: auto; width: 320px; top: 25%; border-radius: 16px;
+        background: #eee; padding: 20px; border-bottom-color: #aaa; border-bottom-style: solid;">
+        <div style="text-align:center; text-weight:bold; font-weight: bold; font-size: 1.1em; color: #333;">
+            Update Browser
+        </div>
+        <div style="margin-top:8px;">Zoomdata visualizations require a modern browser. Please see the following link for a list of supported browsers:</div>
+        <div style="margin-top:8px; text-align:center;">
+            <a href="http://support.zoomdata.com/link/portal/30043/30059/Article/20/How-do-my-users-access-my-Zoomdata-Server">http://support.zoomdata.com/</a>
+        </div>
+    </div>
+
+    <div id="connectionLostPopup">
+        <div>Connection lost. Retry in 10 seconds..</div>
+    </div>
+
+    <link type="text/css" rel="stylesheet" href="./Zoomdata_files/zenbox.css">
+
+    <!-- ZOOMDATA SCRIPTS -->
+    <script type="text/javascript" src="./Zoomdata_files/zoomdata-web.browserify.js"></script>
+
+    <!-- Settings -->
+    <script type="text/javascript">
+    /*<![CDATA[*/
+        window.onload = function() {
+            var
+                Zoomdata = window.Zoomdata,
+                pageData = {
+                    root: document.body,
+                    user: {"name":"demo","roles":["custom","ROLE_MANAGE_SOME_SOURCES"],"id":"542c07f6a272524c122e56ac","accountId":"51db7ad3e4b04caf9ab346c5","groupRoles":["ROLE_MANAGE_SOME_SOURCES"],"account":"company","isNew":true},
+                    csrfToken: '0606d981-9789-49a5-83ec-01295a473bb9',
+                    csrfHeaderName: 'X-CSRF-TOKEN',
+                    csrfParameterName: '_csrf',
+                    xWwwAuthHeaderName: 'X-WWW-Authenticate',
+                    xWwwAuth: true,
+                    branding: {"title":"Zoomdata","url":"","customMessage":"","copyright":"On","terms":"","favicon":"","headerLogo":"","loginLogo":"","background":"","customCss":false,"defaultLogo":true,"zdContactLink":"true","zdSupportLink":"true","zdQuickstartLink":"true","zdContactVal":"Contact us with a question","zdSupportVal":"Support Site","zdQuickstartVal":"Show Quickstart Tutorials"},
+                    systemVariables: {"vis-HEAT_MAP":"false","connector-SPARK_SQL":"false","demo-mode":"true","iframes":"true"},
+                    version: {"git":"e5bfab690789b329e321164a414952e247de18d8","ipad":"1.1.4","version":"1.5.0","revision":"01081827"},
+                    userPreferences: [{"id":"54b9bc65d11ca47eab4d7d4a","userId":"542c07f6a272524c122e56ac","key":"showQuickstart","value":"false","accountId":"51db7ad3e4b04caf9ab346c5","description":null,"label":null}, {"id":"537b9f659d998568dcfcd3c3","userId":"0","key":"dashboardLayout","value":"unset","accountId":"51db7ad3e4b04caf9ab346c5","description":null,"label":null}],
+                    screenshotsEnabled: true
+                };
+            var allow_frames = pageData.systemVariables.iframes || false;
+            if((!allow_frames || allow_frames === 'false') && (self !== top)){
+                top.location = self.location;
+            } else {
+                new Zoomdata(pageData);
+            }
+
+        };
+    /*]]>*/
+    </script>
+
+
+
+<div class="zd-main"><section class="zd-main-section" style="top: 0px; bottom: 0px;"><div class="dashboard embedded"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="topPane">
+    <div class="topControls"></div>
+</div>
+<div class="midPane" style="left: 72px; right: 0px; bottom: 55px;"><div class="progressBarBody" style="display: none;"><div class="progressBar animated" style="width: 0px;"></div></div>
+    <div class="dashboard-header" style="display: none">
+        <div class="dashboard-header-label">
+            <span class="dashboard-title  unsaved">Dashboard</span>
+        </div>
+        <div class="dashboard-header-controls">
+            <span class="header-control details" style="display: none;"><i class="zd icon info"></i></span>
+            <span class="header-control filter-control" style="display: inline-block;"><i class="zd icon filter"></i></span>
+            <span class="header-control links-control" style="display:none;"><i class="zd icon link"></i></span>
+            <span class="header-control download-control" style="display: none;"><i class="zd icon download"></i></span>
+        </div>
+        <div class="dashboard-description"><div class="dashboard-description-text "></div></div>
+    </div>
+<div class="zoomable zoomable-disabled" style="-webkit-user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); touch-action: none;"><div class="zoomable-content" style="-webkit-user-select: none;"><div class="ready single"><ul class="gridster unstyled" style="height: 529px; width: 1284px;"><li class="widget well well-small gs-w selectedWidget no-timeTable medium" data-col="1" data-row="1" data-sizex="4" data-sizey="4" data-cid="c160" id="cid-c160" style="display: list-item;"><div style="display: none;"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="data-message-layer no-data-message">
+    No Data for Selected Period
+</div><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="data-message-layer no-data-message">
+    No Data for Selected Period
+</div><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="data-message-layer no-data-message">
+    No Data for Selected Period
+</div></div><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="resizable ui-resizable">
+    <div class="dragHandle">
+        <div class="widgetHead">
+            <div class="widget-label-wrapper ">
+                <span class="widgetHeadLabel">Vehicle Complaints</span>
+                <i class="zd icon fontIcon widget-edit-icon">u</i>
+            </div>
+            <div class="widgetHeadProgress"></div>
+        </div>
+        <div class="header-controls">
+            <span class="header-control details"><i class="zd icon info"></i></span><a class="zd-widget-change-style" style="display: inline-block;">            <i class="zd icon style"></i>        </a>
+            <a class="zd-filter-indicator" style="display: inline-block;"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<i class="zd icon filter"></i></a><span class="header-control remove"><i class="zd icon remove-item"></i></span>
+            <span class="header-control delete" style="display: none">Delete</span>
+            <span class="header-control itemControl"><i class="zd icon fullscreen"></i></span>
+        </div>
+        <div class="applied-filters">
+            <div class="filters-list"><b>City:</b> Chicago; <b>State:</b> Illinois; </div>
+            <div class="expand" style="display: none;">
+                <div class="count-info"></div>
+                <div class="expbtn">Expand</div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="exitFullscreen"><i class="zd icon exit-fullscreen"></i></div>
+    <div class="widgetLoadingIndicator" style="display: none;"></div>
+    <div class="widgetBody" style="top: 35px;"><div class="widgetLabel bottom"><div class="axisLabel inline timeScale" style="display: inline-block; max-width: 609px;">Failtimestamp (year)</div></div><div class="widgetLabel left" style="width: 445px; padding-top: 10px;"><div class="axisLabel vertical volume multi-metric inline" style="display: inline-block; max-width: 609px;">Y1 Axis: (5 selected)</div></div>
+        
+    <div class="widgetContent medium" data-visid="522655af43b6f943f2309bfe" style="left: 36px; bottom: 36px; height: 405px;">
+            <div class="zd-legend ui-draggable" style="display: none;"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="color-key" style="width: auto;">
+    <div class="color-key-content">
+        <div class="color-key-metric-label"><b>City</b></div>
+        <div class="color-key-linear-view">
+            <div class="color-key-scale" style="display: none;"></div>
+            <div class="color-key-labels"></div>
+        </div>
+        <ul class="color-key-list-view unstyled" style=""><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<li class="color-list-item">
+	<div class="color-item" style="background: #b2df8a;"></div>
+Chicago</li></ul>
+    </div>
+</div></div>
+        <svg width="100%" height="100%"><g class="main-group" transform="translate(40,10)"><g class="x grid" transform="translate(0,375)"><g class="tick" transform="translate(0,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(60.421052631578945,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(120.84210526315789,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(181.26315789473682,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(241.68421052631578,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(302.10526315789474,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(362.52631578947364,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(422.9473684210526,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(483.36842105263156,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(543.7894736842105,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(604.2105263157895,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(664.6315789473684,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(725.0526315789473,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(785.4736842105262,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(845.8947368421052,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(906.3157894736842,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(966.7368421052631,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(1027.157894736842,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(1087.578947368421,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><g class="tick" transform="translate(1148,0)" style="opacity: 1;"><line y2="-375" x2="0"></line><text dy=".71em" y="3" x="0" style="text-anchor: middle;"></text></g><path class="domain" d="M0,6V0H1148V6"></path></g><g class="y-left-grid"><g class="tick" transform="translate(0,375)" style="opacity: 1;"><line x2="1148" y2="0"></line><text dy=".32em" x="-3" y="0" style="text-anchor: end;"></text></g><g class="tick" transform="translate(0,320)" style="opacity: 1;"><line x2="1148" y2="0"></line><text dy=".32em" x="-3" y="0" style="text-anchor: end;"></text></g><g class="tick" transform="translate(0,264)" style="opacity: 1;"><line x2="1148" y2="0"></line><text dy=".32em" x="-3" y="0" style="text-anchor: end;"></text></g><g class="tick" transform="translate(0,209)" style="opacity: 1;"><line x2="1148" y2="0"></line><text dy=".32em" x="-3" y="0" style="text-anchor: end;"></text></g><g class="tick" transform="translate(0,154)" style="opacity: 1;"><line x2="1148" y2="0"></line><text dy=".32em" x="-3" y="0" style="text-anchor: end;"></text></g><g class="tick" transform="translate(0,98)" style="opacity: 1;"><line x2="1148" y2="0"></line><text dy=".32em" x="-3" y="0" style="text-anchor: end;"></text></g><g class="tick" transform="translate(0,43)" style="opacity: 1;"><line x2="1148" y2="0"></line><text dy=".32em" x="-3" y="0" style="text-anchor: end;"></text></g><path class="domain" d="M-6,10H0V375H-6"></path></g><g class="y-left-axis"><g class="tick" transform="translate(0,375)" style="opacity: 1;"><line x2="-6" y2="0"></line><text dy=".32em" x="-9" y="0" style="text-anchor: end;">0</text></g><g class="tick" transform="translate(0,320)" style="opacity: 1;"><line x2="-6" y2="0"></line><text dy=".32em" x="-9" y="0" style="text-anchor: end;">20</text></g><g class="tick" transform="translate(0,264)" style="opacity: 1;"><line x2="-6" y2="0"></line><text dy=".32em" x="-9" y="0" style="text-anchor: end;">40</text></g><g class="tick" transform="translate(0,209)" style="opacity: 1;"><line x2="-6" y2="0"></line><text dy=".32em" x="-9" y="0" style="text-anchor: end;">60</text></g><g class="tick" transform="translate(0,154)" style="opacity: 1;"><line x2="-6" y2="0"></line><text dy=".32em" x="-9" y="0" style="text-anchor: end;">80</text></g><g class="tick" transform="translate(0,98)" style="opacity: 1;"><line x2="-6" y2="0"></line><text dy=".32em" x="-9" y="0" style="text-anchor: end;">100</text></g><g class="tick" transform="translate(0,43)" style="opacity: 1;"><line x2="-6" y2="0"></line><text dy=".32em" x="-9" y="0" style="text-anchor: end;">120</text></g><path class="domain" d="M-6,10H0V375H-6"></path></g><g class="x axis" transform="translate(0, 375)"><g class="tick" transform="translate(0,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">1995</text></g><g class="tick" transform="translate(60.421052631578945,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">1996</text></g><g class="tick" transform="translate(120.84210526315789,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">1997</text></g><g class="tick" transform="translate(181.26315789473682,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">1998</text></g><g class="tick" transform="translate(241.68421052631578,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">1999</text></g><g class="tick" transform="translate(302.10526315789474,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2000</text></g><g class="tick" transform="translate(362.52631578947364,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2001</text></g><g class="tick" transform="translate(422.9473684210526,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2002</text></g><g class="tick" transform="translate(483.36842105263156,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2003</text></g><g class="tick" transform="translate(543.7894736842105,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2004</text></g><g class="tick" transform="translate(604.2105263157895,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2005</text></g><g class="tick" transform="translate(664.6315789473684,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2006</text></g><g class="tick" transform="translate(725.0526315789473,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2007</text></g><g class="tick" transform="translate(785.4736842105262,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2008</text></g><g class="tick" transform="translate(845.8947368421052,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2009</text></g><g class="tick" transform="translate(906.3157894736842,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2010</text></g><g class="tick" transform="translate(966.7368421052631,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2011</text></g><g class="tick" transform="translate(1027.157894736842,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2012</text></g><g class="tick" transform="translate(1087.578947368421,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2013</text></g><g class="tick" transform="translate(1148,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="text-anchor: middle" transform="translate(0, 0) rotate(0,0,0)">2014</text></g><path class="domain" d="M0,6V0H1148V6"></path></g></g></svg><canvas width="1228" height="415" style="position: absolute; left: 0px; top: 10px;"></canvas></div><style data-visid="522655af43b6f943f2309bfe" data-componentid="style_css" scoped="">/**
+ * Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+ */
+.axis path,
+.axis line,
+line.x-line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.y-left-axis path,
+.y-left-axis line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 2;
+    shape-rendering: crispEdges;
+}
+
+.grid path,
+.grid line,
+.y-left-grid path,
+.y-left-grid line {
+    fill: none;
+    stroke: #EBEBEB;
+    shape-rendering: crispEdges;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 3px;
+}
+
+.current-period {
+    position: absolute;
+    top: 0;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background: #F6F6F6;
+    -webkit-box-shadow: 2px 2px 1px 0px #A3A6A2;
+    -moz-box-shadow: 2px 2px 1px 0px #A3A6A2;
+    -ms-box-shadow: 2px 2px 1px 0px #A3A6A2;
+    -o-box-shadow: 2px 2px 1px 0px #A3A6A2;
+    box-shadow: 2px 2px 1px 0px #A3A6A2;
+    color: #1F77B4;
+}</style></div>
+    <div class="widgetFooter"><div class="undo-indicator"> <!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="zd icon undo" style="display: block"></div></div><div class="time-table-container"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="time-table">
+    <div class="head-source-name"></div>
+    <div class="head-time-value">
+        <div class="time-table-name" style="display: none;"></div>
+        <div class="time-attribute"></div>
+        <div class="time-element"></div>
+        <div class="time-zone-element"></div>
+    </div>
+</div></div></div>
+<div class="ui-resizable-handle ui-resizable-e" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-s" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 90; display: block;"></div></div>
+</li></ul></div></div></div></div>
+<div class="leftPane">
+    <div class="paneContent"><div class="visualization-control control-button" style="display: block;"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark active" id="controlUndo" style="display: block;">
+    <div class="zd icon undo"></div>  
+    <div class="text">Undo</div> 
+</div></div><div class="visualization-control control-button"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark" id="controlConfigure" style="display: none;">
+    <div class="zd icon configure"></div>
+    <div class="text">Configure</div>
+</div></div><div class="visualization-control control-button"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark" id="controlAttr" style="display: block;">
+    <div class="zd icon attributes"></div>
+    <div class="text">Attributes</div>
+</div></div><div class="visualization-control control-button palette-highlighted"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark" id="controlFilter" style="display: block;">
+    <div class="zd icon filter"></div>
+    <div class="text">Filters</div>
+</div></div><div class="visualization-control control-button"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark" id="controlCompare" style="display: none;">
+    <div class="zd icon compare"></div>
+    <div class="text">Compare</div>
+</div></div><div class="visualization-control control-button"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark" id="controlSort" style="display: none;">
+    <div class="zd icon sort"></div>  
+    <div class="text">Sort &amp; Rank</div>
+</div></div><div class="visualization-control control-button"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark" id="controlColor" style="display: none;">
+    <div class="zd icon color"></div>
+    <div class="text">Color</div>
+</div></div><div class="visualization-control control-button"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark" id="controlStyle" style="display: block;">
+    <div class="zd icon style"></div>  
+    <div class="text">Style</div> 
+</div></div><div class="visualization-control control-button"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-dark" id="controlTimePlayer" style="display: none;">
+    <div class="zd icon time"></div>  
+    <span class="text">Time Player</span> 
+</div></div></div>
+</div>
+<div class="rightPane hidden" style="height: 0px;">
+    <div class="paneContent"></div>
+</div>
+<div class="bottomPane">
+        <div class="paneContent" style="table-layout: auto;"><div class="visualization-control control-button left"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="footer-control control-button footer-control-button-small control-light" id="controlTime" style="display: none;">
+    <div class="zd icon time"></div>
+</div></div><div class="visualization-control control-button left pause-play"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="footer-control paused-control control-button footer-control-button-small control-light" id="controlPaused" style="display: none;">
+    <!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="zd icon zd-pause"></div>
+</div></div><div class="visualization-control control-button left"></div><div class="visualization-control timeLine" style="display: none;"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="timeLine-control control-light" style="min-width: 992px; display: none;">    
+    <div class="timeLine-slider-container footer-control">
+        <div class="timeLine-slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="zd-available-range"></div><div class="zd-current-range"></div>   
+        <a class="ui-slider-handle ui-state-default ui-corner-all" href="https://live2.zoomdata.com/zoomdata/visualization?__target=embedded&amp;key=546ca53ae4b0f6e2257e3295#" style="left: 0%;"><div class="slider-tooltip" style="display: none;"></div></a></div>  
+        <div class="control-live-indicator"></div>
+    </div>
+</div> </div><div class="visualization-control timeRange"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="timeLine-control control-light table">    
+    <div class="timeLine-slider-container">
+        <div class="timeLine-slider ui-rangeSlider ui-rangeSlider-noArrow ui-dateRangeSlider" style="position: relative;">   
+        <div class="ui-rangeSlider-container" style="position: absolute; width: 1245px;"><div class="ui-rangeSlider-innerBar" style="position: absolute; top: 0px; left: 0px; width: 1245px;"></div><div class="ui-rangeSlider-bar" style="position: absolute; top: 0px; z-index: 1004; width: 1245px; left: -1.00226px;"></div><div class="ui-rangeSlider-handle ui-rangeSlider-leftHandle" style="position: absolute; top: 0px; z-index: 1003; left: -1.00838px;"><div class="ui-rangeSlider-handle-inner"></div></div><div class="ui-rangeSlider-handle ui-rangeSlider-rightHandle" style="position: absolute; top: 0px; z-index: 1003; left: 1234.01px;"><div class="ui-rangeSlider-handle-inner"></div></div></div><div class="ui-rangeSlider-arrow ui-rangeSlider-leftArrow" style="position: absolute; left: 0px; display: none;"><div class="ui-rangeSlider-arrow-inner"></div></div><div class="ui-rangeSlider-arrow ui-rangeSlider-rightArrow" style="position: absolute; right: 0px; display: none;"><div class="ui-rangeSlider-arrow-inner"></div></div><div class="ui-rangeSlider-label ui-rangeSlider-leftLabel" style="position: absolute; display: block; left: -20px;"><div class="ui-rangeSlider-label-value">1995</div><div class="ui-rangeSlider-label-inner"></div></div><div class="ui-rangeSlider-label ui-rangeSlider-rightLabel" style="position: absolute; display: block; right: -18px;"><div class="ui-rangeSlider-label-value">2014</div><div class="ui-rangeSlider-label-inner"></div></div></div>  
+    </div>
+</div> </div></div>
+</div>
+</div></section><footer class="zd-main-footer"></footer></div><div class="zd-radial-menu" style="left: 1272px; top: 121px;"></div><div class="zd notification alert  alert-error" style="display: none;"></div><div class="zd-modal sidepane" style="display: none;"> 
+    <div class="zd-side-pane">
+        <div class="zd-side-pane-loading" style="display: none;"></div>
+        <div class="zd-side-pane-header" style="display: block;"><div class="row-fluid zd-searchbox"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-group">
+    <div class="zd icon magnifying-glass"></div> 
+    <input type="text" class="search-query input-block-level" name="needle" value="">
+</div> </div><div class="zd-tabbar-head"><button value="segment" class="zd btn btn-link active" style="width: 49%;">
+    <div class="zd icon bookmark" style="display:"></div> 
+    <div class="text">Favorites</div>
+</button><button value="segment" class="zd btn btn-link" style="width: 49%;">
+    <div class="zd icon connectors" style="display:"></div> 
+    <div class="text">Data Sources</div>
+</button></div><div class="row-fluid zd-sortby"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="zd icon switcher"> 
+    <div class="zd icon up true" switcher="up"></div>
+    <div class="zd icon down false" switcher="down"></div>
+</div>
+<div class="sortText"><span>Sort by</span> 
+    <span class="currentSort"><b>Name</b></span>
+</div> </div></div>
+        <div class="zd-side-pane-body" style="display: block;"><div class="zd-tabbar"></div></div>
+    </div>
+</div><div style="display: none;">
+    <div class="zd-side-pane">
+        <div class="zd-side-pane-header"></div>
+        <button value="closeSidePane" class="close">×</button>
+        <div class="zd-side-pane-body"></div>
+    </div>
+</div><div class="zd-modal sidepane" style="display: none;"> 
+    <div class="zd-side-pane">
+        <div class="zd-side-pane-loading" style="display: none;"></div>
+        <div class="zd-side-pane-header" style="display: block;"><div class="row-fluid zd-searchbox"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="control-group">
+    <div class="zd icon magnifying-glass"></div> 
+    <input type="text" class="search-query input-block-level" name="needle" value="">
+</div> </div><div class="zd-tabbar-head"><button value="segment" class="zd btn btn-link active" style="width: 49%;">
+    <div class="zd icon bookmark" style="display:"></div> 
+    <div class="text">Favorites</div>
+</button><button value="segment" class="zd btn btn-link" style="width: 49%;">
+    <div class="zd icon connectors" style="display:"></div> 
+    <div class="text">Data Sources</div>
+</button></div><div class="row-fluid zd-sortby"><!--
+    Copyright (C) Zoomdata, Inc. 2012-2014. All rights reserved.
+-->
+<div class="zd icon switcher"> 
+    <div class="zd icon up true" switcher="up"></div>
+    <div class="zd icon down false" switcher="down"></div>
+</div>
+<div class="sortText"><span>Sort by</span> 
+    <span class="currentSort"><b>Name</b></span>
+</div> </div></div>
+        <div class="zd-side-pane-body" style="display: block;"><div class="zd-tabbar"></div></div>
+    </div>
+</div><div style="display: none;">
+    <div class="zd-side-pane">
+        <div class="zd-side-pane-header"></div>
+        <button value="closeSidePane" class="close">×</button>
+        <div class="zd-side-pane-body"></div>
+    </div>
+</div><div class="zd_controls_tooltip_container" id="tid_097d97042983fdd0b0513b4bd08414e9" style="display: none; left: 309px; top: 410px; margin: 0px;"></div><div class="zd_controls_tooltip_container" id="tid_df35d00737ac197b935c2aa47cacc3cb" style="display: none; left: 1227px; top: 159px; margin: 0px;"></div><style>#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_shape{ opacity:1;  background-color:white;  border:2px solid #939393;  border-radius:12px ; }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.corner{ width:18px ;  height:36px ; }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.corner.right{ right:-2px ; }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.corner.left{ left:-2px ;  transform:scaleX(-1); }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.corner.top{ top:-19px ; }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.corner.bottom{ transform:scaleY(-1);  bottom:-19px ; }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.corner.bottom.left{ transform:scaleY(-1) scaleX(-1);  bottom:-19px ; }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.between{ width:18px ;  height:54px ; }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.between.right{ margin:-27px  0px  0 0;  right:-18px ; }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.between.left{ margin:-27px 0 0 0px ;  left:-18px ;  transform:scaleX(-1); }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.between.top{ top:-36px ;  left:50%;  margin:0 0 0 -10px ;  transform:rotate(-90deg); }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_tail.between.bottom{ bottom:-36px ;  left:50%;  margin:0 0 0 -10px ;  transform:rotate(90deg); }#tid_df35d00737ac197b935c2aa47cacc3cb .zd_controls_tooltip_stroke{ stroke:#939393;  fill:white;  stroke-width:2px ;  stroke-linecap:round; }</style><style>#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_shape{ opacity:1;  background-color:white;  border:2px solid #939393;  border-radius:12px ; }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.corner{ width:18px ;  height:36px ; }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.corner.right{ right:-2px ; }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.corner.left{ left:-2px ;  transform:scaleX(-1); }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.corner.top{ top:-19px ; }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.corner.bottom{ transform:scaleY(-1);  bottom:-19px ; }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.corner.bottom.left{ transform:scaleY(-1) scaleX(-1);  bottom:-19px ; }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.between{ width:18px ;  height:54px ; }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.between.right{ margin:-27px  0px  0 0;  right:-18px ; }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.between.left{ margin:-27px 0 0 0px ;  left:-18px ;  transform:scaleX(-1); }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.between.top{ top:-36px ;  left:50%;  margin:0 0 0 -10px ;  transform:rotate(-90deg); }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_tail.between.bottom{ bottom:-36px ;  left:50%;  margin:0 0 0 -10px ;  transform:rotate(90deg); }#tid_097d97042983fdd0b0513b4bd08414e9 .zd_controls_tooltip_stroke{ stroke:#939393;  fill:white;  stroke-width:2px ;  stroke-linecap:round; }</style></body></html>
