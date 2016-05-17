@@ -235,6 +235,12 @@ path.hover {
   stroke-width: 1500px;
   cursor: pointer;
 }
+path.hover {
+  stroke-opacity: .5;
+  stroke: crimson;
+  stroke-width: 1500px;
+  cursor: pointer;
+}
 path.active {
   stroke: black !important;
   stroke-width: 1500px;
@@ -326,4 +332,17 @@ section.age .figures {
 #map .loading {
   margin: 300px auto;
   display: block;
+}
+
+path { fill-rule: evenodd; }
+g#svg_municipios {
+  stroke: #001;
+  stroke-width: 0.3;
+  cursor: pointer; 
+  fill: #FFF;
+}
+g#svg_municipios path:hover {
+  fill-opacity: 1; 
+  stroke-width: 3;
+
 }
