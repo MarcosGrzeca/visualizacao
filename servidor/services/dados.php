@@ -13,7 +13,6 @@ class Dados {
 		$municipio = new Municipio();
 		
 		while ($obj = $dados->getRegistro()) {
-			debug($obj);
 			if (!isset($resultado[$obj["codmunres"]])) {
 				$resultado[$obj["codmunres"]] = array("ocorrencias" => 0, "anos" => array());
 				$resultado[$obj["codmunres"]]["nome"] = trim($obj["munnome"]);
@@ -21,9 +20,15 @@ class Dados {
 			}
 			$resultado[$obj["codmunres"]]["ocorrencias"] += $obj["ocorrencias"];
 			$resultado[$obj["codmunres"]]["anos"][$obj["anobase"]] = $obj["ocorrencias"];
-			$resultado[$obj["codmunres"]]["opacity"] = 15;
-			$resultado[$obj["codmunres"]]["proporcao"] = 20;
+			$resultado[$obj["codmunres"]]["opacity"] = 0;
+			//$resultado[$obj["codmunres"]]["proporcao"] = $resultado[$obj["codmunres"]]["ocorrencias"] / $resultado[$obj["codmunres"]]["populacao"];
+			$resultado[$obj["codmunres"]]["proporcao"] = ($resultado[$obj["codmunres"]]["ocorrencias"] * 100000) / $resultado[$obj["codmunres"]]["populacao"];
 		}
+														
+
+
+
+		debug($resultado);
 		return $resultado;
 	}
 }
