@@ -73,7 +73,7 @@ Map = (function ($) {
   };
 
   function _loadEstupros(callback) {
-    $.getJSON('../data/dados_estupros2.json', function (data) {
+    $.getJSON('http://localhost/visualizacao/servidor/dados.php', function (data) {
       Mortes = data;
       callback();
     });
@@ -171,5 +171,5 @@ Map = (function ($) {
 
 $(document).ready(function () {
   //Map.initialize($('#map'), '../data/RioGrandedoSul_MesoMicroMunicip.svg');
-  Map.initialize($('#map'), '../data/Mapa_Rio_Grande_do_Sul.svg');
+  Map.initialize($('#map'), 'interface/mapa/Mapa_Rio_Grande_do_Sul.svg');
 });
