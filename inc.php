@@ -12,7 +12,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
 require_once(SYSTEM_DIR . "servidor/utils/FirePHPCore/fb.php");
 require_once(SYSTEM_DIR . "servidor/utils/functions.php");
-require_once(SYSTEM_DIR . "model/persistencia/conexao.php");
+require_once(SYSTEM_DIR . "servidor/model/persistencia/conexao.php");
 
 $conexao = new Conexao();
 ?>

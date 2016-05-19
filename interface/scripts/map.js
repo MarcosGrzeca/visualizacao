@@ -10,7 +10,7 @@ Map = (function ($) {
       _loadEstupros(function () {
         var focusedElementSlug = window.location.hash.replace('#', '');
         // Use Soledade as default
-        if (focusedElementSlug == '') { focusedElementSlug = 'soledade'; };
+        if (focusedElementSlug == '') { focusedElementSlug = 'caxias'; };
         _focusInto(focusedElementSlug);
         _drawBars();
         _colorRegions();
@@ -47,25 +47,25 @@ Map = (function ($) {
     var cidade = Mortes[codigo];
     if (!cidade) { return; }
 
-    var day = Math.round(100 * cidade.pela_manha / cidade.ocorrencias),
+    /*var day = Math.round(100 * cidade.pela_manha / cidade.ocorrencias),
     night = 100 - day,
     ranking = _keysSortedByOpacity().indexOf(codigo) + 1,
     proporcao = cidade.proporcao,
     home = Math.round((100 * cidade.local.residencia) / cidade.ocorrencias),
     street = Math.round((100 * cidade.local.via_publica) / cidade.ocorrencias),
     others = 100 - home - street;
-
+*/
     $('#info h3').text(cidade.nome);
-    $('.population em').text(_formatNumber(cidade.populacao));
-    $('.victim em').text(cidade.media_idade_vitima);
+    $('.population em').text(cidade.populacao);
+    /*$('.victim em').text(cidade.media_idade_vitima);
     $('.author em').text(cidade.media_idade_autor);
     $('.night em').text(night+'%');
     $('.day em').text(day+'%');
     $('.home em').text(home+'%');
     $('.street em').text(street+'%');
     $('.others em').text(others+'%');
-    $('.ranking em').text(ranking+'ª');
-    $('.proporcao em').text(proporcao);
+    $('.ranking em').text(ranking+'ª');*/
+    //$('.proporcao em').text(proporcao);
   };
 
   function _formatNumber(number) {
@@ -73,7 +73,9 @@ Map = (function ($) {
   };
 
   function _loadEstupros(callback) {
-    $.getJSON('http://localhost/visualizacao/servidor/dados.php', function (data) {
+    //$('input[name=cid]:checked').val();
+    //$.getJSON('data/dados_estupros2.json', function (data) {
+    $.getJSON('http://localhost/visualizacao/servidor/dados.php?cid=' + $('input[name=cid]:checked').val(), function (data) {
       Mortes = data;
       callback();
     });
@@ -95,7 +97,6 @@ Map = (function ($) {
   };
 
   function _colorRegions() {
-    //console.log(o.ordinal(10));
     $("#svg_4305108").css("fill", "rgba(153,0,0,0.2)");
     $("#svg_4302105").css("fill", "rgba(153,0,0,0.1)");
     d3.selectAll('.bar-graph li')
@@ -148,8 +149,6 @@ Map = (function ($) {
 
   function _draw_timeline(cod) {
     var regiao = Mortes[cod];
-    console.log(Mortes);
-    console.log(cod);
     var years = [];
     $.each(regiao.anos, function(i, v) {
       years.push(v);
