@@ -11,7 +11,7 @@ class Dados {
 		$dados->montarMapa($cid);
 
 		$municipio = new Municipio();
-		
+		$maximaProporcao = 0;		
 		while ($obj = $dados->getRegistro()) {
 			if (!isset($resultado[$obj["codmunres"]])) {
 				$resultado[$obj["codmunres"]] = array("ocorrencias" => 0, "anos" => array());
@@ -22,12 +22,9 @@ class Dados {
 			$resultado[$obj["codmunres"]]["anos"][$obj["anobase"]] = $obj["ocorrencias"];
 			$resultado[$obj["codmunres"]]["opacity"] = 0;
 			//$resultado[$obj["codmunres"]]["proporcao"] = $resultado[$obj["codmunres"]]["ocorrencias"] / $resultado[$obj["codmunres"]]["populacao"];
-			$resultado[$obj["codmunres"]]["proporcao"] = ($resultado[$obj["codmunres"]]["ocorrencias"] * 100000) / $resultado[$obj["codmunres"]]["populacao"];
+			$resultado[$obj["codmunres"]]["proporcao"] = ($resultado[$obj["codmunres"]]["ocorrencias"] * 100000) / ($resultado[$obj["codmunres"]]["populacao"] * count($resultado[$obj["codmunres"]]["anos"]));
 		}
-														
-
-
-
+		
 		debug($resultado);
 		return $resultado;
 	}
