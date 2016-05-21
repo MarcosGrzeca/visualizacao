@@ -3,7 +3,7 @@ body {
   padding: 0;
   background: #ffe url(../images/background-texture.png) repeat scroll left top;
   font-size: 100%;
-  font-family: Rokkitt, Georgia, serif;
+  font-family: serif;
 }
 * {
   box-sizing: border-box;
@@ -140,7 +140,7 @@ body {
   font-weight: 900;
   text-align: right;
   display: inline-block;
-  background-color: rgba(220, 20, 60, .8);
+  /*background-color: rgba(220, 20, 60, .8);*/
   font-size: .85em;
   height: 2em;
   cursor: pointer;
@@ -148,8 +148,8 @@ body {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  color: #000;
-  text-shadow: rgba(0,0,0,.3) 0 -1px 0;
+  color: #FFF;
+  text-shadow: none;
 }
 .bar-graph .meter:hover,
 .bar-graph .hover .meter,
@@ -160,7 +160,12 @@ body {
 #info {
   margin-top: 20px;
   margin-right: 340px;
-  background: crimson;
+  background: mediumslateblue;
+  /*
+  darkcyan
+  darkseagreen  
+  darkslateblue
+  */
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
@@ -195,6 +200,11 @@ h3 {
 #info div.ratio {
   margin-top: 56px;
 }
+
+#info div.timeline {
+  color: #FFF;
+}
+
 #info div.timeline {
   margin-top: 8px;
 }
@@ -225,77 +235,17 @@ h3 {
   height: 600px;
   width: 600px;
 }
-path.str3 {
-  fill: crimson;
-  fill-opacity: 0;
-}
+/*
 path.hover {
   stroke-opacity: .5;
   stroke: crimson;
   stroke-width: 1500px;
   cursor: pointer;
-}
-path.hover {
-  stroke-opacity: .5;
-  stroke: crimson;
-  stroke-width: 1500px;
-  cursor: pointer;
-}
+}*/
 path.active {
-  stroke: black !important;
-  stroke-width: 1500px;
-  stroke-opacity: .5;
+  stroke-width: 3px;
+  stroke-opacity: 1;
   cursor: default;
-}
-/* icons */
-.icons-wrapper {
-  text-align: center;
-}
-.icon {
-  background-color: transparent;
-  background-image: url(../images/sprite.png);
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-}
-.icon.sun,
-.icon.moon {
-  width: 36px;
-  height: 36px;
-  display: inline-block;
-}
-.icon.victim,
-.icon.author {
-  width: 50px;
-  height: 49px;
-  display: block;
-}
-.icon.home,
-.icon.street,
-.icon.others {
-  width: 36px;
-  height: 36px;
-  display: inline-block;
-}
-.icon.sun {
-  background-position: -72px 0;
-}
-.icon.moon {
-  background-position: 0 0;
-}
-.icon.victim {
-  background-position: -149px 0;
-}
-.icon.author {
-  background-position: -249px 0;
-}
-.icon.home {
-  background-position: -450px 0;
-}
-.icon.street {
-  background-position: -396px 0;
-}
-.icon.others {
-  background-position: -350px 0;
 }
 
 /* DASHBOARD */
@@ -344,5 +294,4 @@ g#svg_municipios {
 g#svg_municipios path:hover {
   fill-opacity: 1; 
   stroke-width: 3;
-
 }

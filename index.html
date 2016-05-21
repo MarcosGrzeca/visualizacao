@@ -1,107 +1,114 @@
 <!doctype html>
 <html lang="pt-br">
-  <head>
-    <meta charset="utf-8">
-    <title>Mortalidade no Rio Grande do Sul</title>
-    <link rel="stylesheet" href="interface/estilos/main.css">
-  </head>
-  <body>
-    <div class="header">
-      <div class="wrapper">
-        <h1>Mortalidade no Rio Grande do Sul</h1>
-      </div>
+<head>
+  <meta charset="utf-8">
+  <title>Mortalidade no Rio Grande do Sul</title>
+  <link rel="stylesheet" href="interface/estilos/main.css">
+</head>
+<body>
+  <div class="header">
+    <div class="wrapper">
+      <h1>Mortalidade no Rio Grande do Sul</h1>
     </div>
-    <div class="main">
-      <div class="wrapper">
-        <div id="filtros">
-            <div style="min-height:235px" class="box box-content">
-                <h4 class="page-header">CID <sup><i class="fa fa-asterisk txt-warning small tamanho-obrigatorio"></i></sup></h4>
-                <div class="row form-group">
-                    <div class="col-sm-12">
-                      <div class="radio">
-                            <label>
-                                <input type="radio" checked="" value="" name="cid">Todas as doenças
-                                <i class="fa fa-circle-o small"></i>
-                            </label>
-                        </div>  
-                        <div class="radio">
-                            <label>
-                                <input type="radio" value="A00-B99" name="cid">Doenças infecciosas e parasitárias (A00-B99)
-                                <i class="fa fa-circle-o small"></i>
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" value="C00-D48" name="cid">Neoplasias (C00-D48)
-                                <i class="fa fa-circle-o small"></i>
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" value="I00-I99" name="cid">Doenças do aparelho circulatório (I00-I99)
-                                <i class="fa fa-circle-o small"></i>
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" value="J00-J99" name="cid">Doenças do aparelho respiratório (J00-J99)
-                                <i class="fa fa-circle-o small"></i>
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" value="P00-P96" name="cid">Afecções originadas no período perinatal (P00-P96)
-                                <i class="fa fa-circle-o small"></i>
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" value="V01-Y98" name="cid">Causas externas (V01-Y98)
-                                <i class="fa fa-circle-o small"></i>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <button onclick="atualizarGrafico()">Atualizar</button>
-        <div class="bar-graph">
-          <h3>Cidades com maiores índices</h3>
-        </div>
-        <div id="info">
-          <div id="dashboard-header">
-            <div class="region-data">
-              <p class="population">População: <em></em></p>
-            </div>
-            <h3></h3>
-          </div>
-          <div id="dashboard-bar">
-              <div class="timeline">
-                <p>Mortes por ano (1995-2005)<br><span></span></p>
+  </div>
+  <div class="main">
+    <div class="wrapper">
+      <div id="filtros">
+        <div style="min-height:235px" class="box box-content">
+          <h4 class="page-header">CID <sup><i class="fa fa-asterisk txt-warning small tamanho-obrigatorio"></i></sup></h4>
+          <div class="row form-group">
+            <div class="col-sm-12">
+              <div class="radio">
+                <label>
+                  <input type="radio" checked="" value="" name="cid">Todas as doenças
+                  <i class="fa fa-circle-o small"></i>
+                </label>
+              </div>  
+              <div class="radio">
+                <label>
+                  <input type="radio" value="A00-B99" name="cid">Doenças infecciosas e parasitárias (A00-B99)
+                  <i class="fa fa-circle-o small"></i>
+                </label>
               </div>
-            </section>
-            <section class="ranking">
-              <p>Ranking</p>
-              <p class="ranking" title="Entre as mais violentas do estado"><em></em> /35</p>
-              <div class="ratio">
+              <div class="radio">
+                <label>
+                  <input type="radio" value="C00-D48" name="cid">Neoplasias (C00-D48)
+                  <i class="fa fa-circle-o small"></i>
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" value="I00-I99" name="cid">Doenças do aparelho circulatório (I00-I99)
+                  <i class="fa fa-circle-o small"></i>
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" value="J00-J99" name="cid">Doenças do aparelho respiratório (J00-J99)
+                  <i class="fa fa-circle-o small"></i>
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" value="P00-P96" name="cid">Afecções originadas no período perinatal (P00-P96)
+                  <i class="fa fa-circle-o small"></i>
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" value="V01-Y98" name="cid">Causas externas (V01-Y98)
+                  <i class="fa fa-circle-o small"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="atualizarGrafico()">Atualizar</button>
+      <div class="bar-graph">
+        <h3>Cidades com maiores índices</h3>
+      </div>
+      <div id="info">
+        <div id="dashboard-header">
+          <h3></h3>
+        </div>
+        <section>
+          <table style="width:100%">
+            <tr>
+              <td style="width:33%" class="ranking">
+                <p>Ranking</p>
+                <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span id="numTotalCidades"></span></p>
+              </td>
+              <td style="width:33%">
                 <p>Mortes</p>
                 <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
-              </div>
-            </section>
-            </div>
-        </div>
-        <div id="map">
-          <img src="interface/images/spinner.gif" class="loading" alt="spinner">
-        </div>
+              </td>
+              <td style="width:33%">
+                <p>População</p>
+                <p class="population"><em></em></p>
+              </td>
+            </tr>
+          </table>  
+        </section>
+        <div id="dashboard-bar">
+          <div class="timeline">
+            <p>Mortes por ano (1995-2005)<br><span></span></p>
+          </div>
+        </section>
       </div>
     </div>
-    
+    <div id="map">
+      <img src="interface/images/spinner.gif" class="loading" alt="spinner">
+    </div>
   </div>
-  <script src="interface/libs/jquery-1.7.2.min.js"></script>
-  <script src="interface/libs/d3.v2.min.js"></script>
-  <script src="interface/libs/jquery.sparkline.min.js"></script>
-  <script src="interface/scripts/map.js"></script>
-  <script src="interface/scripts/utils.js"></script>
-  </body>
+</div>
+
+</div>
+<script src="interface/libs/jquery-1.7.2.min.js"></script>
+<script src="interface/libs/d3.min.js"></script>
+<script src="interface/libs/jquery.sparkline.min.js"></script>
+<script src="interface/scripts/map.js"></script>
+<script src="interface/scripts/utils.js"></script>
+</body>
 </html>
