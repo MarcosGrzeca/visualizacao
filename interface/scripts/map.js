@@ -118,9 +118,9 @@ Map = (function ($) {
       var tops = [];
       var ind = 0;
       $.each(valores, function(key, value) {
-        if (ind <= 19) {
+        if (ind <= 9) {
           tops.push(value);
-        } else if (ind > Object.keys(Mortes).length - 19) {
+        } else if (ind > Object.keys(Mortes).length - 9) {
           tops.push(value);
         }
         ind++;
