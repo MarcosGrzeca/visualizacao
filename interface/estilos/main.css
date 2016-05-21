@@ -295,3 +295,9 @@ g#svg_municipios path:hover {
   fill-opacity: 1; 
   stroke-width: 3;
 }
+
+.bar-graph ul {
+  overflow: auto; 
+  max-height: 800px;
+  width: 400px;
+}
