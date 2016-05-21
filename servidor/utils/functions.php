@@ -25,4 +25,33 @@ function debug($msg, $tipo = ""){
     }   
 }
 
+function gerarCvs($array){
+    $csv = "";
+    $csv .= chr(0xEF).chr(0xBB).chr(0xBF);
+    foreach($array as $linha){
+        $linhaCsv = "";
+        foreach($linha as $value){
+            if($linhaCsv != ""){
+                $linhaCsv .= ";";
+            }
+            $linhaCsv .= '"'.$value.'"';
+        }
+        $csv .= $linhaCsv.chr(13).chr(10);
+    }
+    return $csv;
+}  
+function gerarCvsLinha($linha){
+    $csv = "";
+    //$csv .= chr(0xEF).chr(0xBB).chr(0xBF);
+    $linhaCsv ="";
+    foreach($linha as $value){
+        if($linhaCsv != ""){
+            $linhaCsv .= ",";
+        }
+        $linhaCsv .= '"'.$value.'"';
+    }
+    
+    $csv .= $linhaCsv.chr(13).chr(10);
+    return $csv;
+}
 ?>

@@ -11,6 +11,14 @@ class DadosModel extends ResultListModel {
 		"WHERE s.codmunres <> '4300000' ". 
 		"GROUP BY s.codmunres, s.anobase, mun.munnome ";
 		//"LIMIT 100";
+		$this->result = executaSql($query);  
+	}
+
+	function obterScatterParaMunicipio($idMunicipio) {
+		$query = "SELECT dtobito, sexo, causabas, anobase, idade " .
+			 "FROM sim_rs ". 
+			 "WHERE codmunres = '" . $idMunicipio . "' ";
+			 //"LIMIT 10";
 		debug($query);
 		$this->result = executaSql($query);  
 	}
