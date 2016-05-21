@@ -32,14 +32,19 @@ Map = (function ($) {
     d3.selectAll('.'+id).classed(className, true);
   };
 
+  function _getIdSelecionado() {
+      var id = this.id;
+      return id.replace(/.*_/, '');
+  }
+
   function _selectRegion() {
     try {
       var id = this.id,
       codigo = id.replace(/.*_/, '');
-
       _classOnlyThisAs(id, 'active');
       _draw_timeline(codigo);
       _showInfo(codigo);
+      _montarScatterPlot(codigo);
       window.location.hash = $.slug(Mortes[codigo].nome);
     } catch (e) {
 
@@ -177,6 +182,12 @@ Map = (function ($) {
         console.log(Mortes);
         console.log(cod);
       }
+    };
+
+    function _montarScatterPlot(codigo) {
+      console.log(codigo);
+      var sm = new ScatterMatrix('servidor/dados_scatter.csv');
+      sm.render();
     };
 
     return {
