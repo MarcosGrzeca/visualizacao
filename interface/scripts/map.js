@@ -44,7 +44,7 @@ Map = (function ($) {
       _classOnlyThisAs(id, 'cidade_ativa');
       _draw_timeline(codigo);
       _showInfo(codigo);
-      _montarScatterPlot(codigo);
+      //_montarScatterPlot(codigo);
       window.location.hash = $.slug(Mortes[codigo].nome);
     } catch (e) {
 

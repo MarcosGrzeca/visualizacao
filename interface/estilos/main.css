@@ -204,6 +204,10 @@ h3 {
   color: #FFF;
 }
 
+#info {
+  padding: 10px;
+}
+
 #info div.timeline {
   margin-top: 8px;
 }
