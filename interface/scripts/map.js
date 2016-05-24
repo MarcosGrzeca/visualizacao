@@ -186,14 +186,15 @@ Map = (function ($) {
       }
     };
 
-    function _montarScatterPlot(codigo) {
-      console.log(codigo);
+    function montarScatterPlot() {
+      codigo = _getIdSelecionado();
       var sm = new ScatterMatrix('servidor/dados_scatter.csv', undefined, "scatterPlot");
       sm.render();
     };
 
     return {
-      'initialize': initialize
+      'initialize': initialize,
+      "montarScatterPlot" : montarScatterPlot
     };
   })(jQuery);
 
