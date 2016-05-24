@@ -301,3 +301,8 @@ g#svg_municipios path:hover {
   max-height: 800px;
   width: 400px;
 }
+
+
+.hide {
+  display: none;
+}

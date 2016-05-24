@@ -11,3 +11,9 @@ $.slug = (function () {
   
   return function (s) { return s.replace(chars_rgx, lookup).toLowerCase(); }
 })();
+
+
+function exibirGraficosPorMunicipio() {
+	$(".porMunicipio").removeClass("hide");
+	$(".visaoGeral").addClass("hide");
+}

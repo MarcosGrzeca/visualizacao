@@ -186,7 +186,7 @@ Map = (function ($) {
 
     function _montarScatterPlot(codigo) {
       console.log(codigo);
-      var sm = new ScatterMatrix('servidor/dados_scatter.csv');
+      var sm = new ScatterMatrix('servidor/dados_scatter.csv', undefined, "scatterPlot");
       sm.render();
     };
 
