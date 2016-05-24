@@ -17,3 +17,11 @@ function exibirGraficosPorMunicipio() {
 	$(".porMunicipio").removeClass("hide");
 	$(".visaoGeral").addClass("hide");
 }
+
+function wait() {
+  $(".loader").removeClass("hide");
+}
+
+function closeWait() {
+  $(".loader").addClass("hide");
+}
