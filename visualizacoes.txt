@@ -54,3 +54,15 @@ view-source:https://live2.zoomdata.com/zoomdata/visualization?__target=embedded&
 https://live2.zoomdata.com/zoomdata/visualization?__target=embedded&key=546ca53ae4b0f6e2257e3295#54292b07e4b011a99e1252ba-5411ace4e4b065842f0df36e
 
 https://en.wikipedia.org/wiki/File:Mapa_Rio_Grande_do_Sul.svg
+
+
+
+
+http://bl.ocks.org/kerryrodden/raw/7090426/
+http://bl.ocks.org/kerryrodden/7090426
+http://mbostock.github.io/d3/talk/20111018/partition.html
+http://rud.is/outage/
+http://mlvl.github.io/Hierarchie/#/
+http://mbostock.github.io/d3/talk/20111116/bar-hierarchy.html
+
+https://gist.github.com/kerryrodden/7090426
