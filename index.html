@@ -5,6 +5,14 @@
   <title>Mortalidade no Rio Grande do Sul</title>
   <link rel="stylesheet" href="interface/estilos/main.css">
   <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
+
+  <link href="interface/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="interface/estilos/fonts/awesome/font-awesome.css" rel="stylesheet">
+  <link href='interface/estilos/fonts/css.css' rel='stylesheet' type='text/css'>
+
+  <link href="interface/estilos/style.css" rel="stylesheet">
+  <link href="interface/estilos/estilo.css" rel="stylesheet">
+
 </head>
 <body>
   <div class="header">
@@ -67,7 +75,7 @@
           </div>
         </div>
 
-        <button onclick="atualizarGrafico()">Atualizar</button>
+        <button onclick="atualizarGrafico()" type="button" class="btn btn-success">Atualizar</button>
         <div class="bar-graph">
           <h3>Cidades com maiores índices</h3>
         </div>
@@ -98,7 +106,7 @@
               <p>Mortes por ano (1995-2005)<br><span></span></p>
             </div>
           </section>
-          <button onclick="exibirGraficosPorMunicipio()">Visualizações por Município</button>
+          <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-default">Visualizações por Município</button>
           
         </div>
       </div>
