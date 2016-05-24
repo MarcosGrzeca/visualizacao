@@ -2,7 +2,6 @@ body {
   margin: 0;
   padding: 0;
   background: #ffe url(../images/background-texture.png) repeat scroll left top;
-  font-size: 100%;
   font-family: serif;
 }
 * {
@@ -242,7 +241,7 @@ path.hover {
   stroke-width: 1500px;
   cursor: pointer;
 }*/
-path.active {
+path.cidade_ativa {
   stroke-width: 3px;
   stroke-opacity: 1;
   cursor: default;
@@ -300,9 +299,4 @@ g#svg_municipios path:hover {
   overflow: auto; 
   max-height: 800px;
   width: 400px;
-}
-
-
-.hide {
-  display: none;
 }

@@ -41,7 +41,7 @@ Map = (function ($) {
     try {
       var id = this.id,
       codigo = id.replace(/.*_/, '');
-      _classOnlyThisAs(id, 'active');
+      _classOnlyThisAs(id, 'cidade_ativa');
       _draw_timeline(codigo);
       _showInfo(codigo);
       _montarScatterPlot(codigo);

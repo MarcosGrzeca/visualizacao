@@ -55,77 +55,6 @@
     background-color: #7BC5D3 !important;
 }
 
-.grafico-exemplo{
-    
-}
-
-.grafico-listagem:hover{
-    background-color: #7BC5D3;
-}
-
-.grafico-listagem:first-child:hover{
-    background-color: #FFF;
-    cursor:default;
-}
-
-.forma-selecionada{
-    background-color: #6688EE;
-    color: #FFF;
-}
-
-.grafico-listagem{
-    font-size: 14px;
-    padding: 5px;
-    vertical-align: middle;
-    line-height: 30px;
-    cursor: pointer;
-    border-right: 1px solid #CCC;
-    border-left: 1px solid #CCC;
-}
-
-.grafico-listagem:first-child {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    border-top:  1px solid #CCC;
-    font-weight: bold;
-}
-
-.grafico-listagem:last-child {
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;    
-    border-bottom: 1px solid #CCC;
-}
-
-.grafico-listagem span{
-    vertical-align: middle;
-    float: right;
-}
-
-.grafico-exemplo > div {
-    border: 2px solid #CCC;
-    margin-bottom: 5px;
-}
-
-.grafico-exemplo > div:hover{
-    border: 5px solid #6688EE;
-}
-
-.grafico-exemplo > .selected{
-    border: 5px solid #6688EE;
-}
-
-.breadcrumb {
-    background-color: #00923F !important;
-}
-
-body {
-    background-color: #00923F;
-}
-
-.menu-lateral {
-    background-color:#00923F !important;
-}
-
 .box-content {
     background: none repeat scroll 0 0 #fcfcfc;
     border-radius: 0 0 3px 3px;
@@ -146,11 +75,6 @@ body {
     margin-top: 7px;
 }
 
-.tituloOpcoes{
-    font-weight: bold;
-    text-align: center;
-}
-
 .pleasewait {
     left: 35%;
     position: absolute;
@@ -158,29 +82,15 @@ body {
     z-index: 10000;
 }
 
-.pleasewait2{
-    left: 50%;
-    position: absolute;
-    top: 50%;
-    z-index: 10000;
+
+.hide {
+  display: none;
 }
 
-.sem-z-index {
-    z-index: 10 !important;
-}
-
-.fundo-3d{
-    background-color: #FAFAFA !important;
-}
-
-.ui-autocomplete {
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    color: #555;
     cursor: default;
-    left: 0;
-    position: absolute;
-    top: 0;
-    z-index: 9999;
-}
-
-.dropdown-menu {
-    z-index: 2000 !important;
+    background-color: #fff;
+    border: 1px solid #ddd !important;
+    border-bottom-color: transparent;
 }
