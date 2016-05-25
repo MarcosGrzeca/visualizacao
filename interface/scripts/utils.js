@@ -17,7 +17,7 @@ function exibirGraficosPorMunicipio() {
   wait();
 	$(".porMunicipio").removeClass("hide");
 	$(".visaoGeral").addClass("hide");
-  //Map.montarScatterPlot();
+  Map.montarScatterPlot();
 
   closeWait();
 

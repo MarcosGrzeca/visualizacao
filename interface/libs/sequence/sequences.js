@@ -10,12 +10,17 @@ var b = {
 
 // Mapping of step names to colors.
 var colors = {
-  "home": "#5687d1",
-  "product": "#7b615c",
-  "search": "#de783b",
-  "account": "#6ab975",
-  "other": "#a173d1",
-  "end": "#bbbbbb"
+  "Feminino": "#5687d1",
+  "Masculino": "#7b615c",
+  "2000": "#de783b",
+  "2001": "#6ab975",
+  "2002": "#a173d1",
+  "2003": "#bbbbbb",
+  "1996": getRandomColor(),
+  "1997": getRandomColor(),
+  "1998": getRandomColor(),
+  "1999": getRandomColor(),
+  "451": getRandomColor(),
 };
 
 // Total size of all segments; we set this later, after loading the data.
@@ -72,7 +77,13 @@ function createVisualization(json) {
       .attr("display", function(d) { return d.depth ? null : "none"; })
       .attr("d", arc)
       .attr("fill-rule", "evenodd")
-      .style("fill", function(d) { return colors[d.name]; })
+      .style("fill", function(d) { 
+        if (colors[d.name]) {
+          return colors[d.name]; 
+        } else {
+          return getRandomColor();
+        }
+      })
       .style("opacity", 1)
       .on("mouseover", mouseover);
 
@@ -99,6 +110,7 @@ function mouseover(d) {
       .style("visibility", "");
 
   var sequenceArray = getAncestors(d);
+  console.log(sequenceArray);
   updateBreadcrumbs(sequenceArray, percentageString);
 
   // Fade all the segments.
