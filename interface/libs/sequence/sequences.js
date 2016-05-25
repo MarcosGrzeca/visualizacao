@@ -21,7 +21,7 @@ var colors = {
 // Total size of all segments; we set this later, after loading the data.
 var totalSize = 0; 
 
-var vis = d3.select("#chart").append("svg:svg")
+var vis = d3.select("#escopo_sequence #chart").append("svg:svg")
     .attr("width", width)
     .attr("height", height)
     .append("svg:g")
@@ -52,7 +52,7 @@ function createVisualization(json) {
   // Basic setup of page elements.
   initializeBreadcrumbTrail();
   drawLegend();
-  d3.select("#togglelegend").on("click", toggleLegend);
+  d3.select("#escopo_sequence #togglelegend").on("click", toggleLegend);
 
   // Bounding circle underneath the sunburst, to make it easier to detect
   // when the mouse leaves the parent g.
@@ -66,7 +66,7 @@ function createVisualization(json) {
       return (d.dx > 0.005); // 0.005 radians = 0.29 degrees
       });
 
-  var path = vis.data([json]).selectAll("path")
+  var path = vis.data([json]).selectAll("#escopo_sequence path")
       .data(nodes)
       .enter().append("svg:path")
       .attr("display", function(d) { return d.depth ? null : "none"; })
@@ -77,7 +77,7 @@ function createVisualization(json) {
       .on("mouseover", mouseover);
 
   // Add the mouseleave handler to the bounding circle.
-  d3.select("#container").on("mouseleave", mouseleave);
+  d3.select("#escopo_sequence #container").on("mouseleave", mouseleave);
 
   // Get total size of the tree = value of root node from partition.
   totalSize = path.node().__data__.value;
@@ -92,21 +92,21 @@ function mouseover(d) {
     percentageString = "< 0.1%";
   }
 
-  d3.select("#percentage")
+  d3.select("#escopo_sequence #percentage")
       .text(percentageString);
 
-  d3.select("#explanation")
+  d3.select("#escopo_sequence #explanation")
       .style("visibility", "");
 
   var sequenceArray = getAncestors(d);
   updateBreadcrumbs(sequenceArray, percentageString);
 
   // Fade all the segments.
-  d3.selectAll("path")
+  d3.selectAll("#escopo_sequence path")
       .style("opacity", 0.3);
 
   // Then highlight only those that are an ancestor of the current segment.
-  vis.selectAll("path")
+  vis.selectAll("#escopo_sequence path")
       .filter(function(node) {
                 return (sequenceArray.indexOf(node) >= 0);
               })
@@ -117,14 +117,14 @@ function mouseover(d) {
 function mouseleave(d) {
 
   // Hide the breadcrumb trail
-  d3.select("#trail")
+  d3.select("#escopo_sequence #trail")
       .style("visibility", "hidden");
 
   // Deactivate all segments during transition.
-  d3.selectAll("path").on("mouseover", null);
+  d3.selectAll("#escopo_sequence path").on("mouseover", null);
 
   // Transition each segment to full opacity and then reactivate it.
-  d3.selectAll("path")
+  d3.selectAll("#escopo_sequence path")
       .transition()
       .duration(1000)
       .style("opacity", 1)
@@ -132,7 +132,7 @@ function mouseleave(d) {
               d3.select(this).on("mouseover", mouseover);
             });
 
-  d3.select("#explanation")
+  d3.select("#escopo_sequence #explanation")
       .style("visibility", "hidden");
 }
 
@@ -150,7 +150,7 @@ function getAncestors(node) {
 
 function initializeBreadcrumbTrail() {
   // Add the svg area.
-  var trail = d3.select("#sequence").append("svg:svg")
+  var trail = d3.select("#escopo_sequence #sequence").append("svg:svg")
       .attr("width", width)
       .attr("height", 50)
       .attr("id", "trail");
@@ -178,7 +178,7 @@ function breadcrumbPoints(d, i) {
 function updateBreadcrumbs(nodeArray, percentageString) {
 
   // Data join; key function combines name and depth (= position in sequence).
-  var g = d3.select("#trail")
+  var g = d3.select("#escopo_sequence #trail")
       .selectAll("g")
       .data(nodeArray, function(d) { return d.name + d.depth; });
 
@@ -205,7 +205,7 @@ function updateBreadcrumbs(nodeArray, percentageString) {
   g.exit().remove();
 
   // Now move and update the percentage at the end.
-  d3.select("#trail").select("#endlabel")
+  d3.select("#escopo_sequence #trail").select("#endlabel")
       .attr("x", (nodeArray.length + 0.5) * (b.w + b.s))
       .attr("y", b.h / 2)
       .attr("dy", "0.35em")
@@ -213,7 +213,7 @@ function updateBreadcrumbs(nodeArray, percentageString) {
       .text(percentageString);
 
   // Make the breadcrumb trail visible, if it's hidden.
-  d3.select("#trail")
+  d3.select("#escopo_sequence #trail")
       .style("visibility", "");
 
 }
@@ -225,7 +225,7 @@ function drawLegend() {
     w: 75, h: 30, s: 3, r: 3
   };
 
-  var legend = d3.select("#legend").append("svg:svg")
+  var legend = d3.select("#escopo_sequence #legend").append("svg:svg")
       .attr("width", li.w)
       .attr("height", d3.keys(colors).length * (li.h + li.s));
 
@@ -252,7 +252,7 @@ function drawLegend() {
 }
 
 function toggleLegend() {
-  var legend = d3.select("#legend");
+  var legend = d3.select("#escopo_sequence #legend");
   if (legend.style("visibility") == "hidden") {
     legend.style("visibility", "");
   } else {

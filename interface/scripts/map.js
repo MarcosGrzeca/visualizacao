@@ -18,7 +18,7 @@ Map = (function ($) {
   };
 
   function _setupCallbacks() {
-    d3.selectAll('path')
+    d3.selectAll('#map path')
     .on('mouseover', _hoverRegion)
     .on('click', _selectRegion);
   };
@@ -28,8 +28,8 @@ Map = (function ($) {
   };
 
   function _classOnlyThisAs(id, className) {
-    d3.selectAll('.'+className).classed(className, false);
-    d3.selectAll('.'+id).classed(className, true);
+    d3.selectAll('#map .'+className).classed(className, false);
+    d3.selectAll('#map .'+id).classed(className, true);
   };
 
   function _getIdSelecionado() {
@@ -96,7 +96,7 @@ Map = (function ($) {
         $("#svg_" + key).css("fill", "rgba(153,0,0," + value["opacity"] + ")");
       });
 
-      d3.selectAll('.bar-graph li')
+      d3.selectAll('#map .bar-graph li')
       .each(function (id) {
         var d3RegionMap = d3.select('path.'+this.classList[0]),
         opacity = d3RegionMap.attr('style').replace(/.*: (.*);?/, '$1'),
