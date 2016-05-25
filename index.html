@@ -131,10 +131,9 @@
       <div class="col-md-12">
 
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#">Dispersão</a></li>
-          <li><a href="#">Sequence</a></li>
-          <li><a href="#">Menu 2</a></li>
-          <li><a href="#">Menu 3</a></li>
+          <li class="abas active"><a href="#">Dispersão</a></li>
+          <li class="abas"><a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); return false;">Sequence</a></li>
+          <li class="abas"><a href="#">Menu 2</a></li>
         </ul>
       </div>
 
@@ -144,29 +143,29 @@
             <div class="box-name"><i class="fa fa-bar-chart-o"></i><span>ScatterPlot</span></div>
             <div class="no-move"></div>
           </div>-->
-          <div id="scatterPlot" class="box-content"style="min-height:300px; padding: 0px !important"></div>
+          <div id="scatterPlot" class="box-content abas" style="min-height:300px; padding: 0px !important"></div>
           
+          <div id="escopo_sequence" class="box-content abas hide">
+            <div id="main">
+              <div id="sequence"></div>
+              <div id="chart">
+                <div id="explanation" style="visibility: hidden;">
+                  <span id="percentage"></span><br/>
+                  of visits begin with this sequence of pages
+                </div>
+              </div>
+            </div>
+            <div id="sidebar">
+              <input type="checkbox" id="togglelegend"> Legend<br/>
+              <div id="legend" style="visibility: hidden;"></div>
+            </div>
+          </div>          
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div id="escopo_sequence">
-  <div id="main">
-    <div id="sequence"></div>
-    <div id="chart">
-      <div id="explanation" style="visibility: hidden;">
-        <span id="percentage"></span><br/>
-        of visits begin with this sequence of pages
-      </div>
-    </div>
-  </div>
-  <div id="sidebar">
-    <input type="checkbox" id="togglelegend"> Legend<br/>
-    <div id="legend" style="visibility: hidden;"></div>
-  </div>
-</div>
 </div>
 <script src="interface/libs/jquery-1.7.2.min.js"></script>
 <script src="interface/libs/d3.min.js"></script>

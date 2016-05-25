@@ -40,3 +40,12 @@ function getRandomColor() {
     }
     return color;
 }
+
+function ocultarVisualizacoesMunicipio() {
+  $(".abas").hide().filter(".active").removeClass("active");
+}
+
+function trocarAba(aba, divExibir) {
+  aba.parent().addClass("active").show();
+  $("#" + divExibir).removeClass("hide").show();
+}
