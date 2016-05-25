@@ -19,6 +19,9 @@
   <link rel="stylesheet" href="interface/estilos/main.css">
   <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
 
+  <link type="text/css" rel="stylesheet" href="interface/libs/sequence/sequences.css">
+
+
 </head>
 <body>
   <div class="header">
@@ -129,7 +132,7 @@
 
         <ul class="nav nav-tabs">
           <li class="active"><a href="#">Dispersão</a></li>
-          <li><a href="#">Menu 1</a></li>
+          <li><a href="#">Sequence</a></li>
           <li><a href="#">Menu 2</a></li>
           <li><a href="#">Menu 3</a></li>
         </ul>
@@ -141,7 +144,19 @@
             <div class="box-name"><i class="fa fa-bar-chart-o"></i><span>ScatterPlot</span></div>
             <div class="no-move"></div>
           </div>-->
-          <div id="scatterPlot" class="box-content"style="min-height:300px; padding: 0px !important">
+          <div id="scatterPlot" class="box-content"style="min-height:300px; padding: 0px !important"></div>
+          <div id="sequenceDiv">
+            <div id="sequence"></div>
+            <div id="chart">
+              <div id="explanation" style="visibility: hidden;">
+                <span id="percentage"></span><br/>
+                of visits begin with this sequence of pages
+              </div>
+            </div>
+          </div>
+          <div id="sidebar">
+            <input type="checkbox" id="togglelegend"> Legend<br/>
+            <div id="legend" style="visibility: hidden;"></div>
           </div>
         </div>
       </div>
@@ -157,6 +172,7 @@
 <script src="interface/scripts/utils.js"></script>
 <script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
 <script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="interface/libs/sequence/sequences.js"></script>
 
 </body>
 </html>

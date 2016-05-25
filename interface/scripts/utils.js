@@ -17,10 +17,11 @@ function exibirGraficosPorMunicipio() {
   wait();
 	$(".porMunicipio").removeClass("hide");
 	$(".visaoGeral").addClass("hide");
-  Map.montarScatterPlot();
-
+  //Map.montarScatterPlot();
 
   closeWait();
+
+  d3.select(self.frameElement).style("height", "700px");
 }
 
 function wait() {
