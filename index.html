@@ -16,33 +16,30 @@
   <link href="interface/estilos/estilo.css" rel="stylesheet">
 
   <!-- Estilos visualizaçãoes -->
-  <link rel="stylesheet" href="interface/estilos/main.css">
+  <link rel="stylesheet" href="interface/estilos/map.css">
   <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
 
   <link type="text/css" rel="stylesheet" href="interface/libs/sequence/sequences.css">
-
-
 </head>
 <body>
   <div class="header">
     <div class="wrapper">
-      <h1>Mortalidade no Rio Grande do Sul</h1>
+      <h1>Índices de Mortalidade no Rio Grande do Sul</h1>
     </div>
   </div>
   <div class="container-fluid">
-
     <div class="loader hide"></div>
     <div class="main">
       <div class="visaoGeral">
         <div class="wrapper">
-          <div id="filtros">
-            <div style="min-height:235px" class="box box-content">
-              <h4 class="page-header">CID</h4>
-              <div class="row form-group">
-                <div class="col-sm-12">
+          <div id="filtros" class="well well-lg">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="box box-content" style="min-height: 267px">
+                  <h4 class="page-header">CID</h4>
                   <div class="radio">
                     <label>
-                      <input type="radio" checked="" value="" name="cid">Todos  
+                      <input type="radio" checked="" value="" name="cid">Todas doenças
                       <i class="fa fa-circle-o small"></i>
                     </label>
                   </div>  
@@ -84,46 +81,93 @@
                   </div>
                 </div>
               </div>
+              <div class="col-sm-6">
+                <div class="box box-content">
+                  <h4 class="page-header">Sexo</h4>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" checked="" value="" name="sexo">Todas as categorias
+                      <i class="fa fa-circle-o small"></i>
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" value="1" name="sexo">Masculino
+                      <i class="fa fa-circle-o small"></i>
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" value="2" name="sexo">Feminino
+                      <i class="fa fa-circle-o small"></i>
+                    </label>
+                  </div>  
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="box box-content">
+                  <h4 class="page-header">Conteúdo</h4>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" checked="" value="P" name="conteudo">Proporção de óbitos
+                      <i class="fa fa-circle-o small"></i>
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" value="N" name="conteudo">Número de óbitos
+                      <i class="fa fa-circle-o small"></i>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
+              </div>
+              <div class="col-sm-2">
+                <button onclick="minimizarFiltros()" type="button" class="btn btn-default"><i class="fa fa-minus-square-o"></i> Minimizar filtros</button>
+              </div>
             </div>
           </div>
 
-          <button onclick="atualizarGrafico()" type="button" class="btn btn-success">Atualizar dados</button>
-          <div class="bar-graph">
-            <h3>Cidades com maiores índices</h3>
-          </div>
-          <div id="info">
-            <div id="dashboard-header">
-              <h3></h3>
+          <div id="visualizacoes-gerais" class="hide">
+            <div class="bar-graph">
+              <h3>Cidades com maiores índices</h3>
             </div>
-            <section>
-              <table style="width:100%">
-                <tr>
-                  <td style="width:33%" class="ranking">
-                    <p>Ranking</p>
-                    <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span id="numTotalCidades"></span></p>
-                  </td>
-                  <td style="width:33%">
-                    <p>Mortes</p>
-                    <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
-                  </td>
-                  <td style="width:33%">
-                    <p>População</p>
-                    <p class="population"><em></em></p>
-                  </td>
-                </tr>
-              </table>  
-            </section>
-            <div id="dashboard-bar">
-              <div class="timeline">
-                <p>Mortes por ano (1995-2005)<br><span></span></p>
+            <div id="info">
+              <div id="dashboard-header">
+                <h3></h3>
               </div>
-            </section>
-            <br/>
-            <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
+              <section>
+                <table style="width:100%">
+                  <tr>
+                    <td style="width:33%" class="ranking">
+                      <p>Ranking</p>
+                      <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span id="numTotalCidades"></span></p>
+                    </td>
+                    <td style="width:33%">
+                      <p>Mortes</p>
+                      <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
+                    </td>
+                    <td style="width:33%">
+                      <p>População</p>
+                      <p class="population"><em></em></p>
+                    </td>
+                  </tr>
+                </table>  
+              </section>
+              <div id="dashboard-bar">
+                <div class="timeline">
+                  <p>Mortes por ano (1995-2005)<br><span></span></p>
+                </div>
+              </section>
+              <br/>
+              <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
+            </div>
           </div>
-        </div>
-        <div id="map">
-          <img src="interface/images/spinner.gif" class="loading" alt="spinner">
+          <div id="map">
+            <img src="interface/images/spinner.gif" class="loading" alt="spinner">
+          </div>
         </div>
       </div>
     </div>
@@ -143,10 +187,9 @@
             <div class="box-name"><i class="fa fa-bar-chart-o"></i><span>ScatterPlot</span></div>
             <div class="no-move"></div>
           </div>-->
-          <div id="scatterPlot" class="box-content abas" style="min-height:300px; padding: 0px !important"></div>
-          
-          <div id="escopo_sequence" class="box-content abas hide">
-            <div id="main">
+          <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
+          <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
+            <div id="main_sequence">
               <div id="sequence"></div>
               <div id="chart">
                 <div id="explanation" style="visibility: hidden;">

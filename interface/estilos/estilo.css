@@ -156,3 +156,12 @@
   from{ bottom:-100px; opacity:0 } 
   to{ bottom:0; opacity:1 }
 }
+
+.espaco-visualizacoes {
+  min-height:300px;
+  padding: 0px !important;
+}
+
+h1 {
+  text-align: center;
+}

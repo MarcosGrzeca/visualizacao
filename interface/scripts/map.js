@@ -2,6 +2,7 @@ Map = (function ($) {
   var Mortes = {};
 
   function initialize(element, svgPath) {
+    $("#visualizacoes-gerais").addClass("hide");
     d3.xml(svgPath, 'image/svg+xml', function (xml) {
       element.html(xml.documentElement);
 
@@ -13,6 +14,7 @@ Map = (function ($) {
         _focusInto(focusedElementSlug);
         _drawBars();
         _colorRegions();
+        $("#visualizacoes-gerais").removeClass("hide");
       });
     });
   };

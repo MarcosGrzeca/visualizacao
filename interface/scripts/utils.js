@@ -1,12 +1,12 @@
 $.slug = (function () {
   var in_chrs   = 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ _',
-      out_chrs  = 'aaaaaceeeeiiiinooooouuuuyyaaaaaceeeeiiiinooooouuuuy--', 
-      chars_rgx = new RegExp('[' + in_chrs + ']', 'gi'),
-      transl    = {}, i,
-      lookup    = function (m) { return transl[m] || m; };
+  out_chrs  = 'aaaaaceeeeiiiinooooouuuuyyaaaaaceeeeiiiinooooouuuuy--', 
+  chars_rgx = new RegExp('[' + in_chrs + ']', 'gi'),
+  transl    = {}, i,
+  lookup    = function (m) { return transl[m] || m; };
 
   for (i=0; i<in_chrs.length; i++) {
-      transl[ in_chrs[i] ] = out_chrs[i];
+    transl[ in_chrs[i] ] = out_chrs[i];
   }
   
   return function (s) { return s.replace(chars_rgx, lookup).toLowerCase(); }
@@ -15,8 +15,8 @@ $.slug = (function () {
 
 function exibirGraficosPorMunicipio() {
   wait();
-	$(".porMunicipio").removeClass("hide");
-	$(".visaoGeral").addClass("hide");
+  $(".porMunicipio").removeClass("hide");
+  $(".visaoGeral").addClass("hide");
   Map.montarScatterPlot();
 
   closeWait();
@@ -33,12 +33,12 @@ function closeWait() {
 }
 
 function getRandomColor() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+  var letters = '0123456789ABCDEF'.split('');
+  var color = '#';
+  for (var i = 0; i < 6; i++ ) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 function ocultarVisualizacoesMunicipio() {
@@ -48,4 +48,8 @@ function ocultarVisualizacoesMunicipio() {
 function trocarAba(aba, divExibir) {
   aba.parent().addClass("active").show();
   $("#" + divExibir).removeClass("hide").show();
+}
+
+function atualizarGrafico() {
+  Map.initialize($('#map'), 'interface/mapa/Mapa_Rio_Grande_do_Sul.svg');  
 }
