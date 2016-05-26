@@ -85,3 +85,7 @@ function renderScatterPlot() {
 function getIdMunicipioSelecionado() {
   return idMunicipioSelecionado.replace(/.*_/, '');
 }
+
+
+setTimeout(function(){ 
+exibirGraficosPorMunicipio();}, 3000);

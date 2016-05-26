@@ -13,8 +13,7 @@
   <link href='interface/estilos/fonts/css.css' rel='stylesheet' type='text/css'>
 
   <link href="interface/estilos/style.css" rel="stylesheet">
-  <link href="interface/estilos/estilo.css" rel="stylesheet">
-
+  
   <!-- Estilos visualizaçãoes -->
   <link rel="stylesheet" href="interface/estilos/map.css">
   <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
@@ -143,8 +142,8 @@
             <div class="bar-graph">
               <h3>Cidades com maiores índices</h3>
             </div>
-            <div id="info">
-              <div id="dashboard-header">
+            <div class="info-mun">
+              <div class="dashboard-header">
                 <h3></h3>
               </div>
               <section>
@@ -152,7 +151,7 @@
                   <tr>
                     <td style="width:25%" class="ranking">
                       <p>Ranking</p>
-                      <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span id="numTotalCidades"></span></p>
+                      <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
                     </td>
                     <td style="width:25%">
                       <p>Mortes</p>
@@ -191,52 +190,86 @@
         </div>
       </div>
       <div class="porMunicipio hide">
-        <div class="col-md-12">
 
-          <ul class="nav nav-tabs">
-            <li class="active"><a href="#">Dispersão</a></li>
-            <li class=""><a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); return false;">Sequence</a></li>
-            <li class=""><a href="#">Menu 2</a></li>
-          </ul>
-        </div>
+        <div class="row">
+        <div class="col-md-6 col-sm-offset-3">
+            <div class="info-mun" style="width:100%">
+              <div class="dashboard-header">
+                <h3></h3>
+              </div>
+              <section>
+                <table style="width:100%">
+                  <tr>
+                    <td style="width:25%" class="ranking">
+                      <p>Ranking</p>
+                      <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
+                    </td>
+                    <td style="width:25%">
+                      <p>Mortes</p>
+                      <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
+                    </td>
+                    <td style="width:25%">
+                      <p>Total de mortes</p>
+                      <p class="mortesTotal"><span><em></em></span></p>
+                    </td>
+                    <td style="width:25%">
+                      <p>População</p>
+                      <p class="population"><em></em></p>
+                    </td>
+                  </tr>
+                </table>  
+              </section>
+            </div>
+          </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="nav nav-tabs">
+                <li class="active">
+                  <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'scatterPlot'); return false;">ScatterPlot</a>
+                </li>
+                <li class="">
+                  <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); return false;">Sequences Sunburst</a>
+                </li>
+              </ul>
+            </div>
+          </div>
 
-        <div class="col-md-12">
-          <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
-          <!--<div class="box-header">
-            <div class="box-name"><i class="fa fa-bar-chart-o"></i><span>ScatterPlot</span></div>
-            <div class="no-move"></div>
-          </div>-->
-          <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
-          <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
-            <div id="main_sequence">
-              <div id="sequence"></div>
-              <div id="chart">
-                <div id="explanation" style="visibility: hidden;">
-                  <span id="percentage"></span><br/>
-                  of visits begin with this sequence of pages
-                </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
+                <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
+                <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
+                  <div id="main_sequence">
+                    <div id="sequence"></div>
+                    <div id="chart">
+                      <div id="explanation" style="visibility: hidden;">
+                        <span id="percentage"></span><br/>
+                        of visits begin with this sequence of pages
+                      </div>
+                    </div>
+                  </div>
+                  <div id="sidebar">
+                    <input type="checkbox" id="togglelegend"> Legend<br/>
+                    <div id="legend" style="visibility: hidden;"></div>
+                  </div>
+                </div>          
               </div>
             </div>
-            <div id="sidebar">
-              <input type="checkbox" id="togglelegend"> Legend<br/>
-              <div id="legend" style="visibility: hidden;"></div>
-            </div>
-          </div>          
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-</div>
-<script src="interface/libs/jquery-1.7.2.min.js"></script>
-<script src="interface/libs/d3.min.js"></script>
-<script src="interface/libs/jquery.sparkline.min.js"></script>
-<script src="interface/scripts/utils.js"></script>
-<script src="interface/libs/sequence/sequences.js"></script>
-<script src="interface/scripts/map.js"></script>
-<script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
-<script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
+  </div>
+  <script src="interface/libs/jquery-1.7.2.min.js"></script>
+  <script src="interface/libs/d3.min.js"></script>
+  <script src="interface/libs/jquery.sparkline.min.js"></script>
+  <script src="interface/scripts/utils.js"></script>
+  <script src="interface/libs/sequence/sequences.js"></script>
+  <script src="interface/scripts/map.js"></script>
+  <script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
+  <script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
 
 </body>
 </html>

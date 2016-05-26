@@ -130,7 +130,7 @@ ScatterMatrix.prototype.render = function () {
 
         var filter_li =
           filter_control
-            .append('p').text('Filter by '+variable+': ')
+            .append('p').text('Filtrar por '+variable+': ')
             .append('ul')
             .selectAll('li')
             .data(values)
@@ -176,7 +176,7 @@ ScatterMatrix.prototype.render = function () {
             self.__draw(self.__cell_size, svg, color_variable, selected_colors, to_include, drill_variables);
           });
 
-    color_control.append('p').text('Select a variable to color:');
+    color_control.append('p').text('Selecione a variável para a cor:');
     color_control
       .append('ul')
       .selectAll('li')
@@ -184,7 +184,7 @@ ScatterMatrix.prototype.render = function () {
       .enter().append('li')
         .append('a')
           .attr('href', 'javascript:void(0);')
-          .text(function(d) { return d ? d : 'None'; })
+          .text(function(d) { return d ? d : 'Nenhuma'; })
           .on('click', function(d, i) {
             color_variable = d;
             set_filter(d);
@@ -193,7 +193,7 @@ ScatterMatrix.prototype.render = function () {
 
     var variable_li =
       variable_control
-        .append('p').text('Include variables: ')
+        .append('p').text('Variavéis: ')
         .append('ul')
         .selectAll('li')
         .data(self.__numeric_variables)
@@ -220,7 +220,8 @@ ScatterMatrix.prototype.render = function () {
 
     drill_li = 
       drill_control
-        .append('p').text('Drill and Expand: ')
+        //.append('p').text('Drill and Expand: ')
+        .append('p').text('Exercitar e Expandir: ')
         .append('ul')
         .selectAll('li')
         .data(original_numeric_variables.concat(string_variables))
