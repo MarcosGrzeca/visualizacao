@@ -42,11 +42,12 @@ function getRandomColor() {
 }
 
 function ocultarVisualizacoesMunicipio() {
-  $(".abas").hide().filter(".active").removeClass("active");
+  $(".abas").addClass("hide").filter(".active").removeClass("active");
 }
 
 function trocarAba(aba, divExibir) {
-  aba.parent().addClass("active").show();
+  $(".porMunicipio .nav-tabs > li.active").removeClass("active");
+  aba.parent().addClass("active").removeClass("hide");
   $("#" + divExibir).removeClass("hide").show();
 }
 
