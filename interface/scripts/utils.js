@@ -28,6 +28,10 @@ function exibirGraficosPorMunicipio() {
     d3.select(self.frameElement).style("height", "700px");
 }
 
+function exibirMapa() {
+    $(".porMunicipio").addClass("hide");
+    $(".visaoGeral").removeClass("hide");
+}
 function wait() {
     $(".loader").removeClass("hide");
 }
