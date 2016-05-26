@@ -150,9 +150,10 @@ body {
   border-color: black;
   background-color: rgb(220, 20, 60);
 }
-#info {
+.info-mun {
   margin-top: 20px;
-  margin-right: 340px;
+  /*margin-right: 340px;*/
+  width: 60%;
   background: mediumslateblue;
   /*
   darkcyan
@@ -163,12 +164,12 @@ body {
   -moz-border-radius: 2px;
   border-radius: 2px;
 }
-#info h3 {
+.info-mun h3 {
   color: white;
   padding: .25em;
   padding-bottom: 0px;
 }
-#info section {
+.info-mun section {
   color: white;
   display: table-cell;
   vertical-align: top;
@@ -182,45 +183,45 @@ h3 {
   font-size: 2em;
   margin: 0;
 }
-#info p {
+.info-mun p {
   margin: 0;
   font-size: 1.15em;
   padding: 0px .5em;
   white-space: nowrap;
 }
-#info .local p {
+.info-mun .local p {
   display: inline-block !important;
 }
-#info div.ratio {
+.info-mun div.ratio {
   margin-top: 56px;
 }
 
-#info div.timeline {
+.info-mun div.timeline {
   color: #FFF;
 }
 
-#info {
+.info-mun {
   padding: 10px;
 }
 
-#info div.timeline {
+.info-mun div.timeline {
   margin-top: 8px;
 }
-#info .timeline canvas {
+.info-mun .timeline canvas {
   margin-left: 40px;
   margin-top: 10px;
 }
-#info div.age {
+.info-mun div.age {
   margin-left: 40px;
 }
-#info div.age p,
-#info .local p {
+.info-mun div.age p,
+.info-mun .local p {
   text-align: center;
 }
-#info div.period p em {
+.info-mun div.period p em {
   vertical-align: 8px;
 }
-#info p em {
+.info-mun p em {
   font-weight: bold;
   font-style: normal;
   font-size: 1.75em;
@@ -250,28 +251,28 @@ path.cidade_ativa {
 section.age .figures {
   width: 200px;
 }
-#info .region-data {
+.info-mun .region-data {
   float: right;
   color: white;
   margin-top: 10px;
 }
-#info .region-data em {
+.info-mun .region-data em {
   font-size: 1.25em;
   display: inline;
 }
-#info .figures {
+.info-mun .figures {
   clear: both;
   overflow: hidden;
 }
-#info .age p,
-#info .period p em {
+.info-mun .age p,
+.info-mun .period p em {
   display: inline-block;
 }
-#info .ranking p,
-#info .period p {
+.info-mun .ranking p,
+.info-mun .period p {
   display: block;
 }
-#info .figures p {
+.info-mun .figures p {
   margin-right: .5em;
 }
 #map .loading {

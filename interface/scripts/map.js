@@ -57,12 +57,12 @@ Map = (function ($) {
     var cidade = Mortes[codigo];
     if (!cidade) { return; }
     ranking = _keysSortedByOpacity().indexOf(codigo) + 1,    
-    $('#info h3').text(cidade.nome);
+    $('.info-mun h3').text(cidade.nome);
     $('.population em').text(cidade.populacao);
     $('.ranking em').text(ranking+'ª');
     $('.proporcao em').text(parseInt(cidade.proporcao));
     $('.mortesTotal em').text(parseInt(cidade.ocorrencias));
-    $("#numTotalCidades").html("/" + Object.keys(Mortes).length);
+    $(".numTotalCidades").html("/" + Object.keys(Mortes).length);
   };
 
   function _formatNumber(number) {

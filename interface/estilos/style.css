@@ -1670,7 +1670,7 @@ td.beauty-hover {
   white-space:nowrap;
   margin:0.1em 0;
 }
-#dashboard-header {
+.dashboard-header {
   margin-bottom:20px;
 }
 #dashboard_links {

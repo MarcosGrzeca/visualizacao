@@ -41,6 +41,7 @@
 
 .bs-callout-info {
     border-left-color: #5bc0de;
+    background-color: #FFF;
 }
 .bs-callout-info h4{
     color: #5bc0de;
@@ -169,4 +170,8 @@ h1 {
 
 .box-content {
   padding-bottom: 10px;
+}
+
+.bg-primary {
+  padding: 10px;
 }
