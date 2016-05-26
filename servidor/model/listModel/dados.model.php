@@ -27,5 +27,21 @@ class DadosModel extends ResultListModel {
 		"WHERE codmunres = '" . $idMunicipio . "' ";
 		$this->result = executaSql($query);  
 	}
+
+	function obterSequenceParaMunicipio($idMunicipio, $niveis) {
+
+		$query = "SELECT " . implode(", ", $niveis) . ", count(*) as total " . 
+		"FROM sim_rs ". 
+		"WHERE codmunres = '" . $idMunicipio . "' " .
+		"GROUP by " . implode(", ", $niveis);
+		$this->result = executaSql($query);
+	}
+
+	function obterDescricaoCid($cid) {
+		$query = "SELECT descr " .
+				"FROM cid10 " .
+				"WHERE cid10 = '" . $cid . "' ";
+		$this->result = executaSql($query);
+	}
 }
 ?>

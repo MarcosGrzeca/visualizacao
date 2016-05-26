@@ -33,6 +33,10 @@ Sequence = (function($) {
     var vis, partition, arc;
 
     function initialize() {
+        $("#chart > svg").remove();
+        $("#sequence > trail > svg").remove();
+
+        wait();
         vis = d3.select("#escopo_sequence #chart").append("svg:svg")
             .attr("width", width)
             .attr("height", height)
@@ -43,26 +47,43 @@ Sequence = (function($) {
         partition = d3.layout.partition()
             .size([2 * Math.PI, radius * radius])
             .value(function(d) {
-                return d.size; });
+                return d.size;
+            });
 
         arc = d3.svg.arc()
             .startAngle(function(d) {
-                return d.x; })
+                return d.x;
+            })
             .endAngle(function(d) {
-                return d.x + d.dx; })
+                return d.x + d.dx;
+            })
             .innerRadius(function(d) {
-                return Math.sqrt(d.y); })
+                return Math.sqrt(d.y);
+            })
             .outerRadius(function(d) {
-                return Math.sqrt(d.y + d.dy); });
+                return Math.sqrt(d.y + d.dy);
+            });
 
-        // Use d3.text and d3.csv.parseRows so that we do not need to have a header
-        // row, and can receive the csv as an array of arrays.
-        d3.text("servidor/sequence.csv", function(text) {
+            console.log("http://localhost/visualizacao/servidor/sequence.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#nivel1").val() + "&nivel2=" + $("#nivel2").val() + "&nivel3=" + $("#nivel3").val() + "&nivel4=" + $("#nivel4").val() + "&nivel5=" + $("#nivel5").val() + "&nivel6=" + $("#nivel6").val());
+
+        $.ajax({
+                url: "http://localhost/visualizacao/servidor/sequence.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#nivel1").val() + "&nivel2=" + $("#nivel2").val() + "&nivel3=" + $("#nivel3").val() + "&nivel4=" + $("#nivel4").val() + "&nivel5=" + $("#nivel5").val() + "&nivel6=" + $("#nivel6").val()
+            })
+            .done(function(data) {
+                console.log("OBTI");
+                renderSubBurst();
+            });
+    }
+
+    function renderSubBurst() {
+        d3.text("http://localhost/visualizacao/servidor/sequence.csv", function(text) {
             var csv = d3.csv.parseRows(text);
             var json = buildHierarchy(csv);
             createVisualization(json);
         });
+        closeWait();
     }
+
     // Main function to draw and set up the visualization, once we have the data.
     function createVisualization(json) {
 
@@ -87,7 +108,8 @@ Sequence = (function($) {
             .data(nodes)
             .enter().append("svg:path")
             .attr("display", function(d) {
-                return d.depth ? null : "none"; })
+                return d.depth ? null : "none";
+            })
             .attr("d", arc)
             .attr("fill-rule", "evenodd")
             .style("fill", function(d) {
@@ -206,7 +228,8 @@ Sequence = (function($) {
         var g = d3.select("#escopo_sequence #trail")
             .selectAll("g")
             .data(nodeArray, function(d) {
-                return d.name + d.depth; });
+                return d.name + d.depth;
+            });
 
         // Add breadcrumb and label for entering nodes.
         var entering = g.enter().append("svg:g");
@@ -214,7 +237,8 @@ Sequence = (function($) {
         entering.append("svg:polygon")
             .attr("points", breadcrumbPoints)
             .style("fill", function(d) {
-                return colors[d.name]; });
+                return colors[d.name];
+            });
 
         entering.append("svg:text")
             .attr("x", (b.w + b.t) / 2)
@@ -222,7 +246,8 @@ Sequence = (function($) {
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
             .text(function(d) {
-                return d.name; });
+                return d.name;
+            });
 
         // Set position for entering and updating nodes.
         g.attr("transform", function(d, i) {
@@ -273,7 +298,8 @@ Sequence = (function($) {
             .attr("width", li.w)
             .attr("height", li.h)
             .style("fill", function(d) {
-                return d.value; });
+                return d.value;
+            });
 
         g.append("svg:text")
             .attr("x", li.w / 2)
@@ -281,7 +307,8 @@ Sequence = (function($) {
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
             .text(function(d) {
-                return d.key; });
+                return d.key;
+            });
     }
 
     function toggleLegend() {

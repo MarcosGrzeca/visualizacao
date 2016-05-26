@@ -2516,3 +2516,8 @@ h1 {
   float: left;
   width: 200px;
 }
+
+.abas {
+  padding: 10px !important;
+  padding-bottom: 0px;
+}

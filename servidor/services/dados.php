@@ -78,6 +78,48 @@ class Dados {
 		}
 	}
 
+	function obterSequenceParaMunicipio($idMunicipio, $nivel1, $nivel2, $nivel3, $nivel4, $nivel5, $nivel6) {
+		$niveis = array($nivel1, $nivel2, $nivel3, $nivel4, $nivel5, $nivel6);
+		foreach ($niveis as $key => $value) {
+			if (empty($value)) {
+				unset($niveis[$key]);
+			}
+		}
+		
+		$dados = new DadosModel();
+		$dados->obterSequenceParaMunicipio($idMunicipio, $niveis);
+		$nomeArquivo = SYSTEM_DIR . "servidor/sequence.csv";
+		try {
+			@unlink($nomeArquivo);	
+		} catch (Exception $e) {
+			
+		}
+		
+		$doencas = array();
+		while ($obj = $dados->getRegistro()) {
+			if (isset($obj["sexo"])) {
+				$obj["sexo"] = $this->_getDescricaoSexo($obj["sexo"]);	
+			}
+			if (isset($obj["idade"])) {
+				$obj["idade"] = $this->_getIdade($obj["idade"]);
+			}
+
+			if (isset($obj["causabas"])) {
+				if (in_array($obj["causabas"], $doencas)) {
+					$obj["causabas"] = $doencas[$obj["causabas"]];
+				} else {
+					$desc = $this->_getDescricaoCid($obj["causabas"]);
+					$doencas[$obj["causabas"]] = $desc;
+					$obj["causabas"] = $desc;
+				}
+			}
+
+			$copy = $obj;
+			unset($copy["total"]);
+			file_put_contents($nomeArquivo, gerarCvsLinha(array(implode("-", $copy), $obj["total"])), FILE_APPEND);
+		}
+	}
+
 	function _getDescricaoSexo($sexo) {
 		switch ($sexo) {
 			case '1':
@@ -102,6 +144,17 @@ class Dados {
 			$idadeCalculada = ($idade - 300) / 100;
 		}
 		return $idadeCalculada;
+	}
+
+	function _getDescricaoCid($cid) {
+		$descCid = $cid;
+		$dadosCid = new DadosModel();
+		$dadosCid->obterDescricaoCid($cid);
+		while ($obj = $dadosCid->getRegistro()) {
+			$descCid = str_replace("-", " ", trim($obj["descr"]));
+		}
+
+		return $descCid;
 	}
 }
 ?>

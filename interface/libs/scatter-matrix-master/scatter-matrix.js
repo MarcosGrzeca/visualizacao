@@ -43,7 +43,7 @@ ScatterMatrix.prototype.render = function () {
                          .attr('class', 'scatter-matrix-control');
   var svg = container.append('div')
                      .attr('class', 'scatter-matrix-svg')
-                     .html('<em>Loading data...</em>');
+                     .html('<em>Carregando dados...</em>');
 
   this.onData(function() {
     var data = self.__data;
@@ -159,7 +159,7 @@ ScatterMatrix.prototype.render = function () {
       }
     }
 
-    size_a = size_control.append('p').text('Change plot size: ');
+    size_a = size_control.append('label').text('Alterar tamanho: ');
     size_a.append('a')
           .attr('href', 'javascript:void(0);')
           .html('-')
@@ -176,7 +176,7 @@ ScatterMatrix.prototype.render = function () {
             self.__draw(self.__cell_size, svg, color_variable, selected_colors, to_include, drill_variables);
           });
 
-    color_control.append('p').text('Selecione a variável para a cor:');
+    color_control.append('label').text('Selecione a variável para a cor:');
     color_control
       .append('ul')
       .selectAll('li')
@@ -193,7 +193,7 @@ ScatterMatrix.prototype.render = function () {
 
     var variable_li =
       variable_control
-        .append('p').text('Variavéis: ')
+        .append('label').text('Variavéis: ')
         .append('ul')
         .selectAll('li')
         .data(self.__numeric_variables)
@@ -221,7 +221,7 @@ ScatterMatrix.prototype.render = function () {
     drill_li = 
       drill_control
         //.append('p').text('Drill and Expand: ')
-        .append('p').text('Exercitar e Expandir: ')
+        .append('label').text('Exercitar e Expandir: ')
         .append('ul')
         .selectAll('li')
         .data(original_numeric_variables.concat(string_variables))

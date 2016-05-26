@@ -235,19 +235,104 @@
                         <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
                             <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
                             <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
-                                <div id="main_sequence">
-                                    <div id="sequence"></div>
-                                    <div id="chart">
-                                        <div id="explanation" style="visibility: hidden;">
-                                            <span id="percentage"></span>
-                                            <br/> of visits begin with this sequence of pages
+                                <div style="" class="box ui-draggable ui-droppable"">
+                                    <div class="box-header">
+                                        <div class="box-name"><i class="fa fa-cog"></i><span>Configurações</span></div>
+                                        <div class="no-move"></div>
+                                    </div>
+                                    <div class="box-content" id="box-filtros">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label for="nivel1">1º Nível</label>
+                                                <select class="form-control" id="nivel1">
+                                                    <option value="anobase">Ano base</option>
+                                                    <option value="causabas">CID</option>
+                                                    <option value="esc">Escolariedade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo" selected>Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="nivel2">2º Nível</label>
+                                                <select class="form-control" id="nivel2">
+                                                    <option value="">Selecione</option>
+                                                    <option value="anobase" selected>Ano base</option>
+                                                    <option value="causabas">CID</option>
+                                                    <option value="esc">Escolariedade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="nivel3">3º Nível</label>
+                                                <select class="form-control" id="nivel3">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano base</option>
+                                                    <option value="causabas">CID</option>
+                                                    <option value="esc">Escolariedade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="nivel4">4º Nível</label>
+                                                <select class="form-control" id="nivel4">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano base</option>
+                                                    <option value="causabas">CID</option>
+                                                    <option value="esc">Escolariedade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="nivel5">5º Nível</label>
+                                                <select class="form-control" id="nivel5">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano base</option>
+                                                    <option value="causabas">CID</option>
+                                                    <option value="esc">Escolariedade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="nivel6">6º Nível</label>
+                                                <select class="form-control" id="nivel6">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano base</option>
+                                                    <option value="causabas">CID</option>
+                                                    <option value="esc">Escolariedade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                            <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Gerar visualização</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="sidebar">
-                                    <input type="checkbox" id="togglelegend"> Legend
-                                    <br/>
-                                    <div id="legend" style="visibility: hidden;"></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="main_sequence" style="float:left;">
+                                            <div id="sequence"></div>
+                                            <div id="chart">
+                                                <div id="explanation" style="visibility: hidden;">
+                                                    <span id="percentage"></span>
+                                                    <br/> of visits begin with this sequence of pages
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="sidebar">
+                                            <input type="checkbox" id="togglelegend"> Legend
+                                            <br/>
+                                            <div id="legend" style="visibility: hidden;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
