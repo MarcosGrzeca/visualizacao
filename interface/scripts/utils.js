@@ -87,6 +87,7 @@ function montarScatterPlot() {
 };
 
 function renderScatterPlot() {
+    $("#scatterPlot").html("");
     var sm = new ScatterMatrix('servidor/dados_scatter.csv', undefined, "scatterPlot");
     sm.render()
     closeWait();
@@ -99,7 +100,6 @@ function getIdMunicipioSelecionado() {
 function montarSequenceSunburst() {
     wait();
     Sequence.initialize();
-    closeWait();
 }
 
 /*setTimeout(function() {

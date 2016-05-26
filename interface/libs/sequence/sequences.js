@@ -37,6 +37,7 @@ Sequence = (function($) {
     function initialize() {
         $("#chart > svg").remove();
         $("#sequence > trail > svg").remove();
+        $("#legend > svg").remove();
         colors = {};
 
         wait();
