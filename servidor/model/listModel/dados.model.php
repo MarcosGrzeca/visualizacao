@@ -25,8 +25,6 @@ class DadosModel extends ResultListModel {
 		$query = "SELECT dtobito, sexo, causabas, anobase, idade " .
 		"FROM sim_rs ". 
 		"WHERE codmunres = '" . $idMunicipio . "' ";
-			 //"LIMIT 10";
-		debug($query);
 		$this->result = executaSql($query);  
 	}
 }

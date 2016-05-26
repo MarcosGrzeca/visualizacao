@@ -1,3 +1,5 @@
+var idMunicipioSelecionado = 0;
+
 $.slug = (function () {
   var in_chrs   = 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ _',
   out_chrs  = 'aaaaaceeeeiiiinooooouuuuyyaaaaaceeeeiiiinooooouuuuy--', 
@@ -17,10 +19,7 @@ function exibirGraficosPorMunicipio() {
   wait();
   $(".porMunicipio").removeClass("hide");
   $(".visaoGeral").addClass("hide");
-  Map.montarScatterPlot();
-
-  closeWait();
-
+  montarScatterPlot();
   d3.select(self.frameElement).style("height", "700px");
 }
 
@@ -65,4 +64,24 @@ function maximizarFiltros() {
   $("#box-filtros").removeClass("hide");  
   $("#btn_min").addClass("hide");
   $("#btn_max").removeClass("hide");
+}
+
+/*Scatter */
+function montarScatterPlot() {
+  $.ajax({
+    url: "http://localhost/visualizacao/servidor/scatter.php?codMun=" + getIdMunicipioSelecionado()
+  })
+  .done(function( data ) {
+    renderScatterPlot();
+  });
+};
+
+function renderScatterPlot() {
+  var sm = new ScatterMatrix('servidor/dados_scatter.csv', undefined, "scatterPlot");
+  sm.render();
+  closeWait();
+}
+
+function getIdMunicipioSelecionado() {
+  return idMunicipioSelecionado.replace(/.*_/, '');
 }

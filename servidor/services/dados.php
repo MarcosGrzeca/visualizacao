@@ -64,7 +64,6 @@ class Dados {
 		$dados->obterScatterParaMunicipio($idMunicipio);
 
 		$nomeArquivo = SYSTEM_DIR . "servidor/dados_scatter.csv";
-		debug($nomeArquivo);
 		try {
 			@unlink($nomeArquivo);	
 		} catch (Exception $e) {

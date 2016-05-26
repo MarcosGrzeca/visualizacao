@@ -32,11 +32,12 @@ Map = (function ($) {
   function _classOnlyThisAs(id, className) {
     d3.selectAll('#map .'+className).classed(className, false);
     d3.selectAll('#map .'+id).classed(className, true);
+    idMunicipioSelecionado = id;
   };
 
-  function _getIdSelecionado() {
-      var id = this.id;
-      return id.replace(/.*_/, '');
+  function getIdSelecionado() {
+    var id = this.id;
+    return id.replace(/.*_/, '');
   }
 
   function _selectRegion() {
@@ -190,15 +191,10 @@ Map = (function ($) {
       }
     };
 
-    function montarScatterPlot() {
-      codigo = _getIdSelecionado();
-      var sm = new ScatterMatrix('servidor/dados_scatter.csv', undefined, "scatterPlot");
-      sm.render();
-    };
-
     return {
       'initialize': initialize,
-      "montarScatterPlot" : montarScatterPlot
+      "montarScatterPlot" : montarScatterPlot,
+      "getIdSelecionado" : getIdSelecionado
     };
   })(jQuery);
 
