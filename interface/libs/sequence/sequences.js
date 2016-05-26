@@ -1,20 +1,20 @@
 Sequence = (function($) {
 
     // Dimensions of sunburst.
-    var width = 750;
-    var height = 600;
+    var width = 850;
+    var height = 700;
     var radius = Math.min(width, height) / 2;
 
     // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
     var b = {
-        w: 75,
+        w: 200,
         h: 30,
         s: 3,
-        t: 10
+        t: 8
     };
 
     // Mapping of step names to colors.
-    var colors = {
+    /*var colors = {
         "Feminino": "#5687d1",
         "Masculino": "#7b615c",
         "2000": "#de783b",
@@ -26,7 +26,9 @@ Sequence = (function($) {
         "1998": getRandomColor(),
         "1999": getRandomColor(),
         "451": getRandomColor(),
-    };
+    };*/
+
+    var colors = {};
 
     // Total size of all segments; we set this later, after loading the data.
     var totalSize = 0;
@@ -64,13 +66,10 @@ Sequence = (function($) {
                 return Math.sqrt(d.y + d.dy);
             });
 
-            console.log("http://localhost/visualizacao/servidor/sequence.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#nivel1").val() + "&nivel2=" + $("#nivel2").val() + "&nivel3=" + $("#nivel3").val() + "&nivel4=" + $("#nivel4").val() + "&nivel5=" + $("#nivel5").val() + "&nivel6=" + $("#nivel6").val());
-
         $.ajax({
                 url: "http://localhost/visualizacao/servidor/sequence.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#nivel1").val() + "&nivel2=" + $("#nivel2").val() + "&nivel3=" + $("#nivel3").val() + "&nivel4=" + $("#nivel4").val() + "&nivel5=" + $("#nivel5").val() + "&nivel6=" + $("#nivel6").val()
             })
             .done(function(data) {
-                console.log("OBTI");
                 renderSubBurst();
             });
     }
@@ -88,8 +87,6 @@ Sequence = (function($) {
     function createVisualization(json) {
 
         // Basic setup of page elements.
-        initializeBreadcrumbTrail();
-        drawLegend();
         d3.select("#escopo_sequence #togglelegend").on("click", toggleLegend);
 
         // Bounding circle underneath the sunburst, to make it easier to detect
@@ -113,14 +110,29 @@ Sequence = (function($) {
             .attr("d", arc)
             .attr("fill-rule", "evenodd")
             .style("fill", function(d) {
-                if (colors[d.name]) {
-                    return colors[d.name];
-                } else {
-                    return getRandomColor();
+                if (!colors[d.name]) {
+                    while (true)  {
+                        var corTmp = getRandomColor();
+                        var pode = true;
+                        $.each(colors, function(key, value) {
+                            if (value == corTmp) {
+                                pode = false;
+                            }
+                        });
+                        if (pode) {
+                            colors[d.name] = corTmp;
+                            break;
+                        }
+                    }
                 }
+                return colors[d.name];
             })
             .style("opacity", 1)
             .on("mouseover", mouseover);
+
+            initializeBreadcrumbTrail();
+            drawLegend();
+        
 
         // Add the mouseleave handler to the bounding circle.
         d3.select("#escopo_sequence #container").on("mouseleave", mouseleave);
@@ -138,6 +150,8 @@ Sequence = (function($) {
             percentageString = "< 0.1%";
         }
 
+        percentageString = percentageString.replace(".", ",");
+
         d3.select("#escopo_sequence #percentage")
             .text(percentageString);
 
@@ -145,7 +159,6 @@ Sequence = (function($) {
             .style("visibility", "");
 
         var sequenceArray = getAncestors(d);
-        console.log(sequenceArray);
         updateBreadcrumbs(sequenceArray, percentageString);
 
         // Fade all the segments.
@@ -223,7 +236,6 @@ Sequence = (function($) {
 
     // Update the breadcrumb trail to show the current sequence and percentage.
     function updateBreadcrumbs(nodeArray, percentageString) {
-
         // Data join; key function combines name and depth (= position in sequence).
         var g = d3.select("#escopo_sequence #trail")
             .selectAll("g")
@@ -246,6 +258,9 @@ Sequence = (function($) {
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
             .text(function(d) {
+                if (d.name.length > 28) {
+                    return d.name.substr(0, 28);
+                }
                 return d.name;
             });
 
