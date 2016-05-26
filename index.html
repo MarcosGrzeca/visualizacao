@@ -1,275 +1,270 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
-  <meta charset="utf-8">
-  <title>Mortalidade no Rio Grande do Sul</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <link href="interface/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
-
-  <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
-
-  <link href="interface/estilos/fonts/awesome/font-awesome.css" rel="stylesheet">
-  <link href='interface/estilos/fonts/css.css' rel='stylesheet' type='text/css'>
-
-  <link href="interface/estilos/style.css" rel="stylesheet">
-  
-  <!-- Estilos visualizaçãoes -->
-  <link rel="stylesheet" href="interface/estilos/map.css">
-  <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
-
-  <link type="text/css" rel="stylesheet" href="interface/libs/sequence/sequences.css">
+    <meta charset="utf-8">
+    <title>Mortalidade no Rio Grande do Sul</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="interface/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
+    <link href="interface/estilos/fonts/awesome/font-awesome.css" rel="stylesheet">
+    <link href='interface/estilos/fonts/css.css' rel='stylesheet' type='text/css'>
+    <link href="interface/estilos/style.css" rel="stylesheet">
+    <!-- Estilos visualizaçãoes -->
+    <link rel="stylesheet" href="interface/estilos/map.css">
+    <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
+    <link type="text/css" rel="stylesheet" href="interface/libs/sequence/sequences.css">
 </head>
+
 <body>
-  <div class="header">
-    <div class="wrapper">
-      <h1>Índices de Mortalidade no Rio Grande do Sul</h1>
-    </div>
-  </div>
-  <div class="container-fluid">
-    <div class="loader hide"></div>
-    <div class="main">
-      <div class="visaoGeral">
+    <div class="header">
         <div class="wrapper">
-          <div style="" class="box ui-draggable ui-droppable">
-            <div class="box-header">
-              <div class="box-name"><i class="fa fa-filter"></i><span>Filtros</span>
-                <a class="" type="button" id="btn_min" style="float:right; margin-right:5px; cursor: pointer;" onclick="minimizarFiltros()">
-                  <i class="fa fa-minus-square-o "></i>
-                </a>
-                <a class="hide" type="button" id="btn_max" style="float:right; margin-right:5px; cursor: pointer;" onclick="maximizarFiltros()">
-                  <i class="fa fa-plus-square-o "></i>
-                </a>
-              </div>
-              <div class="no-move"></div>
-            </div>
-            <div class="box-content" id="box-filtros">
-              <div class="row">
-                <div class="col-sm-6">
-                  <div class="box box-content" style="min-height: 267px">
-                    <h4 class="page-header">CID</h4>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" checked="" value="" name="cid">Todas doenças
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>  
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="A00-B99" name="cid">Doenças infecciosas e parasitárias (A00-B99)
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="C00-D48" name="cid">Neoplasias (C00-D48)
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="I00-I99" name="cid">Doenças do aparelho circulatório (I00-I99)
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="J00-J99" name="cid">Doenças do aparelho respiratório (J00-J99)
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="P00-P96" name="cid">Afecções originadas no período perinatal (P00-P96)
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="V01-Y98" name="cid">Causas externas (V01-Y98)
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="box box-content">
-                    <h4 class="page-header">Sexo</h4>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" checked="" value="" name="sexo">Todas as categorias
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="1" name="sexo">Masculino
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="2" name="sexo">Feminino
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>  
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="box box-content">
-                    <h4 class="page-header">Conteúdo</h4>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" checked="" value="P" name="conteudo">Proporção de óbitos
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" value="N" name="conteudo">Número de óbitos
-                        <i class="fa fa-circle-o small"></i>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-2">
-                  <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="visualizacoes-gerais" class="hide">
-            <div class="bar-graph">
-              <h3>Cidades com maiores índices</h3>
-            </div>
-            <div class="info-mun">
-              <div class="dashboard-header">
-                <h3></h3>
-              </div>
-              <section>
-                <table style="width:100%">
-                  <tr>
-                    <td style="width:25%" class="ranking">
-                      <p>Ranking</p>
-                      <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
-                    </td>
-                    <td style="width:25%">
-                      <p>Mortes</p>
-                      <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
-                    </td>
-                    <td style="width:25%">
-                      <p>Total de mortes</p>
-                      <p class="mortesTotal"><span><em></em></span></p>
-                    </td>
-                    <td style="width:25%">
-                      <p>População</p>
-                      <p class="population"><em></em></p>
-                    </td>
-                  </tr>
-                </table>  
-              </section>
-              <div id="dashboard-bar">
-                <table>
-                  <tr>
-                    <td style="width:70%">
-                      <div class="timeline">
-                        <p>Mortes por ano (1995-2005)<br><span></span></p>
-                      </div>
-                    </td>
-                    <td style="vertical-align:bottom">
-                      <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-            <div id="map">
-              <img src="interface/images/spinner.gif" class="loading" alt="spinner">
-            </div>
-          </div>
+            <h1>Índices de Mortalidade no Rio Grande do Sul</h1>
         </div>
-      </div>
-      <div class="porMunicipio hide">
-
-        <div class="row">
-        <div class="col-md-6 col-sm-offset-3">
-            <div class="info-mun" style="width:100%">
-              <div class="dashboard-header">
-                <h3></h3>
-              </div>
-              <section>
-                <table style="width:100%">
-                  <tr>
-                    <td style="width:25%" class="ranking">
-                      <p>Ranking</p>
-                      <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
-                    </td>
-                    <td style="width:25%">
-                      <p>Mortes</p>
-                      <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
-                    </td>
-                    <td style="width:25%">
-                      <p>Total de mortes</p>
-                      <p class="mortesTotal"><span><em></em></span></p>
-                    </td>
-                    <td style="width:25%">
-                      <p>População</p>
-                      <p class="population"><em></em></p>
-                    </td>
-                  </tr>
-                </table>  
-              </section>
-            </div>
-          </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <ul class="nav nav-tabs">
-                <li class="active">
-                  <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'scatterPlot'); return false;">ScatterPlot</a>
-                </li>
-                <li class="">
-                  <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); return false;">Sequences Sunburst</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-12">
-              <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
-                <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
-                <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
-                  <div id="main_sequence">
-                    <div id="sequence"></div>
-                    <div id="chart">
-                      <div id="explanation" style="visibility: hidden;">
-                        <span id="percentage"></span><br/>
-                        of visits begin with this sequence of pages
-                      </div>
-                    </div>
-                  </div>
-                  <div id="sidebar">
-                    <input type="checkbox" id="togglelegend"> Legend<br/>
-                    <div id="legend" style="visibility: hidden;"></div>
-                  </div>
-                </div>          
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-
-  </div>
-  <script src="interface/libs/jquery-1.7.2.min.js"></script>
-  <script src="interface/libs/d3.min.js"></script>
-  <script src="interface/libs/jquery.sparkline.min.js"></script>
-  <script src="interface/scripts/utils.js"></script>
-  <script src="interface/libs/sequence/sequences.js"></script>
-  <script src="interface/scripts/map.js"></script>
-  <script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
-  <script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
-
+    <div class="container-fluid">
+        <div class="loader hide"></div>
+        <div class="main">
+            <div class="visaoGeral">
+                <div class="wrapper">
+                    <div style="" class="box ui-draggable ui-droppable">
+                        <div class="box-header">
+                            <div class="box-name"><i class="fa fa-filter"></i><span>Filtros</span>
+                                <a class="" type="button" id="btn_min" style="float:right; margin-right:5px; cursor: pointer;" onclick="minimizarFiltros()">
+                                    <i class="fa fa-minus-square-o "></i>
+                                </a>
+                                <a class="hide" type="button" id="btn_max" style="float:right; margin-right:5px; cursor: pointer;" onclick="maximizarFiltros()">
+                                    <i class="fa fa-plus-square-o "></i>
+                                </a>
+                            </div>
+                            <div class="no-move"></div>
+                        </div>
+                        <div class="box-content" id="box-filtros">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="box box-content" style="min-height: 267px">
+                                        <h4 class="page-header">CID</h4>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" checked="" value="" name="cid">Todas doenças
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="A00-B99" name="cid">Doenças infecciosas e parasitárias (A00-B99)
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="C00-D48" name="cid">Neoplasias (C00-D48)
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="I00-I99" name="cid">Doenças do aparelho circulatório (I00-I99)
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="J00-J99" name="cid">Doenças do aparelho respiratório (J00-J99)
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="P00-P96" name="cid">Afecções originadas no período perinatal (P00-P96)
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="V01-Y98" name="cid">Causas externas (V01-Y98)
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="box box-content">
+                                        <h4 class="page-header">Sexo</h4>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" checked="" value="" name="sexo">Todas as categorias
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="1" name="sexo">Masculino
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="2" name="sexo">Feminino
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="box box-content">
+                                        <h4 class="page-header">Conteúdo</h4>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" checked="" value="P" name="conteudo">Proporção de óbitos
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="N" name="conteudo">Número de óbitos
+                                                <i class="fa fa-circle-o small"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="visualizacoes-gerais" class="hide">
+                        <div class="bar-graph">
+                            <h3>Cidades com maiores índices</h3>
+                        </div>
+                        <div class="info-mun">
+                            <div class="dashboard-header">
+                                <h3></h3>
+                            </div>
+                            <section>
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="width:25%" class="ranking">
+                                            <p>Ranking</p>
+                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
+                                        </td>
+                                        <td style="width:25%">
+                                            <p>Mortes</p>
+                                            <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
+                                        </td>
+                                        <td style="width:25%">
+                                            <p>Total de mortes</p>
+                                            <p class="mortesTotal"><span><em></em></span></p>
+                                        </td>
+                                        <td style="width:25%">
+                                            <p>População</p>
+                                            <p class="population"><em></em></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </section>
+                            <div id="dashboard-bar">
+                                <table>
+                                    <tr>
+                                        <td style="width:70%">
+                                            <div class="timeline">
+                                                <p>Mortes por ano (1995-2005)
+                                                    <br><span></span></p>
+                                            </div>
+                                        </td>
+                                        <td style="vertical-align:bottom">
+                                            <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="map">
+                            <img src="interface/images/spinner.gif" class="loading" alt="spinner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="porMunicipio hide">
+                <div class="row">
+                    <div class="col-md-6 col-sm-offset-3">
+                        <div class="info-mun" style="width:100%">
+                            <div class="dashboard-header">
+                                <h3></h3>
+                            </div>
+                            <section>
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="width:25%" class="ranking">
+                                            <p>Ranking</p>
+                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
+                                        </td>
+                                        <td style="width:25%">
+                                            <p>Mortes</p>
+                                            <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
+                                        </td>
+                                        <td style="width:25%">
+                                            <p>Total de mortes</p>
+                                            <p class="mortesTotal"><span><em></em></span></p>
+                                        </td>
+                                        <td style="width:25%">
+                                            <p>População</p>
+                                            <p class="population"><em></em></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'scatterPlot'); montarScatterPlot(); return false;">ScatterPlot</a>
+                            </li>
+                            <li class="">
+                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); montarSequenceSunburst(); return false;">Sequences Sunburst</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
+                            <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
+                            <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
+                                <div id="main_sequence">
+                                    <div id="sequence"></div>
+                                    <div id="chart">
+                                        <div id="explanation" style="visibility: hidden;">
+                                            <span id="percentage"></span>
+                                            <br/> of visits begin with this sequence of pages
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="sidebar">
+                                    <input type="checkbox" id="togglelegend"> Legend
+                                    <br/>
+                                    <div id="legend" style="visibility: hidden;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="interface/libs/jquery-1.7.2.min.js"></script>
+    <script src="interface/libs/d3.min.js"></script>
+    <script src="interface/libs/jquery.sparkline.min.js"></script>
+    <script src="interface/scripts/utils.js"></script>
+    <script src="interface/libs/sequence/sequences.js"></script>
+    <script src="interface/scripts/map.js"></script>
+    <script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
+    <script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
 </body>
+
 </html>

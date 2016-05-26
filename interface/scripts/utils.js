@@ -45,6 +45,7 @@ function ocultarVisualizacoesMunicipio() {
 }
 
 function trocarAba(aba, divExibir) {
+  wait();
   $(".porMunicipio .nav-tabs > li.active").removeClass("active");
   aba.parent().addClass("active").removeClass("hide");
   $("#" + divExibir).removeClass("hide").show();
@@ -86,6 +87,9 @@ function getIdMunicipioSelecionado() {
   return idMunicipioSelecionado.replace(/.*_/, '');
 }
 
+function montarSequenceSunburst() {
+  
+}
 
 setTimeout(function(){ 
 exibirGraficosPorMunicipio();}, 3000);
