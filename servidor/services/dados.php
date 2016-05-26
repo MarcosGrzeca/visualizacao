@@ -104,6 +104,11 @@ class Dados {
 				$obj["idade"] = $this->_getIdade($obj["idade"]);
 			}
 
+			if (isset($obj["esc"])) {
+				$obj["esc"] = $this->_getEscolariedade($obj["esc"]);
+			}
+			
+
 			if (isset($obj["causabas"])) {
 				if (in_array($obj["causabas"], $doencas)) {
 					$obj["causabas"] = $doencas[$obj["causabas"]];
@@ -144,6 +149,29 @@ class Dados {
 			$idadeCalculada = ($idade - 300) / 100;
 		}
 		return $idadeCalculada;
+	}
+
+	function _getEscolariedade($esc) {
+		switch ($esc) {
+			case "1":
+				$esc = "Nenhum";
+			break;
+			case "2": 
+				$esc = "1 a 3 anos";
+				break;
+			case "3": 
+				$esc = "4 a 7 anos";
+				break;
+			case "4": 
+				$esc = "5 a 11 anos";
+				break;
+			case "5": 
+				$esc = "12 e mais";
+				break;
+			default: 
+				$esc = "Ignorado";
+		}
+		return $esc;
 	}
 
 	function _getDescricaoCid($cid) {

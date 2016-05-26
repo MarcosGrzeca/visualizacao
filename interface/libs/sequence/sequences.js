@@ -37,6 +37,7 @@ Sequence = (function($) {
     function initialize() {
         $("#chart > svg").remove();
         $("#sequence > trail > svg").remove();
+        colors = {};
 
         wait();
         vis = d3.select("#escopo_sequence #chart").append("svg:svg")
@@ -290,7 +291,7 @@ Sequence = (function($) {
 
         // Dimensions of legend item: width, height, spacing, radius of rounded rect.
         var li = {
-            w: 75,
+            w: 190,
             h: 30,
             s: 3,
             r: 3
