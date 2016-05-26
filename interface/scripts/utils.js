@@ -98,6 +98,6 @@ function montarSequenceSunburst() {
     closeWait();
 }
 
-setTimeout(function() {
+/*setTimeout(function() {
     exibirGraficosPorMunicipio();
-}, 3000);
+}, 3000);*/
