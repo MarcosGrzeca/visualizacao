@@ -55,5 +55,13 @@ function atualizarGrafico() {
 }
 
 function minimizarFiltros() {
-  
+  $("#box-filtros").addClass("hide");  
+  $("#btn_min").addClass("hide");
+  $("#btn_max").removeClass("hide");
+}
+
+function maximizarFiltros() {
+  $("#box-filtros").removeClass("hide");  
+  $("#btn_min").addClass("hide");
+  $("#btn_max").removeClass("hide");
 }

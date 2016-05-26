@@ -35,8 +35,11 @@
           <div style="" class="box ui-draggable ui-droppable">
             <div class="box-header">
               <div class="box-name"><i class="fa fa-filter"></i><span>Filtros</span>
-              <a clas="btn btn-default" type="button" style="float:right; margin-right:5px; cursor: pointer;" onclick="minimizarFiltros()">
+                <a class="" type="button" id="btn_min" style="float:right; margin-right:5px; cursor: pointer;" onclick="minimizarFiltros()">
                   <i class="fa fa-minus-square-o "></i>
+                </a>
+                <a class="hide" type="button" id="btn_max" style="float:right; margin-right:5px; cursor: pointer;" onclick="maximizarFiltros()">
+                  <i class="fa fa-plus-square-o "></i>
                 </a>
               </div>
               <div class="no-move"></div>
@@ -167,32 +170,38 @@
                 </table>  
               </section>
               <div id="dashboard-bar">
-                <div class="timeline">
-                  <p>Mortes por ano (1995-2005)<br><span></span></p>
-                </div>
-              </section>
-              <br/>
-              <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
+                <table>
+                  <tr>
+                    <td style="width:70%">
+                      <div class="timeline">
+                        <p>Mortes por ano (1995-2005)<br><span></span></p>
+                      </div>
+                    </td>
+                    <td style="vertical-align:bottom">
+                      <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
             </div>
-          </div>
-          <div id="map">
-            <img src="interface/images/spinner.gif" class="loading" alt="spinner">
+            <div id="map">
+              <img src="interface/images/spinner.gif" class="loading" alt="spinner">
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="porMunicipio hide">
-      <div class="col-md-12">
+      <div class="porMunicipio hide">
+        <div class="col-md-12">
 
-        <ul class="nav nav-tabs">
-          <li class="abas active"><a href="#">Dispersão</a></li>
-          <li class="abas"><a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); return false;">Sequence</a></li>
-          <li class="abas"><a href="#">Menu 2</a></li>
-        </ul>
-      </div>
+          <ul class="nav nav-tabs">
+            <li class="abas active"><a href="#">Dispersão</a></li>
+            <li class="abas"><a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); return false;">Sequence</a></li>
+            <li class="abas"><a href="#">Menu 2</a></li>
+          </ul>
+        </div>
 
-      <div class="col-md-12">
-        <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
+        <div class="col-md-12">
+          <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
           <!--<div class="box-header">
             <div class="box-name"><i class="fa fa-bar-chart-o"></i><span>ScatterPlot</span></div>
             <div class="no-move"></div>
