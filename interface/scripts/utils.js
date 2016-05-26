@@ -53,3 +53,7 @@ function trocarAba(aba, divExibir) {
 function atualizarGrafico() {
   Map.initialize($('#map'), 'interface/mapa/Mapa_Rio_Grande_do_Sul.svg');  
 }
+
+function minimizarFiltros() {
+  
+}

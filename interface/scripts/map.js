@@ -71,7 +71,7 @@ Map = (function ($) {
   function _loadEstupros(callback) {
     //$.getJSON('data/dados_estupros2.json', function (data) {
       wait();
-      $.getJSON('http://localhost/visualizacao/servidor/dados.php?cid=' + $('input[name=cid]:checked').val(), function (data) {
+      $.getJSON('http://localhost/visualizacao/servidor/dados.php?cid=' + $('input[name=cid]:checked').val() + "&sexo=" + $('input[name=sexo]:checked').val()+ "&conteudo=" + $('input[name=conteudo]:checked').val(), function (data) {
         Mortes = data;
         callback();
         closeWait();

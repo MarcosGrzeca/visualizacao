@@ -32,104 +32,110 @@
     <div class="main">
       <div class="visaoGeral">
         <div class="wrapper">
-          <div id="filtros" class="well well-lg">
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="box box-content" style="min-height: 267px">
-                  <h4 class="page-header">CID</h4>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" checked="" value="" name="cid">Todas doenças
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>  
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="A00-B99" name="cid">Doenças infecciosas e parasitárias (A00-B99)
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="C00-D48" name="cid">Neoplasias (C00-D48)
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="I00-I99" name="cid">Doenças do aparelho circulatório (I00-I99)
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="J00-J99" name="cid">Doenças do aparelho respiratório (J00-J99)
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="P00-P96" name="cid">Afecções originadas no período perinatal (P00-P96)
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="V01-Y98" name="cid">Causas externas (V01-Y98)
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
+          <div style="" class="box ui-draggable ui-droppable">
+            <div class="box-header">
+              <div class="box-name"><i class="fa fa-filter"></i><span>Filtros</span>
+              <a clas="btn btn-default" type="button" style="float:right; margin-right:5px; cursor: pointer;" onclick="minimizarFiltros()">
+                  <i class="fa fa-minus-square-o "></i>
+                </a>
+              </div>
+              <div class="no-move"></div>
+            </div>
+            <div class="box-content" id="box-filtros">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="box box-content" style="min-height: 267px">
+                    <h4 class="page-header">CID</h4>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" checked="" value="" name="cid">Todas doenças
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>  
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="A00-B99" name="cid">Doenças infecciosas e parasitárias (A00-B99)
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="C00-D48" name="cid">Neoplasias (C00-D48)
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="I00-I99" name="cid">Doenças do aparelho circulatório (I00-I99)
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="J00-J99" name="cid">Doenças do aparelho respiratório (J00-J99)
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="P00-P96" name="cid">Afecções originadas no período perinatal (P00-P96)
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="V01-Y98" name="cid">Causas externas (V01-Y98)
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="box box-content">
-                  <h4 class="page-header">Sexo</h4>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" checked="" value="" name="sexo">Todas as categorias
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="1" name="sexo">Masculino
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="2" name="sexo">Feminino
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>  
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="box box-content">
-                  <h4 class="page-header">Conteúdo</h4>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" checked="" value="P" name="conteudo">Proporção de óbitos
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" value="N" name="conteudo">Número de óbitos
-                      <i class="fa fa-circle-o small"></i>
-                    </label>
+                <div class="col-sm-6">
+                  <div class="box box-content">
+                    <h4 class="page-header">Sexo</h4>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" checked="" value="" name="sexo">Todas as categorias
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="1" name="sexo">Masculino
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="2" name="sexo">Feminino
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>  
                   </div>
                 </div>
-              </div>
-              <div class="col-sm-2">
-                <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
-              </div>
-              <div class="col-sm-2">
-                <button onclick="minimizarFiltros()" type="button" class="btn btn-default"><i class="fa fa-minus-square-o"></i> Minimizar filtros</button>
+                <div class="col-sm-6">
+                  <div class="box box-content">
+                    <h4 class="page-header">Conteúdo</h4>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" checked="" value="P" name="conteudo">Proporção de óbitos
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" value="N" name="conteudo">Número de óbitos
+                        <i class="fa fa-circle-o small"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
+                </div>
               </div>
             </div>
           </div>
-
           <div id="visualizacoes-gerais" class="hide">
             <div class="bar-graph">
               <h3>Cidades com maiores índices</h3>

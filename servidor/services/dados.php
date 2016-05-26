@@ -6,10 +6,19 @@ require_once(SYSTEM_DIR . "servidor/services/municipio.php");
 
 class Dados {
 
-	function montarMapa($cid) {
+	function montarMapa($cid, $sexo, $conteudo) {
 		$resultado = array();
+
+		$cidInicial = "";
+		$cidFinal = "";
+		if (trim($cid) != "") {
+			$cids = explode("-", $cid);
+			$cidInicial = $cids[0];
+			$cidFinal = $cids[1];
+		}
+
 		$dados = new DadosModel();
-		$dados->montarMapa($cid);
+		$dados->montarMapa($cidInicial, $cidFinal, $sexo);
 		$municipio = new Municipio();
 		$maximaProporcao = 0;		
 		while ($obj = $dados->getRegistro()) {
@@ -26,7 +35,7 @@ class Dados {
 		}
 
 		$resultado["4314548"] = $resultado["4302105"];
-		
+
 		$maiorIndice = 0;
 		foreach ($resultado as $key => $value) {
 			if ($value["proporcao"] > $maiorIndice) {
@@ -66,14 +75,14 @@ class Dados {
 	function _getDescricaoSexo($sexo) {
 		switch ($sexo) {
 			case '1':
-				$sexoDesc = "Masculino";
-				break;
+			$sexoDesc = "Masculino";
+			break;
 			case '2' :
-				$sexoDesc = "Feminino";
-				break;
+			$sexoDesc = "Feminino";
+			break;
 			default:
-				$sexoDesc = "Não informado";
-				break;
+			$sexoDesc = "Não informado";
+			break;
 		}
 		return $sexoDesc;
 	}
