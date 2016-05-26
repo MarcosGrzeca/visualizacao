@@ -61,6 +61,7 @@ Map = (function ($) {
     $('.population em').text(cidade.populacao);
     $('.ranking em').text(ranking+'ª');
     $('.proporcao em').text(parseInt(cidade.proporcao));
+    $('.mortesTotal em').text(parseInt(cidade.ocorrencias));
     $("#numTotalCidades").html("/" + Object.keys(Mortes).length);
   };
 
@@ -109,6 +110,7 @@ Map = (function ($) {
 
     function _drawBars() {
       try {
+        $(".bar-graph > ul").remove();
         d3.select('.bar-graph').append('ul').selectAll('li')
         .data(getTopMunicipios()).enter().append('li')
         .attr('class', function (id) { 

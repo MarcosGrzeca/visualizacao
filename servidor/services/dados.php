@@ -30,25 +30,32 @@ class Dados {
 			$resultado[$obj["codmunres"]]["ocorrencias"] += $obj["ocorrencias"];
 			$resultado[$obj["codmunres"]]["anos"][$obj["anobase"]] = $obj["ocorrencias"];
 			$resultado[$obj["codmunres"]]["opacity"] = 0;
-			//$resultado[$obj["codmunres"]]["proporcao"] = $resultado[$obj["codmunres"]]["ocorrencias"] / $resultado[$obj["codmunres"]]["populacao"];
 			$resultado[$obj["codmunres"]]["proporcao"] = ($resultado[$obj["codmunres"]]["ocorrencias"] * 100000) / ($resultado[$obj["codmunres"]]["populacao"] * count($resultado[$obj["codmunres"]]["anos"]));
 		}
 
 		$resultado["4314548"] = $resultado["4302105"];
 
 		$maiorIndice = 0;
+		$conteudo = trim($conteudo);
 		foreach ($resultado as $key => $value) {
-			if ($value["proporcao"] > $maiorIndice) {
-				$maiorIndice = $value["proporcao"];
+			if ($conteudo == "P") {
+				if ($value["proporcao"] > $maiorIndice) {
+					$maiorIndice = $value["proporcao"];
+				}
+			} else {
+				if ($value["ocorrencias"] > $maiorIndice) {
+					$maiorIndice = $value["ocorrencias"];
+				}
 			}
 		}
 		foreach ($resultado as $key => $value) {
-			$resultado[$key]["opacity"] = $value["proporcao"] / $maiorIndice;
+			if ($conteudo == "P") {
+				$resultado[$key]["opacity"] = $value["proporcao"] / $maiorIndice;
+			} else {
+				$resultado[$key]["opacity"] = $value["ocorrencias"] / $maiorIndice;
+			}
 		}
-		/*
-		debug(date("H:i:s.u"), "W");
-		debug($resultado);
-		debug(count($resultado));*/
+		//debug(date("H:i:s.u"), "W");
 		return $resultado;
 	}
 
