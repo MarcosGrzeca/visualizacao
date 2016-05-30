@@ -68,3 +68,10 @@ http://mbostock.github.io/d3/talk/20111116/bar-hierarchy.html
 https://gist.github.com/kerryrodden/7090426
 
 https://gist.github.com/mbostock/1283663
+
+ColorMap:
+https://github.com/bpostlethwaite/colormapx
+
+TableLens:
+http://stackoverflow.com/questions/30019647/how-to-create-a-javascript-table-lens
+https://github.com/lvterry/learn-d3/blob/master/table_lens.html
