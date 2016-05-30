@@ -1,4 +1,4 @@
-"Data Óbito","Sexo","CID","Ano","Idade"
+"Data Óbito","Sexo","Causa Básica","Ano Base","Idade"
 "08011996","Feminino","Y200","1996","48"
 "26051996","Feminino","I500","1996","82"
 "23051996","Masculino","I10 ","1996","80"

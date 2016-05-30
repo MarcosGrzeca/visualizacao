@@ -69,7 +69,7 @@ class Dados {
 		} catch (Exception $e) {
 			
 		}
-		$obj = array("Data Óbito", "Sexo", "CID", "Ano", "Idade");
+		$obj = array("Data Óbito", "Sexo", "Causa Básica", "Ano Base", "Idade");
 		file_put_contents($nomeArquivo, gerarCvsLinha($obj), FILE_APPEND);
 		while ($obj = $dados->getRegistro()) {
 			$obj["sexo"] = $this->_getDescricaoSexo($obj["sexo"]);
