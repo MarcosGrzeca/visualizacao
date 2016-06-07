@@ -102,6 +102,14 @@ function montarSequenceSunburst() {
     Sequence.initialize();
 }
 
+function exibirOcultarAnosComparacao() {
+    if ($("#compararAnos").attr("checked")) {
+        $("#boxComparacaoAnos").removeClass("hide");
+    } else {
+        $("#boxComparacaoAnos").addClass("hide");
+    }
+}
+
 /*setTimeout(function() {
     exibirGraficosPorMunicipio();
 }, 3000);*/

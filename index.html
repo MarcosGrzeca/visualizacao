@@ -128,6 +128,49 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-3">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="S" id="compararAnos" onclick="exibirOcultarAnosComparacao();">Comparar anos
+                                            <i class="fa fa-square-o"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 hide" id="boxComparacaoAnos">
+                                    <div class="box box-content">
+                                        <h4 class="page-header">Anos bases</h4>
+                                        <div class="row form-group">
+                                            <div class="col-sm-6">
+                                                <select onchange="" class="form-control" name="anoBase1" id="anoBase1">
+                                                    <option value="1996" selected="">1996</option>
+                                                    <option value="1997">1997</option>
+                                                    <option value="1998">1998</option>
+                                                    <option value="1999">1999</option>
+                                                    <option value="2000">2000</option>
+                                                    <option value="2001">2001</option>
+                                                    <option value="2002">2002</option>
+                                                    <option value="2003">2003</option>
+                                                    <option value="2004">2004</option>
+                                                    <option value="2005">2005</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <select onchange="" class="form-control" name="anoBase2" id="anoBase2">
+                                                    <option value="1996">1996</option>
+                                                    <option value="1997">1997</option>
+                                                    <option value="1998">1998</option>
+                                                    <option value="1999">1999</option>
+                                                    <option value="2000">2000</option>
+                                                    <option value="2001">2001</option>
+                                                    <option value="2002">2002</option>
+                                                    <option value="2003">2003</option>
+                                                    <option value="2004">2004</option>
+                                                    <option value="2005" selected="">2005</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-sm-2">
                                     <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
                                 </div>
@@ -236,102 +279,102 @@
                         <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
                             <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
                             <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
-                                <div style="" class="box ui-draggable ui-droppable"">
-                                    <div class="box-header">
-                                        <div class="box-name"><i class="fa fa-cog"></i><span>Configurações</span></div>
-                                        <div class="no-move"></div>
+                                <div style="" class="box ui-draggable ui-droppable" ">
+                                    <div class="box-header ">
+                                        <div class="box-name "><i class="fa fa-cog "></i><span>Configurações</span></div>
+                                        <div class="no-move "></div>
                                     </div>
-                                    <div class="box-content" id="box-filtros">
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                <label for="nivel1">1º Nível</label>
-                                                <select class="form-control" id="nivel1">
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo" selected>Sexo</option>
+                                    <div class="box-content " id="box-filtros ">
+                                        <div class="row ">
+                                            <div class="col-md-2 ">
+                                                <label for="nivel1 ">1º Nível</label>
+                                                <select class="form-control " id="nivel1 ">
+                                                    <option value="anobase ">Ano Base</option>
+                                                    <option value="causabas ">Causa Básica</option>
+                                                    <option value="esc ">Escolaridade</option>
+                                                    <option value="idade ">Idade</option>
+                                                    <option value="sexo " selected>Sexo</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label for="nivel2">2º Nível</label>
-                                                <select class="form-control" id="nivel2">
-                                                    <option value="">Selecione</option>
-                                                    <option value="anobase" seleBted>Ano base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
+                                            <div class="col-md-2 ">
+                                                <label for="nivel2 ">2º Nível</label>
+                                                <select class="form-control " id="nivel2 ">
+                                                    <option value=" ">Selecione</option>
+                                                    <option value="anobase " seleBted>Ano base</option>
+                                                    <option value="causabas ">Causa Básica</option>
+                                                    <option value="esc ">Escolaridade</option>
+                                                    <option value="idade ">Idade</option>
+                                                    <option value="sexo ">Sexo</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label for="nivel3">3º Nível</label>
-                                                <select class="form-control" id="nivel3">
-                                                    <option value="" selected="">Selecione</option>
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
+                                            <div class="col-md-2 ">
+                                                <label for="nivel3 ">3º Nível</label>
+                                                <select class="form-control " id="nivel3 ">
+                                                    <option value=" " selected=" ">Selecione</option>
+                                                    <option value="anobase ">Ano Base</option>
+                                                    <option value="causabas ">Causa Básica</option>
+                                                    <option value="esc ">Escolaridade</option>
+                                                    <option value="idade ">Idade</option>
+                                                    <option value="sexo ">Sexo</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label for="nivel4">4º Nível</label>
-                                                <select class="form-control" id="nivel4">
-                                                    <option value="" selected="">Selecione</option>
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
+                                            <div class="col-md-2 ">
+                                                <label for="nivel4 ">4º Nível</label>
+                                                <select class="form-control " id="nivel4 ">
+                                                    <option value=" " selected=" ">Selecione</option>
+                                                    <option value="anobase ">Ano Base</option>
+                                                    <option value="causabas ">Causa Básica</option>
+                                                    <option value="esc ">Escolaridade</option>
+                                                    <option value="idade ">Idade</option>
+                                                    <option value="sexo ">Sexo</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label for="nivel5">5º Nível</label>
-                                                <select class="form-control" id="nivel5">
-                                                    <option value="" selected="">Selecione</option>
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
+                                            <div class="col-md-2 ">
+                                                <label for="nivel5 ">5º Nível</label>
+                                                <select class="form-control " id="nivel5 ">
+                                                    <option value=" " selected=" ">Selecione</option>
+                                                    <option value="anobase ">Ano Base</option>
+                                                    <option value="causabas ">Causa Básica</option>
+                                                    <option value="esc ">Escolaridade</option>
+                                                    <option value="idade ">Idade</option>
+                                                    <option value="sexo ">Sexo</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-2 hide">
-                                                <label for="nivel6">6º Nível</label>
-                                                <select class="form-control" id="nivel6">
-                                                    <option value="" selected="">Selecione</option>
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
+                                            <div class="col-md-2 hide ">
+                                                <label for="nivel6 ">6º Nível</label>
+                                                <select class="form-control " id="nivel6 ">
+                                                    <option value=" " selected=" ">Selecione</option>
+                                                    <option value="anobase ">Ano Base</option>
+                                                    <option value="causabas ">Causa Básica</option>
+                                                    <option value="esc ">Escolaridade</option>
+                                                    <option value="idade ">Idade</option>
+                                                    <option value="sexo ">Sexo</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <br/>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                            <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Gerar visualização</button>
+                                        <div class="row ">
+                                            <div class="col-md-3 ">
+                                            <button class="btn btn-success " type="button " onclick="Sequence.initialize(); "><i class="fa fa-bars "></i> Gerar visualização</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div id="main_sequence" style="float:left;">
-                                            <div id="sequence"></div>
-                                            <div id="chart">
-                                                <div id="explanation" style="visibility: hidden;">
-                                                    <span id="percentage"></span>
+                                <div class="row ">
+                                    <div class="col-md-12 ">
+                                        <div id="main_sequence " style="float:left; ">
+                                            <div id="sequence "></div>
+                                            <div id="chart ">
+                                                <div id="explanation " style="visibility: hidden; ">
+                                                    <span id="percentage "></span>
                                                     <br/>dos óbitos
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="sidebar">
-                                            <input type="checkbox" id="togglelegend"> Legenda
+                                        <div id="sidebar ">
+                                            <input type="checkbox " id="togglelegend "> Legenda
                                             <br/>
-                                            <div id="legend" style="visibility: hidden;"></div>
+                                            <div id="legend " style="visibility: hidden; "></div>
                                         </div>
                                     </div>
                                 </div>
@@ -343,14 +386,14 @@
         </div>
     </div>
     </div>
-    <script src="interface/libs/jquery-1.7.2.min.js"></script>
-    <script src="interface/libs/d3.min.js"></script>
-    <script src="interface/libs/jquery.sparkline.min.js"></script>
-    <script src="interface/scripts/utils.js"></script>
-    <script src="interface/libs/sequence/sequences.js"></script>
-    <script src="interface/scripts/map.js"></script>
-    <script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
-    <script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="interface/libs/jquery-1.7.2.min.js "></script>
+    <script src="interface/libs/d3.min.js "></script>
+    <script src="interface/libs/jquery.sparkline.min.js "></script>
+    <script src="interface/scripts/utils.js "></script>
+    <script src="interface/libs/sequence/sequences.js "></script>
+    <script src="interface/scripts/map.js "></script>
+    <script src="interface/libs/scatter-matrix-master/scatter-matrix.js "></script>
+    <script src="interface/libs/bootstrap/js/bootstrap.min.js "></script>
 </body>
 
 </html>
