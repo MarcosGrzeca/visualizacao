@@ -143,7 +143,7 @@ class Dados {
 
 		foreach ($resultado as $key => $value) {
 			if ($value["diferenca"] < 0) {
-				$resultado[$key]["opacity"] = $value["diferenca"] / $diferencaNegativa;
+				$resultado[$key]["opacity"] = ($value["diferenca"] / $diferencaNegativa) * -1 ;
 			}
 			if ($value["diferenca"] > 0) {
 				$resultado[$key]["opacity"] = $value["diferenca"] / $diferencaPositiva;

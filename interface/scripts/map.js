@@ -106,12 +106,13 @@ Map = (function($) {
     }
 
     function _colorRegions() {
-
         $.each(Mortes, function(key, value) {
-            if (value["diferenca"] > 0 || !_ehComparativo()) {
+            if (parseFloat(value["opacity"]) == 0 && _ehComparativo()) {
+                $("#svg_" + key).css("fill", "rgba(0,0,255, 0.1)");
+            } else if (parseFloat(value["opacity"]) > 0 || !_ehComparativo()) {
                 $("#svg_" + key).css("fill", "rgba(153,0,0," + value["opacity"] + ")");
             } else {
-                $("#svg_" + key).css("fill", "rgba(0,165,0," + value["opacity"] + ")");
+                $("#svg_" + key).css("fill", "rgba(0,165,0," + parseFloat(value["opacity"]) * -1 + ")");
             }
         });
 
@@ -168,7 +169,13 @@ Map = (function($) {
 
     function _barInfo(id) {
         var regiao = Mortes[id];
-        meter = "<span class='meter' style='width: " + regiao.opacity * 100 + "%; background-color: rgba(220, 20, 60, " + regiao.opacity + ")'>" + regiao.nome + "</span>";
+        if (parseFloat(regiao.opacity) == 0 && _ehComparativo()) {
+            meter = "<span class='meter' style='width: 10%; background-color: rgba(0,0,255, 1)'>" + regiao.nome + "</span>";
+        } else if (parseFloat(regiao.opacity) > 0 || !_ehComparativo()) {
+            meter = "<span class='meter' style='width: " + regiao.opacity * 100 + "%; background-color: rgba(220, 20, 60, " + regiao.opacity + ")'>" + regiao.nome + "</span>";
+        } else {
+            meter = "<span class='meter' style='width: " + (parseFloat(regiao.opacity) * -100) + "%; background-color: rgba(20, 198, 60, " + parseFloat(regiao.opacity) * -1 + ")'>" + regiao.nome + "</span>";
+        }
         return meter;
     }
 
