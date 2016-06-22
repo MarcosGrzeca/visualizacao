@@ -100,10 +100,19 @@ Map = (function($) {
         d3.select(element).on('click').call(element);
     };
 
+    function _ehComparativo() {
+        return $("#compararAnos").attr("checked");
+       
+    }
+
     function _colorRegions() {
 
         $.each(Mortes, function(key, value) {
-            $("#svg_" + key).css("fill", "rgba(153,0,0," + value["opacity"] + ")");
+            if (value["diferenca"] > 0 || !_ehComparativo()) {
+                $("#svg_" + key).css("fill", "rgba(153,0,0," + value["opacity"] + ")");
+            } else {
+                $("#svg_" + key).css("fill", "rgba(0,165,0," + value["opacity"] + ")");
+            }
         });
 
         d3.selectAll('#map .bar-graph li')

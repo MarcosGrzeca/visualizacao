@@ -59,6 +59,101 @@ class Dados {
 		return $resultado;
 	}
 
+	function montarMapaComparativo($anoBase1, $anoBase2, $cid, $sexo, $conteudo) {
+		$resultado = array();
+
+		$cidInicial = "";
+		$cidFinal = "";
+		if (trim($cid) != "") {
+			$cids = explode("-", $cid);
+			$cidInicial = $cids[0];
+			$cidFinal = $cids[1];
+		}
+
+		$dados = new DadosModel();
+		$dados->montarMapa($cidInicial, $cidFinal, $sexo);
+		$municipio = new Municipio();
+		$maximaProporcao = 0;		
+
+		$idMunAnterior = -1;
+		while ($obj = $dados->getRegistro()) {
+
+			if ($idMunAnterior == -1) {
+				$idMunAnterior = $obj["codmunres"];
+			}
+
+			if ($idMunAnterior != $obj["codmunres"]) {
+				if (!isset($resultado[$idMunAnterior]["anoBase2"]) || !isset($resultado[$idMunAnterior]["anoBase1"])) {
+					$resultado[$idMunAnterior]["diferenca"] = 0;
+				} else {
+					$resultado[$idMunAnterior]["diferenca"] = $resultado[$idMunAnterior]["anoBase2"] - $resultado[$idMunAnterior]["anoBase1"];
+				}
+				$idMunAnterior = $obj["codmunres"];	
+			}
+
+			if (!isset($resultado[$obj["codmunres"]])) {
+				$resultado[$obj["codmunres"]] = array("ocorrencias" => 0, "anos" => array());
+				$resultado[$obj["codmunres"]]["nome"] = trim($obj["munnome"]);
+				$resultado[$obj["codmunres"]]["populacao"] = $municipio->obterPopulacaoTotalMunicipio($obj["codmunres"]);
+			}
+			$resultado[$obj["codmunres"]]["ocorrencias"] += $obj["ocorrencias"];
+			$resultado[$obj["codmunres"]]["anos"][$obj["anobase"]] = $obj["ocorrencias"];
+			$resultado[$obj["codmunres"]]["opacity"] = 0;
+			$resultado[$obj["codmunres"]]["proporcao"] = ($resultado[$obj["codmunres"]]["ocorrencias"] * 100000) / ($resultado[$obj["codmunres"]]["populacao"] * count($resultado[$obj["codmunres"]]["anos"]));
+
+			if ($obj["anobase"] == $anoBase1) {
+				if ($conteudo == "P") {
+					$resultado[$obj["codmunres"]]["anoBase1"] = ($obj["ocorrencias"] * 100000) / ($resultado[$obj["codmunres"]]["populacao"]);
+				} else {
+					$resultado[$obj["codmunres"]]["anoBase1"] = ($obj["ocorrencias"]);
+				}
+			} else if ($obj["anobase"] == $anoBase2) {
+				if ($conteudo == "P") {
+					$resultado[$obj["codmunres"]]["anoBase2"] = ($obj["ocorrencias"] * 100000) / ($resultado[$obj["codmunres"]]["populacao"]);
+				} else {
+					$resultado[$obj["codmunres"]]["anoBase2"] = ($obj["ocorrencias"]);
+				}
+			}
+		}
+		if (!isset($resultado[$idMunAnterior]["anoBase2"]) || !isset($resultado[$idMunAnterior]["anoBase1"])) {
+			$resultado[$idMunAnterior]["diferenca"] = 0;
+		} else {
+			$resultado[$idMunAnterior]["diferenca"] = $resultado[$idMunAnterior]["anoBase2"] - $resultado[$idMunAnterior]["anoBase1"];
+		}
+
+		$diferencaPositiva = 0;
+		$diferencaNegativa = 0;
+		$primeiro = true;
+		
+		foreach ($resultado as $key => $value) {
+			if ($primeiro) {
+				$diferencaNegativa = $value["diferenca"];
+				$diferencaPositiva = $value["diferenca"];
+				$primeiro = false;
+			}
+
+			if ($value["diferenca"] < 0 && $value["diferenca"] < $diferencaNegativa) {
+				$diferencaNegativa = $value["diferenca"];
+			}
+			if ($value["diferenca"] > 0 && $value["diferenca"] > $diferencaPositiva) {
+				$diferencaPositiva = $value["diferenca"];
+			}
+		
+		}
+
+		foreach ($resultado as $key => $value) {
+			if ($value["diferenca"] < 0) {
+				$resultado[$key]["opacity"] = $value["diferenca"] / $diferencaNegativa;
+			}
+			if ($value["diferenca"] > 0) {
+				$resultado[$key]["opacity"] = $value["diferenca"] / $diferencaPositiva;
+			}
+		}
+		
+		//debug(date("H:i:s.u"), "W");
+		return $resultado;
+	}
+
 	function obterScatterParaMunicipio($idMunicipio) {
 		$dados = new DadosModel();
 		$dados->obterScatterParaMunicipio($idMunicipio);
