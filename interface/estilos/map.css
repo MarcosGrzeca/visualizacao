@@ -176,8 +176,8 @@ body {
   vertical-align: top;
 }
 #map {
-  width: 700px;
-  height: 700px;
+  width: 650px;
+  height: 650px;
 }
 h3 {
   color: crimson;
@@ -294,6 +294,6 @@ g#svg_municipios path:hover {
 
 .bar-graph ul {
   overflow: auto; 
-  max-height: 800px;
+  max-height: 750px;
   width: 400px;
 }
