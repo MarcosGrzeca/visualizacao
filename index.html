@@ -5,29 +5,31 @@
     <meta charset="utf-8">
     <title>Mortalidade no Rio Grande do Sul</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="interface/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
-    <link href="interface/estilos/fonts/awesome/font-awesome.css" rel="stylesheet">
-    <link href='interface/estilos/fonts/css.css' rel='stylesheet' type='text/css'>
-    <link href="interface/estilos/style.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="interface/libs/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="interface/estilos/fonts/awesome/font-awesome.css">
+    <link type="text/css" rel="stylesheet" href='interface/estilos/fonts/css.css' rel='stylesheet'>
+    <link type="text/css" rel="stylesheet" href="interface/estilos/style.css">
     <!-- Estilos visualizaçãoes -->
-    <link rel="stylesheet" href="interface/estilos/map.css">
+    <link type="text/css" rel="stylesheet" href="interface/estilos/map.css">
     <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
     <link type="text/css" rel="stylesheet" href="interface/libs/sequence/sequences.css">
 </head>
 
 <body>
-    <div class="header">
-        <div class="wrapper">
+
+    <div class="header header-app">
+        <div class="wrapper text-center" >
             <h1>Índices de Mortalidade no Rio Grande do Sul</h1>
         </div>
     </div>
+    <br>
+    
     <div class="container-fluid">
         <div class="loader hide"></div>
-        <div class="main">
-            <div class="visaoGeral">
-                <div class="wrapper">
-                    <div style="" class="box ui-draggable ui-droppable">
+        <div class="row">
+            <div class="col-md-12">    
+                <div class="visaoGeral">
+                    <div class="box ui-draggable ui-droppable">
                         <div class="box-header">
                             <div class="box-name"><i class="fa fa-filter"></i><span>Filtros</span>
                                 <a class="" type="button" id="btn_min" style="float:right; margin-right:5px; cursor: pointer;" onclick="minimizarFiltros()">
@@ -42,7 +44,7 @@
                         <div class="box-content" id="box-filtros">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="box box-content" style="min-height: 267px">
+                                    <div class="box box-content" style="min-height: 287px">
                                         <h4 class="page-header">Causa Básica</h4>
                                         <div class="radio">
                                             <label>
@@ -128,6 +130,11 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
+                                </div>
                                 <div class="col-sm-3">
                                     <div class="checkbox">
                                         <label>
@@ -136,9 +143,12 @@
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <br>
                                 <div class="col-sm-6 hide" id="boxComparacaoAnos">
                                     <div class="box box-content">
-                                        <h4 class="page-header">Anos bases</h4>
+                                        <h4 class="page-header">Anos para comparação</h4>
                                         <div class="row form-group">
                                             <div class="col-sm-6">
                                                 <select onchange="" class="form-control" name="anoBase1" id="anoBase1">
@@ -171,15 +181,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div id="visualizacoes-gerais" class="hide">
                         <div class="bar-graph">
-                            <h3>Cidades com maiores índices</h3>
+                            <h3>Ranking</h3>
                         </div>
                         <div class="info-mun">
                             <div class="dashboard-header">
@@ -214,167 +221,168 @@
                                             <div class="timeline">
                                                 <p>Mortes por ano (1995-2005)
                                                     <br><span></span></p>
-                                            </div>
-                                        </td>
-                                        <td style="vertical-align:bottom">
-                                            <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div id="map">
-                            <img src="interface/images/spinner.gif" class="loading" alt="spinner">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="porMunicipio hide">
-                <div class="row">
-                    <div class="col-md-6 col-sm-offset-3">
-                        <div class="info-mun" style="width:100%">
-                            <div class="dashboard-header">
-                                <h3></h3>
-                            </div>
-                            <section>
-                                <table style="width:100%">
-                                    <tr>
-                                        <td style="width:25%" class="ranking">
-                                            <p>Ranking</p>
-                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
-                                        </td>
-                                        <td style="width:25%">
-                                            <p>Mortes</p>
-                                            <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
-                                        </td>
-                                        <td style="width:25%">
-                                            <p>Total de mortes</p>
-                                            <p class="mortesTotal"><span><em></em></span></p>
-                                        </td>
-                                        <td style="width:25%">
-                                            <p>População</p>
-                                            <p class="population"><em></em></p>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <button type="button" class="btn btn-success btn-sm" onclick="exibirMapa();">Voltar para o Mapa</button>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <ul class="nav nav-tabs">
-                            <li class="active">
-                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'scatterPlot'); montarScatterPlot(); return false;">ScatterPlot</a>
-                            </li>
-                            <li class="">
-                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); montarSequenceSunburst(); return false;">Sequences Sunburst</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
-                            <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
-                            <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
-                                <div style="" class="box ui-draggable ui-droppable">
-                                    <div class="box-header">
-                                        <div class="box-name"><i class="fa fa-cog"></i><span>Configurações</span></div>
-                                        <div class="no-move"></div>
-                                    </div>
-                                    <div class="box-content" id="box-filtros">
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                <label for="nivel1">1º Nível</label>
-                                                <select class="form-control" id="nivel1">
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo" selected>Sexo</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label for="nivel2">2º Nível</label>
-                                                <select class="form-control" id="nivel2">
-                                                    <option value="">Selecione</option>
-                                                    <option value="anobase" seleBted>Ano base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label for="nivel3">3º Nível</label>
-                                                <select class="form-control" id="nivel3">
-                                                    <option value="" selected="">Selecione</option>
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label for="nivel4">4º Nível</label>
-                                                <select class="form-control" id="nivel4">
-                                                    <option value="" selected="">Selecione</option>
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label for="nivel5">5º Nível</label>
-                                                <select class="form-control" id="nivel5">
-                                                    <option value="" selected="">Selecione</option>
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2 hide">
-                                                <label for="nivel6">6º Nível</label>
-                                                <select class="form-control" id="nivel6">
-                                                    <option value="" selected="">Selecione</option>
-                                                    <option value="anobase">Ano Base</option>
-                                                    <option value="causabas">Causa Básica</option>
-                                                    <option value="esc">Escolaridade</option>
-                                                    <option value="idade">Idade</option>
-                                                    <option value="sexo">Sexo</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <br/>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                            <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Gerar visualização</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="vertical-align:bottom">
+                                                <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div id="main_sequence" style="float:left;">
-                                            <div id="sequence"></div>
-                                            <div id="chart">
-                                                <div id="explanation" style="visibility: hidden;">
-                                                    <span id="percentage"></span>
-                                                    <br/>dos óbitos
+                            </div>
+                            <div id="map">
+                                <img src="interface/images/spinner.gif" class="loading" alt="spinner">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="porMunicipio hide">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-offset-3">
+                            <div class="info-mun" style="width:100%">
+                                <div class="dashboard-header">
+                                    <h3></h3>
+                                </div>
+                                <section>
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:25%" class="ranking">
+                                                <p>Ranking</p>
+                                                <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
+                                            </td>
+                                            <td style="width:25%">
+                                                <p>Mortes</p>
+                                                <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
+                                            </td>
+                                            <td style="width:25%">
+                                                <p>Total de mortes</p>
+                                                <p class="mortesTotal"><span><em></em></span></p>
+                                            </td>
+                                            <td style="width:25%">
+                                                <p>População</p>
+                                                <p class="population"><em></em></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <button type="button" class="btn btn-success btn-sm" onclick="exibirMapa();">Voltar para o Mapa</button>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'scatterPlot'); montarScatterPlot(); return false;">ScatterPlot</a>
+                                </li>
+                                <li class="">
+                                    <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); montarSequenceSunburst(); return false;">Sequences Sunburst</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
+                                <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
+                                <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
+                                    <div style="" class="box ui-draggable ui-droppable">
+                                        <div class="box-header">
+                                            <div class="box-name"><i class="fa fa-cog"></i><span>Configurações</span></div>
+                                            <div class="no-move"></div>
+                                        </div>
+                                        <div class="box-content" id="box-filtros">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <label for="nivel1">1º Nível</label>
+                                                    <select class="form-control" id="nivel1">
+                                                        <option value="anobase">Ano Base</option>
+                                                        <option value="causabas">Causa Básica</option>
+                                                        <option value="esc">Escolaridade</option>
+                                                        <option value="idade">Idade</option>
+                                                        <option value="sexo" selected>Sexo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label for="nivel2">2º Nível</label>
+                                                    <select class="form-control" id="nivel2">
+                                                        <option value="">Selecione</option>
+                                                        <option value="anobase" seleBted>Ano base</option>
+                                                        <option value="causabas">Causa Básica</option>
+                                                        <option value="esc">Escolaridade</option>
+                                                        <option value="idade">Idade</option>
+                                                        <option value="sexo">Sexo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label for="nivel3">3º Nível</label>
+                                                    <select class="form-control" id="nivel3">
+                                                        <option value="" selected="">Selecione</option>
+                                                        <option value="anobase">Ano Base</option>
+                                                        <option value="causabas">Causa Básica</option>
+                                                        <option value="esc">Escolaridade</option>
+                                                        <option value="idade">Idade</option>
+                                                        <option value="sexo">Sexo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label for="nivel4">4º Nível</label>
+                                                    <select class="form-control" id="nivel4">
+                                                        <option value="" selected="">Selecione</option>
+                                                        <option value="anobase">Ano Base</option>
+                                                        <option value="causabas">Causa Básica</option>
+                                                        <option value="esc">Escolaridade</option>
+                                                        <option value="idade">Idade</option>
+                                                        <option value="sexo">Sexo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label for="nivel5">5º Nível</label>
+                                                    <select class="form-control" id="nivel5">
+                                                        <option value="" selected="">Selecione</option>
+                                                        <option value="anobase">Ano Base</option>
+                                                        <option value="causabas">Causa Básica</option>
+                                                        <option value="esc">Escolaridade</option>
+                                                        <option value="idade">Idade</option>
+                                                        <option value="sexo">Sexo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2 hide">
+                                                    <label for="nivel6">6º Nível</label>
+                                                    <select class="form-control" id="nivel6">
+                                                        <option value="" selected="">Selecione</option>
+                                                        <option value="anobase">Ano Base</option>
+                                                        <option value="causabas">Causa Básica</option>
+                                                        <option value="esc">Escolaridade</option>
+                                                        <option value="idade">Idade</option>
+                                                        <option value="sexo">Sexo</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Gerar visualização</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="sidebar">
-                                            <input type="checkbox" id="togglelegend"> Legenda
-                                            <br/>
-                                            <div id="legend" style="visibility: hidden;"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="main_sequence" style="float:left;">
+                                                <div id="sequence"></div>
+                                                <div id="chart">
+                                                    <div id="explanation" style="visibility: hidden;">
+                                                        <span id="percentage"></span>
+                                                        <br/>dos óbitos
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="sidebar">
+                                                <input type="checkbox" id="togglelegend"> Legenda
+                                                <br/>
+                                                <div id="legend" style="visibility: hidden;"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -384,7 +392,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <script src="interface/libs/jquery-1.7.2.min.js"></script>
     <script src="interface/libs/d3.min.js"></script>

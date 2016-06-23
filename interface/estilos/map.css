@@ -1,7 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  background: #ffe url(../images/background-texture.png) repeat scroll left top;
+  /*background: #ffe url(../images/background-texture.png) repeat scroll left top;*/
+  background-color: #f0f2f4 none repeat scroll 0 0 !important;
+
   font-family: serif;
 }
 * {
@@ -114,7 +116,6 @@ body {
 
 .bar-graph {
   float: right;
-  width: 300px;
   font-size: .85em;
   white-space: nowrap;
   clear: right;
@@ -175,8 +176,8 @@ body {
   vertical-align: top;
 }
 #map {
-  width: 600px;
-  height: 600px;
+  width: 700px;
+  height: 700px;
 }
 h3 {
   color: crimson;
@@ -276,7 +277,6 @@ section.age .figures {
   margin-right: .5em;
 }
 #map .loading {
-  margin: 300px auto;
   display: block;
 }
 
