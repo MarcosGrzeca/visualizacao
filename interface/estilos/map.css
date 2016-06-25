@@ -119,6 +119,7 @@ body {
   font-size: .85em;
   white-space: nowrap;
   clear: right;
+  margin-top: 170px;
 }
 .bar-graph ul {
   list-style: none;
@@ -154,7 +155,7 @@ body {
 .info-mun {
   margin-top: 20px;
   /*margin-right: 340px;*/
-  width: 67%;
+  width: 100%;
   background: mediumslateblue;
   /*
   darkcyan
@@ -294,6 +295,6 @@ g#svg_municipios path:hover {
 
 .bar-graph ul {
   overflow: auto; 
-  max-height: 750px;
+  max-height: 550px;
   width: 400px;
 }
