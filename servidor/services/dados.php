@@ -235,9 +235,9 @@ class Dados {
 
 		$doencas = array();
 		while ($obj = $dados->getRegistro()) {
-			$obj["sexo"] = $this->_getDescricaoSexo($obj["sexo"]);	
-			$obj["idade"] = $this->_getIdade($obj["idade"]);
-			$obj["esc"] = $this->_getEscolariedade($obj["esc"]);
+			//$obj["sexo"] = $this->_getDescricaoSexo($obj["sexo"]);	
+			//$obj["idade"] = $this->_getIdade($obj["idade"]);
+			//$obj["esc"] = $this->_getEscolariedade($obj["esc"]);
 			/*if (isset($obj["causabas"])) {
 				if (in_array($obj["causabas"], $doencas)) {
 					$obj["causabas"] = $doencas[$obj["causabas"]];
