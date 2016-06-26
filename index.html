@@ -14,6 +14,7 @@
     <link type="text/css" rel="stylesheet" href="interface/estilos/parallel.css">
     <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
     <link type="text/css" rel="stylesheet" href="interface/libs/sequence/sequences.css">
+    <link type="text/css" rel="stylesheet" href="interface/libs/paralela_categorica/d3.parsets.css">
 </head>
 
 <body>
@@ -234,7 +235,7 @@
             <div class="porMunicipio hide">
                 <div class="row">
                     <div class="col-md-2">
-                        <button type="button" class="btn btn-default" onclick="exibirMapa();"  style="margin-left:10px"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Voltar para o Mapa</button>
+                        <button type="button" class="btn btn-default" onclick="exibirMapa();" style="margin-left:10px"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Voltar para o Mapa</button>
                     </div>
                     <div class="col-md-8">
                         <div class="info-mun">
@@ -279,6 +280,9 @@
                             <li class="">
                                 <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_paralelas'); montarCordenadasParalelas(); return false;">Coordenadas Paralelas</a>
                             </li>
+                            <li class="">
+                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_paralelas_categoricas'); montarCordenadasParalelasCategoricas(); return false;">Coordenadas Paralelas Categóricas</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -290,7 +294,84 @@
                                 <div id="parallel">
                                 </div>
                             </div>
-                            
+                            <div id="escopo_paralelas_categoricas" class="box-content abas hide espaco-visualizacoes">
+                                <div style="" class="box ui-draggable ui-droppable">
+                                    <div class="box-header">
+                                        <div class="box-name"><i class="fa fa-cog"></i><span>Configurações</span></div>
+                                        <div class="no-move"></div>
+                                    </div>
+                                    <div class="box-content" id="box-filtros">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel1">1º Nível</label>
+                                                <select class="form-control" id="paralela_nivel1">
+                                                    <option value="anobase">Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo" selected>Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel2">2º Nível</label>
+                                                <select class="form-control" id="paralela_nivel2">
+                                                    <option value="">Selecione</option>
+                                                    <option value="anobase" selected>Ano base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel3">3º Nível</label>
+                                                <select class="form-control" id="paralela_nivel3">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade" selected="">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel4">4º Nível</label>
+                                                <select class="form-control" id="paralela_nivel4">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel5">5º Nível</label>
+                                                <select class="form-control" id="paralela_nivel5">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Visualizar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="paralela_categorica">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
                                 <div style="" class="box ui-draggable ui-droppable">
                                     <div class="box-header">
@@ -368,7 +449,7 @@
                                         <br/>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Gerar visualização</button>
+                                                <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Visualizar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -407,8 +488,9 @@
     <script src="interface/scripts/map.js"></script>
     <script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
     <script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
-    <!--<script src="interface/libs/paralelas/fisheye.js"></script>-->
     <script src="interface/libs/paralelas/parallel.js"></script>
+    <script src="interface/libs/paralela_categorica/d3.parsets.js"></script>
+    <script src="interface/libs/paralela_categorica/paralela.js"></script>
 </body>
 
 </html>
