@@ -86,7 +86,10 @@ pre, code { font-family: "Menlo", monospace; }
 <script src="Parallel%20Sets_arquivos/highlight.js"></script>
 <script>
 var chart = d3.parsets()
-    .dimensions(["Survived", "Sex", "Age", "Class"]);
+    .dimensions(["Sexo", "Anobase", "Escolaridade", "idade"]);
+
+    //"Sexo", "Idade", "Ano Base","Escolaridade"
+
 
 var vis = d3.select("#vis").append("svg")
     .attr("width", chart.width())
@@ -109,7 +112,7 @@ function curves() {
   t.call(chart.tension(this.checked ? .5 : 1));
 }
 
-d3.csv("titanic.csv?201402", function(error, csv) {
+d3.csv("titanic.csv", function(error, csv) {
   vis.datum(csv).call(chart);
 
   window.icicle = function() {
