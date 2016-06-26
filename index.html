@@ -11,6 +11,7 @@
     <link type="text/css" rel="stylesheet" href="interface/estilos/style.css">
     <!-- Estilos visualizaçãoes -->
     <link type="text/css" rel="stylesheet" href="interface/estilos/map.css">
+    <link type="text/css" rel="stylesheet" href="interface/estilos/parallel.css">
     <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
     <link type="text/css" rel="stylesheet" href="interface/libs/sequence/sequences.css">
 </head>
@@ -275,6 +276,9 @@
                             <li class="">
                                 <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); montarSequenceSunburst(); return false;">Sequences Sunburst</a>
                             </li>
+                            <li class="">
+                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_paralelas'); montarCordenadasParalelas(); return false;">Coordenadas Paralelas</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -282,6 +286,11 @@
                     <div class="col-md-12">
                         <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
                             <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
+                            <div id="escopo_paralelas" class="box-content abas hide espaco-visualizacoes">
+                                <div id="parallel">
+                                </div>
+                            </div>
+                            
                             <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
                                 <div style="" class="box ui-draggable ui-droppable">
                                     <div class="box-header">
@@ -398,6 +407,8 @@
     <script src="interface/scripts/map.js"></script>
     <script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
     <script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="interface/libs/paralelas/fisheye.js"></script>
+    <script src="interface/libs/paralelas/parallel.js"></script>
 </body>
 
 </html>
