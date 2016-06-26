@@ -115,5 +115,6 @@ setTimeout(function() {
 }, 3000);
 
 function montarCordenadasParalelas() {
-    Parallel.montarCoordenadasParalelas();
+    wait();
+    Parallel.initialize();
 }

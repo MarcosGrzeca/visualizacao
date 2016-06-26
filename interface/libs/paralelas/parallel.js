@@ -36,14 +36,26 @@ Parallel = (function($) {
         });
     };
 
-    function montarCoordenadasParalelas() {
+
+    function initialize() {
+        $("#parallel > svg").remove();
+        $.ajax({
+                url: "http://localhost/visualizacao/servidor/parallel.php?codMun=" + getIdMunicipioSelecionado()
+            })
+            .done(function(data) {
+                _renderParallel();
+            });
+    }
+
+    function _renderParallel() {
+
         var svg = d3.select("#parallel").append("svg:svg")
             .attr("width", w + m[1] + m[3])
             .attr("height", h + m[0] + m[2])
             .append("svg:g")
             .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-        d3.csv("interface/libs/paralelas/nutrients.csv", function(cars) {
+        d3.csv("http://localhost/visualizacao/servidor/parallel.csv", function(cars) {
 
             // Extract the list of dimensions and create a scale for each.
             x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
@@ -107,10 +119,12 @@ Parallel = (function($) {
                 });
             });
         });
+
+        closeWait();
     }
 
     return {
-        'montarCoordenadasParalelas': montarCoordenadasParalelas
+        'initialize': initialize
 
     };
 })(jQuery);

@@ -220,6 +220,39 @@ class Dados {
 		}
 	}
 
+	function obterParallelParaMunicipio($idMunicipio) {
+		$dados = new DadosModel();
+		$dados->obterParallelParaMunicipio($idMunicipio);
+		$nomeArquivo = SYSTEM_DIR . "servidor/parallel.csv";
+		try {
+			@unlink($nomeArquivo);	
+		} catch (Exception $e) {
+			
+		}
+		
+
+		file_put_contents($nomeArquivo, gerarCvsLinha(array("AnoBase", "Escolaridade", "Idade", "Sexo")), FILE_APPEND);
+
+		$doencas = array();
+		while ($obj = $dados->getRegistro()) {
+			$obj["sexo"] = $this->_getDescricaoSexo($obj["sexo"]);	
+			//$obj["idade"] = $this->_getIdade($obj["idade"]);
+			//$obj["esc"] = $this->_getEscolariedade($obj["esc"]);
+			if (isset($obj["causabas"])) {
+				if (in_array($obj["causabas"], $doencas)) {
+					$obj["causabas"] = $doencas[$obj["causabas"]];
+				} else {
+					$desc = $this->_getDescricaoCid($obj["causabas"]);
+					$doencas[$obj["causabas"]] = $desc;
+					$obj["causabas"] = $desc;
+				}
+			}
+			//$obj["causabas"] = "";
+			//debug($obj);
+			file_put_contents($nomeArquivo, gerarCvsLinha($obj), FILE_APPEND);
+		}
+	}
+
 	function _getDescricaoSexo($sexo) {
 		switch ($sexo) {
 			case '1':
