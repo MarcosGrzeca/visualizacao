@@ -220,6 +220,49 @@ class Dados {
 		}
 	}
 
+	function obterParalelaCategoricaParaMunicipio($idMunicipio, $nivel1, $nivel2, $nivel3, $nivel4, $nivel5) {
+		$niveis = array($nivel1, $nivel2, $nivel3, $nivel4, $nivel5);
+		foreach ($niveis as $key => $value) {
+			if (empty($value)) {
+				unset($niveis[$key]);
+			}
+		}
+		
+		$dados = new DadosModel();
+		$dados->obterParalelaCategoricaParaMunicipio($idMunicipio, $niveis);
+		$nomeArquivo = SYSTEM_DIR . "servidor/paralela.categorica.csv";
+		try {
+			@unlink($nomeArquivo);	
+		} catch (Exception $e) {
+			
+		}
+		
+		$doencas = array();
+		while ($obj = $dados->getRegistro()) {
+			if (isset($obj["sexo"])) {
+				$obj["sexo"] = $this->_getDescricaoSexo($obj["sexo"]);	
+			}
+			if (isset($obj["idade"])) {
+				$obj["idade"] = $this->_getIdade($obj["idade"]);
+			}
+
+			if (isset($obj["esc"])) {
+				$obj["esc"] = $this->_getEscolariedade($obj["esc"]);
+			}
+			
+			if (isset($obj["causabas"])) {
+				if (in_array($obj["causabas"], $doencas)) {
+					$obj["causabas"] = $doencas[$obj["causabas"]];
+				} else {
+					$desc = $this->_getDescricaoCid($obj["causabas"]);
+					$doencas[$obj["causabas"]] = $desc;
+					$obj["causabas"] = $desc;
+				}
+			}
+			file_put_contents($nomeArquivo, gerarCvsLinha($obj), FILE_APPEND);
+		}
+	}
+
 	function obterParallelParaMunicipio($idMunicipio) {
 		$dados = new DadosModel();
 		$dados->obterParallelParaMunicipio($idMunicipio);

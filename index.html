@@ -281,7 +281,7 @@
                                 <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_paralelas'); montarCordenadasParalelas(); return false;">Coordenadas Paralelas</a>
                             </li>
                             <li class="">
-                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_paralelas_categoricas'); montarCordenadasParalelasCategoricas(); return false;">Coordenadas Paralelas Categóricas</a>
+                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_paralelas_categoricas'); ParalelaCategorica.initialize(); return false;">Coordenadas Paralelas Categóricas</a>
                             </li>
                         </ul>
                     </div>
@@ -360,7 +360,7 @@
                                         <br/>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Visualizar</button>
+                                                <button class="btn btn-success" type="button" onclick="ParalelaCategorica.initialize();"><i class="fa fa-bars"></i> Visualizar</button>
                                             </div>
                                         </div>
                                     </div>

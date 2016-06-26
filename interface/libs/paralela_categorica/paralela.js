@@ -7,23 +7,24 @@ ParalelaCategorica = (function($) {
     //https://github.com/jasondavies/d3-parsets
 
 
-    var vis = d3.select("#vis").append("svg")
-        .attr("width", chart.width())
-        .attr("height", chart.height());
-
-    var partition = d3.layout.partition()
-        .sort(null)
-        .size([chart.width(), chart.height() * 5 / 4])
-        .children(function(d) {
-            return d.children ? d3.values(d.children) : null; })
-        .value(function(d) {
-            return d.count; });
+    var vis;
+    var partition;
 
     var ice = false;
 
 
     function initialize() {
+        alert("MARCOS");
         //var chart = d3.parsets().dimensions(["Sexo", "Anobase", "Escolaridade", "idade"]);
+        wait();
+        $("#paralela_categorica > svg").remove();
+        console.log("http://localhost/visualizacao/servidor/parallel.categorica.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#paralela_nivel1").val() + "&nivel2=" + $("#paralela_nivel2").val() + "&nivel3=" + $("#paralela_nivel3").val() + "&nivel4=" + $("#paralela_nivel4").val() + "&nivel5=" + $("#paralela_nivel5").val());
+        $.ajax({
+            url: "http://localhost/visualizacao/servidor/paralela.categorica.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#paralela_nivel1").val() + "&nivel2=" + $("#paralela_nivel2").val() + "&nivel3=" + $("#paralela_nivel3").val() + "&nivel4=" + $("#paralela_nivel4").val() + "&nivel5=" + $("#paralela_nivel5").val()
+        })
+        .done(function(data) {
+            //_render();
+        });
 
     };
 
@@ -82,6 +83,19 @@ ParalelaCategorica = (function($) {
     }
 
     function _render() {
+        vis = d3.select("#paralela_categorica").append("svg")
+            .attr("width", chart.width())
+            .attr("height", chart.height());
+
+        partition = d3.layout.partition()
+            .sort(null)
+            .size([chart.width(), chart.height() * 5 / 4])
+            .children(function(d) {
+                return d.children ? d3.values(d.children) : null;
+            })
+            .value(function(d) {
+                return d.count;
+            });
 
         d3.csv("titanic.csv", function(error, csv) {
             vis.datum(csv).call(chart);

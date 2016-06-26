@@ -51,6 +51,13 @@ class DadosModel extends ResultListModel {
 		$this->result = executaSql($query);	
 	} 
 
+	function obterParalelaCategoricaParaMunicipio($idMunicipio, $niveis) {
+		$query = "SELECT " . implode(", ", $niveis) .  " " .
+				"FROM sim_rs ". 
+				"WHERE codmunres = '" . $idMunicipio . "' ";
+		$this->result = executaSql($query);
+	}
+
 	function obterDescricaoCid($cid) {
 		$query = "SELECT descr " .
 				"FROM cid10 " .

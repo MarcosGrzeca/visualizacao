@@ -118,8 +118,3 @@ function montarCordenadasParalelas() {
     wait();
     Parallel.initialize();
 }
-
-function montarCordenadasParalelasCategoricas() {
-    wait();
-    //ParalelaCategorica.initialize();
-}
