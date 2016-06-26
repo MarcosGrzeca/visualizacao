@@ -232,8 +232,11 @@
             </div>
             <div class="porMunicipio hide">
                 <div class="row">
-                    <div class="col-md-6 col-sm-offset-3">
-                        <div class="info-mun" style="width:100%">
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-default" onclick="exibirMapa();"  style="margin-left:10px"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Voltar para o Mapa</button>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="info-mun">
                             <div class="dashboard-header">
                                 <h3></h3>
                             </div>
@@ -242,11 +245,11 @@
                                     <tr>
                                         <td style="width:25%" class="ranking">
                                             <p>Ranking</p>
-                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
+                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em><sub class="numTotalCidades"></sub>
                                         </td>
                                         <td style="width:25%">
                                             <p>Mortes</p>
-                                            <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
+                                            <p class="proporcao"><em></em><sub> / 100 mil hab</sub></p>
                                         </td>
                                         <td style="width:25%">
                                             <p>Total de mortes</p>
@@ -258,11 +261,11 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <button type="button" class="btn btn-success btn-sm" onclick="exibirMapa();">Voltar para o Mapa</button>
                             </section>
                         </div>
                     </div>
                 </div>
+                <br/>
                 <div class="row">
                     <div class="col-md-12">
                         <ul class="nav nav-tabs">
@@ -301,7 +304,7 @@
                                                 <label for="nivel2">2º Nível</label>
                                                 <select class="form-control" id="nivel2">
                                                     <option value="">Selecione</option>
-                                                    <option value="anobase" seleBted>Ano base</option>
+                                                    <option value="anobase" selected>Ano base</option>
                                                     <option value="causabas">Causa Básica</option>
                                                     <option value="esc">Escolaridade</option>
                                                     <option value="idade">Idade</option>

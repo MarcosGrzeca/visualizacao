@@ -110,6 +110,6 @@ function exibirOcultarAnosComparacao() {
     }
 }
 
-/*setTimeout(function() {
-    exibirGraficosPorMunicipio();
-}, 3000);*/
+setTimeout(function() {
+    //exibirGraficosPorMunicipio();
+}, 3000);
