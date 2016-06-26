@@ -13,19 +13,34 @@ ParalelaCategorica = (function($) {
     var ice = false;
 
 
+    function getSelectedText(elementId) {
+        var elt = document.getElementById(elementId);
+
+        if (elt.selectedIndex == -1)
+            return null;
+
+        return elt.options[elt.selectedIndex].text;
+    }
+
     function initialize() {
-        alert("MARCOS");
-        //var chart = d3.parsets().dimensions(["Sexo", "Anobase", "Escolaridade", "idade"]);
         wait();
         $("#paralela_categorica > svg").remove();
-        console.log("http://localhost/visualizacao/servidor/parallel.categorica.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#paralela_nivel1").val() + "&nivel2=" + $("#paralela_nivel2").val() + "&nivel3=" + $("#paralela_nivel3").val() + "&nivel4=" + $("#paralela_nivel4").val() + "&nivel5=" + $("#paralela_nivel5").val());
-        $.ajax({
-            url: "http://localhost/visualizacao/servidor/paralela.categorica.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#paralela_nivel1").val() + "&nivel2=" + $("#paralela_nivel2").val() + "&nivel3=" + $("#paralela_nivel3").val() + "&nivel4=" + $("#paralela_nivel4").val() + "&nivel5=" + $("#paralela_nivel5").val()
-        })
-        .done(function(data) {
-            //_render();
-        });
 
+        var dimensions = [];
+        for (i = 1; i < 6; i++) {
+            if ($("#paralela_nivel" + i).val() != "") {
+                dimensions.push(getSelectedText("paralela_nivel" + i));
+            }
+        }
+
+        console.log(dimensions);
+        chart = d3.parsets().dimensions(dimensions);
+        $.ajax({
+                url: "http://localhost/visualizacao/servidor/paralela.categorica.php?codMun=" + getIdMunicipioSelecionado() + "&nivel1=" + $("#paralela_nivel1").val() + "&nivel2=" + $("#paralela_nivel2").val() + "&nivel3=" + $("#paralela_nivel3").val() + "&nivel4=" + $("#paralela_nivel4").val() + "&nivel5=" + $("#paralela_nivel5").val()
+            })
+            .done(function(data) {
+                _render();
+            });
     };
 
     function curves() {
@@ -97,7 +112,7 @@ ParalelaCategorica = (function($) {
                 return d.count;
             });
 
-        d3.csv("titanic.csv", function(error, csv) {
+        d3.csv("http://localhost/visualizacao/servidor/paralela.categorica.csv", function(error, csv) {
             vis.datum(csv).call(chart);
 
             window.icicle = function() {
@@ -222,6 +237,8 @@ ParalelaCategorica = (function($) {
             };
             reader.readAsText(file);
         });
+
+        closeWait();
     }
 
     return {

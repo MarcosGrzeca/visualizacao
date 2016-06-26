@@ -236,7 +236,32 @@ class Dados {
 		} catch (Exception $e) {
 			
 		}
-		
+
+		$header = array();
+		foreach ($niveis as $key => $value) {
+			# code...
+			$desc = $value;
+			switch ($value) {
+				case "anobase": 
+					$desc = "Ano Base";
+					break;
+				case "causabas": 
+					$desc = "Causa Básica";
+					break;
+				case "esc": 
+					$desc = "Escolaridade";
+					break;
+				case "idade": 
+					$desc = "Idade";
+					break;
+				case "sexo": 
+					$desc = "Sexo";
+					break;
+			}
+			$header[] = $desc;
+		}
+		file_put_contents($nomeArquivo, gerarCvsLinha($header), FILE_APPEND);
+
 		$doencas = array();
 		while ($obj = $dados->getRegistro()) {
 			if (isset($obj["sexo"])) {
