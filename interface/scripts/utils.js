@@ -111,7 +111,7 @@ function exibirOcultarAnosComparacao() {
 }
 
 setTimeout(function() {
-    exibirGraficosPorMunicipio();
+ //   exibirGraficosPorMunicipio();
 }, 3000);
 
 function montarCordenadasParalelas() {

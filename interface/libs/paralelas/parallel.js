@@ -122,6 +122,7 @@ Parallel = (function($) {
                 .attr("x", -8)
                 .attr("width", 16);
         });
+        closeWait();
     }
 
     function position(d) {
