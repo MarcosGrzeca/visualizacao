@@ -72,8 +72,8 @@ function minimizarFiltros() {
 
 function maximizarFiltros() {
     $("#box-filtros").removeClass("hide");
-    $("#btn_min").addClass("hide");
-    $("#btn_max").removeClass("hide");
+    $("#btn_min").removeClass("hide");
+    $("#btn_max").addClass("hide");
 }
 
 /*Scatter */
@@ -110,6 +110,11 @@ function exibirOcultarAnosComparacao() {
     }
 }
 
-/*setTimeout(function() {
-    exibirGraficosPorMunicipio();
-}, 3000);*/
+setTimeout(function() {
+ //   exibirGraficosPorMunicipio();
+}, 3000);
+
+function montarCordenadasParalelas() {
+    wait();
+    Parallel.initialize();
+}

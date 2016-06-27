@@ -10,7 +10,7 @@ Map = (function($) {
             _loadEstupros(function() {
                 var focusedElementSlug = window.location.hash.replace('#', '');
                 // Use Soledade as default
-                if (focusedElementSlug == '') { focusedElementSlug = 'porto-alegre'; };
+                if (focusedElementSlug == '') { focusedElementSlug = 'esmeralda'; };
                 _focusInto(focusedElementSlug);
                 _drawBars();
                 _colorRegions();

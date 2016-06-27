@@ -5,44 +5,46 @@
     <meta charset="utf-8">
     <title>Mortalidade no Rio Grande do Sul</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="interface/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
-    <link href="interface/estilos/fonts/awesome/font-awesome.css" rel="stylesheet">
-    <link href='interface/estilos/fonts/css.css' rel='stylesheet' type='text/css'>
-    <link href="interface/estilos/style.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="interface/libs/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="interface/estilos/fonts/awesome/font-awesome.css">
+    <link type="text/css" rel="stylesheet" href='interface/estilos/fonts/css.css' rel='stylesheet'>
+    <link type="text/css" rel="stylesheet" href="interface/estilos/style.css">
     <!-- Estilos visualizaçãoes -->
-    <link rel="stylesheet" href="interface/estilos/map.css">
+    <link type="text/css" rel="stylesheet" href="interface/estilos/map.css">
+    <link type="text/css" rel="stylesheet" href="interface/estilos/parallel.css">
     <link type="text/css" rel="stylesheet" href="interface/libs/scatter-matrix-master/scatter-matrix.css">
     <link type="text/css" rel="stylesheet" href="interface/libs/sequence/sequences.css">
+    <link type="text/css" rel="stylesheet" href="interface/libs/paralela_categorica/d3.parsets.css">
 </head>
 
 <body>
-    <div class="header">
-        <div class="wrapper">
+    <div class="header header-app">
+        <div class="wrapper text-center">
             <h1>Índices de Mortalidade no Rio Grande do Sul</h1>
         </div>
     </div>
+    <br>
     <div class="container-fluid">
         <div class="loader hide"></div>
-        <div class="main">
-            <div class="visaoGeral">
-                <div class="wrapper">
-                    <div style="" class="box ui-draggable ui-droppable">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="visaoGeral">
+                    <div class="box ui-draggable ui-droppable">
                         <div class="box-header">
                             <div class="box-name"><i class="fa fa-filter"></i><span>Filtros</span>
-                                <a class="" type="button" id="btn_min" style="float:right; margin-right:5px; cursor: pointer;" onclick="minimizarFiltros()">
+                                <a class="hide" type="button" id="btn_min" style="float:right; margin-right:5px; cursor: pointer;" onclick="minimizarFiltros()">
                                     <i class="fa fa-minus-square-o"></i>
                                 </a>
-                                <a class="hide" type="button" id="btn_max" style="float:right; margin-right:5px; cursor: pointer;" onclick="maximizarFiltros()">
+                                <a type="button" id="btn_max" style="float:right; margin-right:5px; cursor: pointer;" onclick="maximizarFiltros()">
                                     <i class="fa fa-plus-square-o"></i>
                                 </a>
                             </div>
                             <div class="no-move"></div>
                         </div>
-                        <div class="box-content" id="box-filtros">
+                        <div class="box-content hide" id="box-filtros">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="box box-content" style="min-height: 267px">
+                                    <div class="box box-content" style="min-height: 287px">
                                         <h4 class="page-header">Causa Básica</h4>
                                         <div class="radio">
                                             <label>
@@ -128,6 +130,11 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
+                                </div>
                                 <div class="col-sm-3">
                                     <div class="checkbox">
                                         <label>
@@ -136,9 +143,12 @@
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <br>
                                 <div class="col-sm-6 hide" id="boxComparacaoAnos">
                                     <div class="box box-content">
-                                        <h4 class="page-header">Anos bases</h4>
+                                        <h4 class="page-header">Anos para comparação</h4>
                                         <div class="row form-group">
                                             <div class="col-sm-6">
                                                 <select onchange="" class="form-control" name="anoBase1" id="anoBase1">
@@ -171,15 +181,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button onclick="atualizarGrafico()" type="button" class="btn btn-success"><i class="fa fa-repeat"></i> Recarregar dados</button>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div id="visualizacoes-gerais" class="hide">
                         <div class="bar-graph">
-                            <h3>Cidades com maiores índices</h3>
+                            <h3>Ranking</h3>
                         </div>
                         <div class="info-mun">
                             <div class="dashboard-header">
@@ -188,40 +195,36 @@
                             <section>
                                 <table style="width:100%">
                                     <tr>
-                                        <td style="width:25%" class="ranking">
+                                        <td class="ranking">
                                             <p>Ranking</p>
-                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
+                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em>
+                                                <sub class="numTotalCidades"></sub>
+                                            </p>
                                         </td>
-                                        <td style="width:25%">
+                                        <td>
                                             <p>Mortes</p>
-                                            <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
+                                            <p class="proporcao"><span><em></em><sub> / 100 mil hab</sub></p>
                                         </td>
-                                        <td style="width:25%">
+                                        <td>
                                             <p>Total de mortes</p>
                                             <p class="mortesTotal"><span><em></em></span></p>
                                         </td>
-                                        <td style="width:25%">
+                                        <td>
                                             <p>População</p>
                                             <p class="population"><em></em></p>
                                         </td>
-                                    </tr>
-                                </table>
-                            </section>
-                            <div id="dashboard-bar">
-                                <table>
-                                    <tr>
-                                        <td style="width:70%">
-                                            <div class="timeline">
+                                        <td>
+                                            <div class="timeline text-center">
                                                 <p>Mortes por ano (1995-2005)
                                                     <br><span></span></p>
                                             </div>
                                         </td>
-                                        <td style="vertical-align:bottom">
-                                            <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success">Analisar Município</button>
+                                        <td style="padding-left: 20px; vertical-align:bottom;">
+                                            <button onclick="exibirGraficosPorMunicipio()" type="button" class="btn btn-success btn-lg"><i class="fa fa-table" aria-hidden="true"></i> Analisar Município</button>
                                         </td>
                                     </tr>
                                 </table>
-                            </div>
+                            </section>
                         </div>
                         <div id="map">
                             <img src="interface/images/spinner.gif" class="loading" alt="spinner">
@@ -231,8 +234,11 @@
             </div>
             <div class="porMunicipio hide">
                 <div class="row">
-                    <div class="col-md-6 col-sm-offset-3">
-                        <div class="info-mun" style="width:100%">
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-default" onclick="exibirMapa();" style="margin-left:10px"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Voltar para o Mapa</button>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="info-mun">
                             <div class="dashboard-header">
                                 <h3></h3>
                             </div>
@@ -241,11 +247,11 @@
                                     <tr>
                                         <td style="width:25%" class="ranking">
                                             <p>Ranking</p>
-                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em> <span class="numTotalCidades"></span></p>
+                                            <p class="ranking" title="Entre as mais violentas do estado"><em></em><sub class="numTotalCidades"></sub>
                                         </td>
                                         <td style="width:25%">
                                             <p>Mortes</p>
-                                            <p class="proporcao"><span><em></em> / 100 mil hab.</span></p>
+                                            <p class="proporcao"><em></em><sub> / 100 mil hab</sub></p>
                                         </td>
                                         <td style="width:25%">
                                             <p>Total de mortes</p>
@@ -257,11 +263,11 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <button type="button" class="btn btn-success btn-sm" onclick="exibirMapa();">Voltar para o Mapa</button>
                             </section>
                         </div>
                     </div>
                 </div>
+                <br/>
                 <div class="row">
                     <div class="col-md-12">
                         <ul class="nav nav-tabs">
@@ -271,6 +277,12 @@
                             <li class="">
                                 <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_sequence'); montarSequenceSunburst(); return false;">Sequences Sunburst</a>
                             </li>
+                            <li class="hide">
+                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_paralelas'); montarCordenadasParalelas(); return false;">Coordenadas Paralelas</a>
+                            </li>
+                            <li class="">
+                                <a href="#" onclick="ocultarVisualizacoesMunicipio(); trocarAba($(this), 'escopo_paralelas_categoricas'); ParalelaCategorica.initialize(); return false;">Coordenadas Paralelas</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -278,6 +290,88 @@
                     <div class="col-md-12">
                         <div class="box ui-draggable ui-droppable" style="top: 0px; left: 0px; opacity: 1; z-index: 1999;">
                             <div id="scatterPlot" class="box-content abas espaco-visualizacoes"></div>
+                            <div id="escopo_paralelas" class="box-content abas hide espaco-visualizacoes">
+                                <div id="parallel">
+                                </div>
+                            </div>
+                            <div id="escopo_paralelas_categoricas" class="box-content abas hide espaco-visualizacoes">
+                                <div style="" class="box ui-draggable ui-droppable">
+                                    <div class="box-header">
+                                        <div class="box-name"><i class="fa fa-cog"></i><span>Configurações</span></div>
+                                        <div class="no-move"></div>
+                                    </div>
+                                    <div class="box-content" id="box-filtros">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel1">1º Nível</label>
+                                                <select class="form-control" id="paralela_nivel1">
+                                                    <option value="anobase">Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo" selected>Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel2">2º Nível</label>
+                                                <select class="form-control" id="paralela_nivel2">
+                                                    <option value="">Selecione</option>
+                                                    <option value="anobase" selected>Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel3">3º Nível</label>
+                                                <select class="form-control" id="paralela_nivel3">
+                                                    <option value="">Selecione</option>
+                                                    <option value="anobase">Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade" selected>Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel4">4º Nível</label>
+                                                <select class="form-control" id="paralela_nivel4">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="paralela_nivel5">5º Nível</label>
+                                                <select class="form-control" id="paralela_nivel5">
+                                                    <option value="" selected="">Selecione</option>
+                                                    <option value="anobase">Ano Base</option>
+                                                    <option value="causabas">Causa Básica</option>
+                                                    <option value="esc">Escolaridade</option>
+                                                    <option value="idade">Idade</option>
+                                                    <option value="sexo">Sexo</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <button class="btn btn-success" type="button" onclick="ParalelaCategorica.initialize();"><i class="fa fa-bars"></i> Visualizar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="paralela_categorica">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="escopo_sequence" class="box-content abas hide espaco-visualizacoes">
                                 <div style="" class="box ui-draggable ui-droppable">
                                     <div class="box-header">
@@ -300,7 +394,7 @@
                                                 <label for="nivel2">2º Nível</label>
                                                 <select class="form-control" id="nivel2">
                                                     <option value="">Selecione</option>
-                                                    <option value="anobase" seleBted>Ano base</option>
+                                                    <option value="anobase" selected>Ano Base</option>
                                                     <option value="causabas">Causa Básica</option>
                                                     <option value="esc">Escolaridade</option>
                                                     <option value="idade">Idade</option>
@@ -355,7 +449,7 @@
                                         <br/>
                                         <div class="row">
                                             <div class="col-md-3">
-                                            <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Gerar visualização</button>
+                                                <button class="btn btn-success" type="button" onclick="Sequence.initialize();"><i class="fa fa-bars"></i> Visualizar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -394,6 +488,10 @@
     <script src="interface/scripts/map.js"></script>
     <script src="interface/libs/scatter-matrix-master/scatter-matrix.js"></script>
     <script src="interface/libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="interface/libs/paralelas/parallel.js"></script>
+    <script src="interface/libs/paralela_categorica/d3.parsets.js"></script>
+    <script src="interface/libs/paralela_categorica/paralela.js"></script>
+    <script src="interface/libs/paralela_categorica/highlight.js"></script>
 </body>
 
 </html>

@@ -220,6 +220,107 @@ class Dados {
 		}
 	}
 
+	function obterParalelaCategoricaParaMunicipio($idMunicipio, $nivel1, $nivel2, $nivel3, $nivel4, $nivel5) {
+		$niveis = array($nivel1, $nivel2, $nivel3, $nivel4, $nivel5);
+		foreach ($niveis as $key => $value) {
+			if (empty($value)) {
+				unset($niveis[$key]);
+			}
+		}
+		
+		$dados = new DadosModel();
+		$dados->obterParalelaCategoricaParaMunicipio($idMunicipio, $niveis);
+		$nomeArquivo = SYSTEM_DIR . "servidor/paralela.categorica.csv";
+		try {
+			@unlink($nomeArquivo);	
+		} catch (Exception $e) {
+			
+		}
+
+		$header = array();
+		foreach ($niveis as $key => $value) {
+			# code...
+			$desc = $value;
+			switch ($value) {
+				case "anobase": 
+					$desc = "Ano Base";
+					break;
+				case "causabas": 
+					$desc = "Causa Básica";
+					break;
+				case "esc": 
+					$desc = "Escolaridade";
+					break;
+				case "idade": 
+					$desc = "Idade";
+					break;
+				case "sexo": 
+					$desc = "Sexo";
+					break;
+			}
+			$header[] = $desc;
+		}
+		file_put_contents($nomeArquivo, gerarCvsLinha($header), FILE_APPEND);
+
+		$doencas = array();
+		while ($obj = $dados->getRegistro()) {
+			if (isset($obj["sexo"])) {
+				$obj["sexo"] = $this->_getDescricaoSexo($obj["sexo"]);	
+			}
+			if (isset($obj["idade"])) {
+				$obj["idade"] = $this->_getIdade($obj["idade"]);
+			}
+
+			if (isset($obj["esc"])) {
+				$obj["esc"] = $this->_getEscolariedade($obj["esc"]);
+			}
+			
+			if (isset($obj["causabas"])) {
+				if (in_array($obj["causabas"], $doencas)) {
+					$obj["causabas"] = $doencas[$obj["causabas"]];
+				} else {
+					$desc = $this->_getDescricaoCid($obj["causabas"]);
+					$doencas[$obj["causabas"]] = $desc;
+					$obj["causabas"] = $desc;
+				}
+			}
+			file_put_contents($nomeArquivo, gerarCvsLinha($obj), FILE_APPEND);
+		}
+	}
+
+	function obterParallelParaMunicipio($idMunicipio) {
+		$dados = new DadosModel();
+		$dados->obterParallelParaMunicipio($idMunicipio);
+		$nomeArquivo = SYSTEM_DIR . "servidor/parallel.csv";
+		try {
+			@unlink($nomeArquivo);	
+		} catch (Exception $e) {
+			
+		}
+		
+
+		file_put_contents($nomeArquivo, gerarCvsLinha(array("Ano Base", "Escolaridade", "Idade", "Sexo")), FILE_APPEND);
+
+		$doencas = array();
+		while ($obj = $dados->getRegistro()) {
+			//$obj["sexo"] = $this->_getDescricaoSexo($obj["sexo"]);	
+			//$obj["idade"] = $this->_getIdade($obj["idade"]);
+			//$obj["esc"] = $this->_getEscolariedade($obj["esc"]);
+			/*if (isset($obj["causabas"])) {
+				if (in_array($obj["causabas"], $doencas)) {
+					$obj["causabas"] = $doencas[$obj["causabas"]];
+				} else {
+					$desc = $this->_getDescricaoCid($obj["causabas"]);
+					$doencas[$obj["causabas"]] = $desc;
+					$obj["causabas"] = $desc;
+				}
+			}*/
+			//$obj["causabas"] = "";
+			//debug($obj);
+			file_put_contents($nomeArquivo, gerarCvsLinha($obj), FILE_APPEND);
+		}
+	}
+
 	function _getDescricaoSexo($sexo) {
 		switch ($sexo) {
 			case '1':
