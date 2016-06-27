@@ -26,7 +26,7 @@
 #paralela_categorica .category-8 { fill: #bcbd22; stroke: #bcbd22; }
 #paralela_categorica .category-9 { fill: #17becf; stroke: #17becf; }
 
-#paralela_categorica .tooltip {
+.tooltip {
   background-color: rgba(242, 242, 242, .6);
   position: absolute;
   padding: 5px;
