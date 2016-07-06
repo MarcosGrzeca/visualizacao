@@ -74,9 +74,9 @@ Map = (function($) {
     function _loadEstupros(callback) {
         wait();
         var filtros = 'cid=' + $('input[name=cid]:checked').val() + "&sexo=" + $('input[name=sexo]:checked').val() + "&conteudo=" + $('input[name=conteudo]:checked').val();
-        var url = 'http://localhost/visualizacao/servidor/dados.php?';
+        var url = 'servidor/dados.php?';
         if ($("#compararAnos").attr("checked")) {
-            url = 'http://localhost/visualizacao/servidor/dados.comparativo.php?anoBase1=' + $("#anoBase1").val() + "&anoBase2=" + $("#anoBase2").val() + "&";
+            url = 'servidor/dados.comparativo.php?anoBase1=' + $("#anoBase1").val() + "&anoBase2=" + $("#anoBase2").val() + "&";
         }
         $.getJSON(url + filtros, function(data) {
             Mortes = data;
